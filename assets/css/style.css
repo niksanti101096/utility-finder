@@ -1,0 +1,45 @@
+/*================================================================================
+	Item Name: Vuexy - Vuejs, HTML & Laravel Admin Dashboard Template
+	Version: 2.0
+	Author: PIXINVENT
+	Author URL: http://www.themeforest.net/user/pixinvent
+================================================================================
+
+NOTE:
+------
+PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
+WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
+.trustdocs-icon{
+	margin-left: -10px;
+	width: 100%;
+}
+.badge svg{
+	vertical-align: middle !important;
+}
+.SPLAddressListSt {
+	width: 100%;
+    background: #283046;
+    color: #b4b7bd;
+    cursor: pointer;
+	border: 1px solid #b4b7bd;
+}
+::-webkit-scrollbar {
+	width: 12px;               /* width of the entire scrollbar */
+}
+::-webkit-scrollbar-track {
+	background: #283046;        /* color of the tracking area */
+}
+::-webkit-scrollbar-thumb {
+	background-color: #7367f0;    /* color of the scroll thumb */
+	border-radius: 20px;       /* roundness of the scroll thumb */
+	border: 3px solid #283046;  /* creates padding around scroll thumb */
+}
+::-webkit-resizer {
+	background: #283046;
+}
+.modal-bxl{
+	max-width: 990px;
+}
+.top-layer-modal{
+	background-color: rgba(0,0,0,0.4);
+}
