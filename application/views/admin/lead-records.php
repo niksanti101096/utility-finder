@@ -8,7 +8,7 @@
                 <h1>Settings</h1>
             </div>
 
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-md-12" id="setting-navigation">
                     <ul class="nav nav-tabs justify-content-end mb-0" role="tablist">
                         <li class="nav-item">
@@ -109,9 +109,9 @@
                         </button>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
 <!-- END: Content-->
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/admin/settings.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/admin/lead-records.js"></script>

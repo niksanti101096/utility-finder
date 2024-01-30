@@ -50,11 +50,17 @@
     <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/style.css">
     <!-- END: Custom CSS-->
 
+
     <script src="<?php echo base_url('app-assets/vendors/js/jquery/jquery.min.js');?>"></script>
     <script src="<?php echo base_url('app-assets/vendors/js/charts/apexcharts.min.js');?>"></script>
     <script src="<?php echo base_url('app-assets/vendors/js/SPL_AJAX_Full.js'); ?>"></script>
     <script type="text/javascript">
         var url = "<?php echo base_url(); ?>";
+        var url_extended = '';
+        <?php if(strpos(strtoupper($session['role']), 'ADMIN') !== false): ?>
+        url_extended = "<?php echo base_url().'admin/'; ?>";
+        userTypeURL = "admin/";
+        <?php endif; ?>
     </script>
 
     <style>

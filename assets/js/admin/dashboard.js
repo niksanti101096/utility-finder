@@ -128,7 +128,7 @@ function loadLeads() {
                 data: null,
                 render: function (data, type, row) {
                     return (
-                        `<button type="button" class="btn btn-success btn-sm w-100">View</button>` +
+                        '<button type="button" class="btn btn-success btn-sm w-100" onclick="openLeadRecords('+row.id+')">View</button>' +
                         `<button type="button" class="btn btn-danger btn-sm w-100">Archive</button>`
                     )
                 }
@@ -146,4 +146,8 @@ function loadLeads() {
         lengthMenu: [50, 75, 100],
         order: [[4, 'desc']],
     });
+}
+
+function openLeadRecords(id) {
+    location.href = url_extended + 'lead-records/' + id;
 }

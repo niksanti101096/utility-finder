@@ -9,8 +9,8 @@ class App extends CI_Controller {
 
     public function index()
 	{
-		if($this->session->userdata('l_session')){
-			$sess = $this->session->userdata('l_session');
+		if($this->session->userdata('uf_session')){
+			$sess = $this->session->userdata('uf_session');
 			if(strpos(strtoupper($sess['role']), 'ADMIN') !== false){
                 return redirect(base_url('admin'), 'refresh');
             }
