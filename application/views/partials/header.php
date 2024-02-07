@@ -50,6 +50,10 @@
     <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/style.css">
     <!-- END: Custom CSS-->
 
+    <!-- BEGIN: Online CSS  -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- END: Online CSS  -->
+
 
     <script src="<?php echo base_url('app-assets/vendors/js/jquery/jquery.min.js');?>"></script>
     <script src="<?php echo base_url('app-assets/vendors/js/charts/apexcharts.min.js');?>"></script>
@@ -99,9 +103,15 @@
                 <ul class="nav navbar-nav d-xl-none">
                     <li class="nav-item"><a class="nav-link menu-toggle" href="javascript:void(0);"><i class="ficon" data-feather="menu"></i></a></li>
                 </ul>
+                <ul class="nav navbar-nav">
+                    <li class="nav-item my-auto">
+                        <span class="user-name font-weight-bolder"><?php echo $session['firstname']. ' ' . $session['lastname']; ?></span>
+                    </li>
+                </ul>
             </div>
         
             <ul class="nav navbar-nav align-items-center ml-auto nav-right">
+
                 <li class="nav-item d-none d-lg-block">
                     <a class="nav-link nav-link-style">
                         <i class="ficon" data-feather="sun"></i>
@@ -148,14 +158,10 @@
     <div class="main-menu menu-fixed menu-dark menu-accordion menu-shadow" data-scroll-to-active="true">
         <div class="navbar-header">
             <ul class="nav navbar-nav flex-row">
-                <li class="nav-item mr-auto d-flex">
+                <li class="nav-item m-auto d-flex">
                     <a class="navbar-brand" href="<?php echo base_url('admin'); ?>">
                         <h2 class="brand-text">Utility Finder</h2>
                     </a>
-                    
-                    <div class="navbar-brand user-nav d-sm-flex d-none">
-                        <span class="user-name font-weight-bolder"><?php echo $session['username']; ?></span>
-                    </div>
                 </li>
                 <!-- <li class="nav-item nav-toggle">
                     <a class="nav-link modern-nav-toggle pr-0" data-toggle="collapse">

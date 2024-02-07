@@ -60,23 +60,23 @@
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-2 d-flex align-items-center">
-                                        <label class="col-form-label"  for="new-lead-type">Lead Type</label>
+                                        <label class="col-form-label" for="new-lead-type-electricity-gas">Lead Type</label>
                                     </div>
                                     <div class="col-sm-10 d-flex flex-wrap align-items-center justify-content-start">
                                         <div class="custom-control custom-radio flex-fill">
-                                            <input type="radio" id="new-lead-type-electricity-gas" name="new_lead_type" class="custom-control-input" value="2">
+                                            <input type="radio" id="new-lead-type-electricity-gas" name="new_lead_type" class="custom-control-input" value="2" onclick="newLeadTypeClick()">
                                             <label for="new-lead-type-electricity-gas" class="custom-control-label">Electricity & Gas</label>
                                         </div>
                                         <div class="custom-control custom-radio flex-fill">
-                                            <input type="radio" id="new-lead-type-gas" name="new_lead_type" class="custom-control-input" value="3">
+                                            <input type="radio" id="new-lead-type-gas" name="new_lead_type" class="custom-control-input" value="3" onclick="newLeadTypeClick()">
                                             <label for="new-lead-type-gas" class="custom-control-label">Gas</label>
                                         </div>
                                         <div class="custom-control custom-radio flex-fill">
-                                            <input type="radio" id="new-lead-type-electricity" name="new_lead_type" class="custom-control-input" value="4">
+                                            <input type="radio" id="new-lead-type-electricity" name="new_lead_type" class="custom-control-input" value="4" onclick="newLeadTypeClick()">
                                             <label for="new-lead-type-electricity" class="custom-control-label">Electricity</label>
                                         </div>
                                         <div class="custom-control custom-radio flex-fill">
-                                            <input type="radio" id="new-lead-type-water" name="new_lead_type" class="custom-control-input" value="5">
+                                            <input type="radio" id="new-lead-type-water" name="new_lead_type" class="custom-control-input" value="5" onclick="newLeadTypeClick()">
                                             <label for="new-lead-type-water" class="custom-control-label">Water</label>
                                         </div>
                                     </div>
@@ -88,13 +88,31 @@
                                         <label class="col-form-label" for="new-lead-supplier">Supplier</label>
                                     </div>
                                     <div class="col-sm-4 d-flex align-items-center">
-                                        <input type="text" id="new-lead-supplier" class="form-control" name="new_lead_supplier" placeholder="..." />
+                                        <div class="col-12 p-0">
+                                            <select class="select2 form-control" name="new_lead_supplier" id="new-lead-supplier"></select>
+                                        </div>
                                     </div>
                                     <div class="col-sm-2 d-flex align-items-center">
                                         <label class="col-form-label" for="new-lead-contract-end-date">Contract End Date</label>
                                     </div>
-                                    <div class="col-sm-4 d-flex align-items-center">
-                                        <input type="date" id="new-lead-contract-end-date" class="form-control" name="new_lead_contract_end_date" placeholder="..." />
+                                    <div class="col-sm-4 d-flex align-items-center w-100">
+                                        <div class="col-12 p-0">
+                                            <select class="select2 form-control" name="new_lead_contract_end_date" id="new-lead-contract-end-date">
+                                                <option value=""></option>
+                                                <option value="January">January</option>
+                                                <option value="February">February</option>
+                                                <option value="March">March</option>
+                                                <option value="April">April</option>
+                                                <option value="May">May</option>
+                                                <option value="June">June</option>
+                                                <option value="July">July</option>
+                                                <option value="August">August</option>
+                                                <option value="September">September</option>
+                                                <option value="October">October</option>
+                                                <option value="November">November</option>
+                                                <option value="December">December</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

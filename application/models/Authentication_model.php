@@ -23,4 +23,9 @@ Class Authentication_Model extends CI_Model {
             }
         }
     }
+
+    public function create_new_user($data) {
+        $data['password'] = password_hash($data['password'],PASSWORD_BCRYPT);
+        return $this->db->insert('users', $data);
+    }
 }

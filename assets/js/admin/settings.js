@@ -1,15 +1,6 @@
 
-var userRecords1;
-var userRecords2;
-var userRecords3;
-
-var energySupplierRecords1;
-var energySupplierRecords2;
-var energySupplierRecords3;
-
-var waterSupplierRecords1;
-var waterSupplierRecords2;
-var waterSupplierRecords3;
+var userRecords;
+var userTable;
 
 $(document).ready(function() {
 
@@ -48,108 +39,86 @@ $(document).ready(function() {
         loadWaterSupplierRecords();
     });
     
+    $('#add-user-btn').click(function() {
+        $('#create-new-user-modal').modal('show');
+        $('img#profile-pic').attr('src', '');
+        $(':input','#create-new-user-form')
+            .not(':button, :submit, :reset, :hidden')
+            .val('');
+        $('#new-user-salutation').val(null).trigger('change');
+    });
+
 });
 
 function loadUserRecords() {
-    tempUserRecords();
-    $('#user-records-table tbody').append(userRecords3);
-}
+    userRecords = [];
+                
+    $.ajax({
+        type: "GET",
+        url: url + "admin/load-user-record",
+        dataType: "JSON",
+        data: {},
+        success: function(response){
+            if (response.data.length > 0) {
+                response.data.forEach(data => {
+                    userRecords.push(data);
+                });
 
-function tempUserRecords() {
-    userRecords1 = '<tr>' +
-        '<td>' +
-            '<div class="custom-control custom-checkbox">' +
-                '<input class="custom-control-input" type="checkbox" value="" id="check-user-1">' +
-                '<label for="check-user-1" class="custom-control-label"></label>' +
-            '</div>' +
-        '</td>' + 
-        '<td>ID1</td>' + 
-        '<td>Username1</td>' + 
-        '<td>User type1</td>' + 
-        '<td>Status1</td>' + 
-        '<td class="col-md-1">' +
-            '<button type="button" class="btn btn-success btn-sm w-100">View</button>' +
-            '<button type="button" class="btn btn-danger btn-sm w-100">Archive</button>' +
-        '</td>' + 
-    '</tr>';
-
-    userRecords2 = '<tr>' +
-        '<td>' +
-            '<div class="custom-control custom-checkbox">' +
-                '<input class="custom-control-input" type="checkbox" value="" id="check-user-2">' +
-                '<label for="check-user-2" class="custom-control-label"></label>' +
-            '</div>' +
-        '</td>' + 
-        '<td>ID2</td>' + 
-        '<td>Username2</td>' + 
-        '<td>User type2</td>' + 
-        '<td>Status2</td>' + 
-        '<td class="col-md-1">' +
-            '<button type="button" class="btn btn-success btn-sm w-100">View</button>' +
-            '<button type="button" class="btn btn-danger btn-sm w-100">Archive</button>' +
-        '</td>' + 
-    '</tr>';
-    userRecords3 = userRecords1 + userRecords2;
-}
-
-function loadEnergySupplierRecords() {
-    tempEnergySupplierRecords();
-    $('#energy-supplier-records-table tbody').append(energySupplierRecords3);
-}
-
-function tempEnergySupplierRecords() {
-    energySupplierRecords1 = '<tr>' +
-        '<td>' +
-            'Cepalco' +
-        '</td>' + 
-        '<td class="col-md-1">' +
-            '<button type="button" class="btn btn-success btn-sm w-100">View</button>' +
-            '<button type="button" class="btn btn-info btn-sm w-100">Edit</button>' +
-            '<button type="button" class="btn btn-danger btn-sm w-100">Delete</button>' +
-        '</td>' + 
-    '</tr>';
-
-    energySupplierRecords2 = '<tr>' +
-        '<td>' +
-            'Meralco' +
-        '</td>' + 
-        '<td class="col-md-1">' +
-            '<button type="button" class="btn btn-success btn-sm w-100">View</button>' +
-            '<button type="button" class="btn btn-info btn-sm w-100">Edit</button>' +
-            '<button type="button" class="btn btn-danger btn-sm w-100">Delete</button>' +
-        '</td>' + 
-    '</tr>';
-
-    energySupplierRecords3 = energySupplierRecords1 + energySupplierRecords2;
-}
-
-function loadWaterSupplierRecords() {
-    tempWaterSupplierRecords();
-    $('#water-supplier-records-table tbody').append(waterSupplierRecords3);
-}
-
-function tempWaterSupplierRecords() {
-    waterSupplierRecords1 = '<tr>' +
-        '<td>' +
-            'Cepalco' +
-        '</td>' + 
-        '<td class="col-md-1">' +
-            '<button type="button" class="btn btn-success btn-sm w-100">View</button>' +
-            '<button type="button" class="btn btn-info btn-sm w-100">Edit</button>' +
-            '<button type="button" class="btn btn-danger btn-sm w-100">Delete</button>' +
-        '</td>' + 
-    '</tr>';
-
-    waterSupplierRecords2 = '<tr>' +
-        '<td>' +
-            'Meralco' +
-        '</td>' + 
-        '<td class="col-md-1">' +
-            '<button type="button" class="btn btn-success btn-sm w-100">View</button>' +
-            '<button type="button" class="btn btn-info btn-sm w-100">Edit</button>' +
-            '<button type="button" class="btn btn-danger btn-sm w-100">Delete</button>' +
-        '</td>' + 
-    '</tr>';
-
-    waterSupplierRecords3 = waterSupplierRecords1 + waterSupplierRecords2;
-}
+                $("#user-records-table").DataTable().destroy();
+                userTable = $("#user-records-table").DataTable({
+                    dom: '<"card-header border-bottom p-1"<"head-label"<"datatable-user-title">>><"card-body"<"d-flex justify-content-between align-items-center mx-0 row">t<"d-flex justify-content-between mx-0 row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>>',
+                    responsive: true,
+                    initComplete : function( settings, json ) {
+                        $('.datatable-user-title').html('User Records');
+                        $('.datatable-user-title').addClass('h4');
+                        $('.datatable-user-title').css('color','inherit');
+                    },
+                    data: userRecords,
+                    columns: [
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+                                return (
+                                    '<div class="custom-control custom-checkbox">' +
+                                        '<input class="custom-control-input" type="checkbox" value="" id="check-all-user-'+row.user_id+'">' +
+                                        '<label for="check-all-user-'+row.user_id+'" class="custom-control-label"></label>' +
+                                    '</div>'
+                                )
+                            }
+                        },
+                        {data: "user_id"},
+                        {data: "username"},
+                        {
+                            data: null,
+                            render: function(data, type, row) {
+                                if(row.user_type == 1) return "ADMIN";
+                                else return "STANDARD";
+                            }
+                        },
+                        {
+                            data: null,
+                            render: function(data, type, row) {
+                                if(row.status == 1) return "Active";
+                                else return "Disabled";
+                            }
+                        },
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+                                return (
+                                    '<button type="button" class="btn btn-success btn-sm mr-1" onclick="">View</button>' +
+                                    `<button type="button" class="btn btn-danger btn-sm">Archive</button>`
+                                )
+                            }
+                        },
+                    ],
+                    select: true,
+                    displayLength: 50,
+                    lengthMenu: [50, 75, 100],
+                });
+            } else {
+                
+            }
+        }
+    });
+};

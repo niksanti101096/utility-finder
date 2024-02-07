@@ -74,10 +74,41 @@ class Authentication extends REST_Controller {
         }
         $this->load->view('login', $data); // return to login page with message
 	}
+
 	public function logout_get() {
 		$session_data = false;
 		$this->session->unset_userdata($session_data);
 		$this->session->sess_destroy();
 		return redirect(base_url('authentication'), 'refresh');
 	}
-}
+
+    public function create_new_user_post(){
+        if ($this->session->userdata('uf_session')) {
+            $sess = $this->session->userdata('uf_session');
+            $data = [
+                'salutation' => $this->post('new_user_salutation') ? $this->post('new_user_salutation') : '',
+                'firstname' => $this->post('new_user_firstname') ? $this->post('new_user_firstname') : '',
+                'lastname' => $this->post('new_user_lastname') ? $this->post('new_user_lastname') : '',
+                'department' => $this->post('new_user_department') ? $this->post('new_user_department') : '',
+                'email' => $this->post('new_user_email') ? $this->post('new_user_email') : '',
+                'phone' => $this->post('new_user_phone') ? $this->post('new_user_phone') : '',
+                'extention' => $this->post('new_user_extention') ? $this->post('new_user_extention') : '',
+                'user_type' => $this->post('new_user_type') ? $this->post('new_user_type') : '',
+                'username' => $this->post('new_user_username') ? $this->post('new_user_username') : '',
+                'password' => $this->post('new_user_password') ? $this->post('new_user_password') : '',
+            ];
+            $result = $this->authentication_model->create_new_user($data);
+            if(gettype($result) == "array"){
+            $this->response(array('success'=>true,'message'=>'Success'), REST_Controller::HTTP_OK);
+        }else{
+            if($result){
+                $this->response(array('success'=>true,'message'=>'Successfully saved.'), REST_Controller::HTTP_OK);
+            }else{
+                $this->response(array('success'=>false,'message'=>'Failed Saving'), REST_Controller::HTTP_OK);
+            }
+        }
+		}else{
+			return redirect(base_url('admin/settings'), 'refresh');
+		}
+    }
+};

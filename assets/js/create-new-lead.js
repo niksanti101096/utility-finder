@@ -1,9 +1,9 @@
 $(document).ready(function () {
 
-    $("#create-lead-btn").click(function(e) {
-        e.preventDefault();
-        $("#create-new-lead-form")[0].reset();
-    });
+    // $("#create-lead-btn").click(function(e) {
+    //     e.preventDefault();
+    //     $("#create-new-lead-form")[0].reset();
+    // });
 
     function makeid(length) {
         let result = '';
@@ -15,10 +15,12 @@ $(document).ready(function () {
           counter += 1;
         }
         return result;
-    }
+    };
 
     $("#create-lead-btn").click(function() {
+        $("#create-new-lead-form")[0].reset();
         $('#create-new-lead-modal').modal('show');
+        
         // random generated Lead ID
         $("#new-lead-id").attr("value", makeid(7));
         
@@ -28,7 +30,7 @@ $(document).ready(function () {
         var month = ("0" + (now.getMonth() + 1)).slice(-2);
         var today = now.getFullYear()+"-"+(month)+"-"+(day);
         $('#new-lead-date-created').attr("value", today);
-    })
+    });
 
     $("#create-new-lead-form").submit(function (e) {
         e.preventDefault();
@@ -45,6 +47,8 @@ $(document).ready(function () {
             }
         });
 
+        var disabled = $("#create-new-lead-form").find(':input:disabled').removeAttr('disabled');
+
         $.ajax({
             type: "POST",
             url: url + "admin/create-new-lead",
@@ -54,9 +58,9 @@ $(document).ready(function () {
                 if(response.success){
                     setTimeout(() => {
                         Swal.fire('Success!', 'Successfully created new lead!', 'success').then(function () {
-                            // load_monetary_debt();
                             $.unblockUI();
                             $('#create-new-lead-modal').modal('hide');
+                            location.href = url_extended;
                         });
                     }, 2000);
                 }else{
@@ -67,6 +71,45 @@ $(document).ready(function () {
             error: function () {},
         });
 
-    })
+        disabled.attr('disabled','disabled');
+
+    });
 
 });
+
+function newLeadTypeClick() {
+    var supplierElect = '<option value=""></option>';
+    supplierElect += '<option value="British Gas">British Gas</option>';
+    supplierElect += '<option value="EDF">EDF</option>';
+    supplierElect += '<option value="Scottish Power">Scottish Power</option>';
+    supplierElect += '<option value="Opus Energy">Opus Energy</option>';
+    supplierElect += '<option value="Eon">Eon</option>';
+    supplierElect += '<option value="Smartest Energy">Smartest Energy</option>';
+    supplierElect += '<option value="SSE">SSE</option>';
+    supplierElect += '<option value="CNG">CNG</option>';
+    supplierElect += '<option value="Crown Gas and Power">Crown Gas and Power</option>';
+    supplierElect += '<option value="Total">Total</option>';
+    supplierElect += '<option value="Gazprom">Gazprom</option>';
+    supplierElect += '<option value="BG Lite">BG Lite</option>';
+    supplierElect += '<option value="Bulb">Bulb</option>';
+    supplierElect += '<option value="Other Company">Other Company</option>';
+
+    var supplierWater = '<option value=""></option>';
+    supplierWater += '<option value="Castle Water">Castle Water</option>';
+    supplierWater += '<option value="Clear Business">Clear Business</option>';
+    supplierWater += '<option value="Everflow Water">Everflow Water</option>';
+    supplierWater += '<option value="Smarta Water">Smarta Water</option>';
+    supplierWater += '<option value="Olympus Water">Olympus Water</option>';
+    supplierWater += '<option value="Source 4 Business">Source 4 Business</option>';
+    supplierWater += '<option value="Veolia">Veolia</option>';
+    supplierWater += '<option value="Water2Business">Water2Business</option>';
+    supplierWater += '<option value="WaterPlus">WaterPlus</option>';
+    supplierWater += '<option value="Waterscan">Waterscan</option>';
+    supplierWater += '<option value="Wave">Wave</option>';
+    supplierWater += '<option value="Yu Water">Yu Water</option>';
+    supplierWater += '<option value="Other">Other</option>';
+
+    $('#new-lead-supplier').empty();                                
+    if ($("#create-new-lead-form [name=new_lead_type][value=5]").is(':checked')) $('#new-lead-supplier').append(supplierWater);
+    else $('#new-lead-supplier').append(supplierElect);
+}

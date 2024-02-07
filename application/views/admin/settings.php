@@ -3,11 +3,29 @@
     <div class="content-overlay"></div>
     <div class="header-navbar-shadow"></div>
     <div class="content-wrapper container-xxl p-0">
-        <div class="content-body">
-            <div>
-                <h1>Settings</h1>
+        
+        <div class="content-header">
+            <div class="content-header row">
+                <div class="content-header-left col-md-9 col-12 mb-2">
+                    <div class="row breadcrumbs-top">
+                        <div class="col-12">
+                            <h2 class="content-header-title float-left mb-0">Settings</h2>
+                            <div class="breadcrumb-wrapper">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item">
+                                        <a href="<?php echo base_url('admin'); ?>">Dashboard</a>
+                                    </li>
+                                    <li class="breadcrumb-item active">
+                                        User Profile
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-
+        </div>
+        <div class="content-body">
             <div class="row">
                 <div class="col-md-12" id="setting-navigation">
                     <ul class="nav nav-tabs justify-content-end mb-0" role="tablist">
@@ -21,7 +39,6 @@
                     <div class="card">
                         <div class="card-body tab-content">
                             <div class="tab-pane active" role="tabpanel" id="user-setting">
-                                <h4>User Records</h4>
                                 <div class="table-responsive">
                                     <table class="table" id="user-records-table">
                                         <thead>
@@ -115,3 +132,7 @@
 </div>
 <!-- END: Content-->
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/admin/settings.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/user-profile.js"></script>
+
+<!-- Modal -->
+<?php include_once('assets/modals/create-new-user-modal.php'); ?>

@@ -55,7 +55,7 @@
                                                     <input type="date" class="form-control" id="hits-allocation-to" name="hits_allocation_to" disabled>
                                                 </div>
                                                 <div>
-                                                    <button class="btn btn-sm btn-primary" type="button" id="hits-allocation-btn-submit" style="display:none;">Submit</button>
+                                                    <button class="btn btn-sm btn-primary" type="button" id="hits-allocation-btn-submit" style="display:none;" onclick="metricHits()">Submit</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -77,9 +77,9 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td>12</td>
-                                                        <td>7</td>
-                                                        <td>5</td>
+                                                        <td id="metrics-hits"></td>
+                                                        <td id="metrics-not-allocated"></td>
+                                                        <td id="metrics-allocated"></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -156,8 +156,10 @@
                                                 <th>Phone</th>
                                                 <th>Email</th>
                                                 <th>Date</th>
-                                                <th>Source</th>
+                                                <th>Lead Type</th>
+                                                <th>Lead Source</th>
                                                 <th>Status</th>
+                                                <th>Allocated to</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
