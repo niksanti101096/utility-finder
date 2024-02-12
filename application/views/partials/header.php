@@ -120,7 +120,7 @@
                 
                 <!-- Profile Section -->
                 <li class="nav-item">
-                    <a class="nav-link" id="navbar-profile">
+                    <a class="nav-link" id="navbar-profile" href="<?php echo base_url('profile'); ?>">
                         Profile
                     </a>
                 </li>

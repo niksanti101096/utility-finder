@@ -16,7 +16,7 @@
                                         <a href="<?php echo base_url('admin'); ?>">Dashboard</a>
                                     </li>
                                     <li class="breadcrumb-item active">
-                                        User Profile
+                                        Manage Users
                                     </li>
                                 </ol>
                             </div>
@@ -132,6 +132,7 @@
 </div>
 <!-- END: Content-->
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/admin/settings.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/admin/create-new-user.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/user-profile.js"></script>
 
 <!-- Modal -->
