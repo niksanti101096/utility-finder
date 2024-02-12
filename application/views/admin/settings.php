@@ -135,4 +135,4 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/user-profile.js"></script>
 
 <!-- Modal -->
-<?php include_once('assets/modals/create-new-user-modal.php'); ?>
+<?php include_once('assets/modals/user-modal.php'); ?>

@@ -84,7 +84,7 @@ function loadLeads() {
     leadRecords = [];
     $.ajax({
         type: "GET",
-        url: url + "admin/load-lead-record", 
+        url: url + "admin/load-lead-records", 
         dataType: "JSON",
         data: {},
         success: function (response) {
@@ -144,8 +144,8 @@ function loadLeads() {
                             data: null,
                             render: function (data, type, row) {
                                 return (
-                                    '<button type="button" class="btn btn-success btn-sm w-100" onclick="openLeadRecords('+row.id+')">View</button>' +
-                                    `<button type="button" class="btn btn-danger btn-sm w-100">Archive</button>`
+                                    '<button type="button" class="btn btn-success btn-sm w-100" onclick="viewLeadRecord('+row.sequence+')">View</button>' +
+                                    '<button type="button" class="btn btn-danger btn-sm w-100">Archive</button>'
                                 )
                             }
                         },
@@ -189,6 +189,7 @@ function metricHits(type = "date range") {
     });
 }
 
-function openLeadRecords(id) {
-    location.href = url_extended + 'lead-records/' + id;
+
+function viewLeadRecord(id) {
+	location.href = url_extended + "lead-record/" + id;
 }

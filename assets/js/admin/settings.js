@@ -1,6 +1,7 @@
 
 var userRecords;
 var userTable;
+var userUpdatedData;
 
 $(document).ready(function() {
 
@@ -40,12 +41,31 @@ $(document).ready(function() {
     });
     
     $('#add-user-btn').click(function() {
-        $('#create-new-user-modal').modal('show');
+        $('#user-modal').modal('show');
+        document.getElementById('user-form').reset();
         $('img#profile-pic').attr('src', '');
-        $(':input','#create-new-user-form')
+        $(':input','#user-form')
             .not(':button, :submit, :reset, :hidden')
             .val('');
         $('#new-user-salutation').val(null).trigger('change');
+        $("[name=salutation]").val("").change();
+        $("[name=user_type]").val("").change();
+        $("[name=department]").val("").change();
+        $('#user-modal input, #user-modal select').removeAttr('disabled');
+        $('[name=user_id]').removeAttr('value');
+        $('#div-password').removeAttr('hidden');
+        $('#div-repassword').removeAttr('hidden');
+    });
+
+    $('#user-btn-edit').click(function() {
+        $('#user-btn-update').removeAttr('hidden');
+        $('#user-btn-edit').attr('hidden', 'hidden');
+        $('#user-modal input, #user-modal select').removeAttr('disabled');
+    });
+
+    $('#user-btn-update').click(function() {
+        userUpdatedData = $("#user-form").serialize();
+        updateUserRecord(userUpdatedData);
     });
 
 });
@@ -55,7 +75,7 @@ function loadUserRecords() {
                 
     $.ajax({
         type: "GET",
-        url: url + "admin/load-user-record",
+        url: url + "admin/load-users-record",
         dataType: "JSON",
         data: {},
         success: function(response){
@@ -106,8 +126,8 @@ function loadUserRecords() {
                             data: null,
                             render: function (data, type, row) {
                                 return (
-                                    '<button type="button" class="btn btn-success btn-sm mr-1" onclick="">View</button>' +
-                                    `<button type="button" class="btn btn-danger btn-sm">Archive</button>`
+                                    '<button type="button" class="btn btn-success btn-sm mr-1" onclick="openUserProfileModal(\''+encodeURIComponent(JSON.stringify(data))+'\')">View</button>' +
+                                    '<button type="button" class="btn btn-danger btn-sm" onclick="deleteUser('+row.user_id+')">Archive</button>'
                                 )
                             }
                         },
@@ -122,3 +142,105 @@ function loadUserRecords() {
         }
     });
 };
+
+function openUserProfileModal(encryptedData) {
+    $('#user-modal').modal('show');
+    $('#user-modal input, #user-modal select').attr('disabled', true);
+    document.getElementById('user-form').reset();
+    var data = JSON.parse(decodeURIComponent(encryptedData));
+    var form = "#user-form";
+    for (var key in data) {
+        var type = $(form + " [name=" + key + "]").attr("type");
+        
+        if (type === "radio") {
+            $(form + " [name=" + key + "][value='" + data[key]).prop("checked", true);
+        } else if (type === "checkbox") {
+            var checked = data[key] === "Y" ? true : false;
+            $(form + " [name=" + key + "]").attr("checked", checked);
+        } else {
+            if($(form + " [name="+key+"]").hasClass('select2')){
+                $(form + " [name="+key+"]").val(data[key]).change();
+            } else $(form + " [name=" + key + "]").val(data[key]);
+        }
+	}
+    $('#user-btn-edit').removeAttr('hidden');
+    $('#user-btn-add').attr('hidden', 'hidden');
+    $('#user-btn-update').attr('hidden', 'hidden');
+    $('#div-password').attr('hidden', 'hidden');
+    $('#div-repassword').attr('hidden', 'hidden');
+    $('#user-modal h4').html('User Record ID ' + data.user_id);
+};
+
+function updateUserRecord(data) {
+    $.blockUI({
+        message:
+            '<div class="d-flex justify-content-center align-items-center"><p class="mr-50 mb-0">Updating user...</p> <div class="spinner-grow spinner-grow-sm text-white" role="status"></div> </div>',
+        css: {
+            backgroundColor: 'transparent',
+            color: '#fff',
+            border: '0'
+        },
+        overlayCSS: {
+            opacity: 0.8
+        }
+    });
+    
+    $.ajax({
+        type: "POST",
+        url: url + "authentication/update-user", 
+        dataType: "JSON",
+        data: data,
+        success: function (response) {
+            console.log(response);
+            if(response.success){
+                setTimeout(() => {
+                    Swal.fire('Success!', 'Successfully updated user '+ response.data['email'] +'.', 'success').then(function () {
+                        location.href = url_extended + 'settings';
+                        $.unblockUI();
+                        $("#user-modal").modal("hide");
+                    });
+                }, 2000);
+            }else{
+                Swal.fire('Oops!', 'Something went wrong.', 'warning');
+                $.unblockUI();
+            }
+        },
+        error: function () {},
+    });
+};
+
+function deleteUser(id) {
+    Swal.fire({
+		title: "Are you sure?",
+		text: "You want to archive this user?",
+		icon: "warning",
+		showCancelButton: true,
+		confirmButtonText: "Yes, Proceed",
+		customClass: {
+			confirmButton: "btn btn-primary",
+			cancelButton: "btn btn-outline-danger ml-1",
+		},
+		buttonsStyling: false,
+	}).then(function (result) {
+		if (result.value) {
+            $.ajax({
+                type: "DELETE",
+                url: url + "authentication/user-archive",
+                dataType: "JSON",
+                data: { id: id },
+                success: function (data) {
+                    if(data.success){
+                        Swal.fire(
+                            'Success!',
+                            data.message,
+                            'success'
+                        ).then(function(){
+                            location.href = url_extended + 'settings';
+                        });
+                    }
+                },
+                error: function () {}
+            });
+        }
+    })
+}

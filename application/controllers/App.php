@@ -14,6 +14,9 @@ class App extends CI_Controller {
 			if(strpos(strtoupper($sess['role']), 'ADMIN') !== false){
                 return redirect(base_url('admin'), 'refresh');
             }
+            if(strpos(strtoupper($sess['role']), 'STANDARD') !== false){
+                return redirect(base_url('standard'), 'refresh');
+            }
 		}else{
 			return redirect(base_url('authentication'), 'refresh');
 		}

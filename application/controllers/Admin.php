@@ -86,6 +86,21 @@ class Admin extends REST_Controller {
 			return redirect(base_url('authentication'), 'refresh');
 		}
     }
+    
+    public function lead_record_get() {
+		if($this->session->userdata('uf_session')){
+            $sess = $this->session->userdata('uf_session');
+            if(strpos(strtoupper($sess['role']), 'ADMIN') !== false){
+                $this->header('View Record');
+                $this->load->view('admin/lead-record');
+                $this->footer();
+            }else{
+                return redirect(base_url('app'), 'refresh');
+            }
+		}else{
+			return redirect(base_url('authentication'), 'refresh');
+		}
+    }
 
     // functions
     public function pie_chart_get(){
@@ -93,11 +108,25 @@ class Admin extends REST_Controller {
         $this->returns($result);
     }
 
-    public function load_lead_record_get() {
-        $result = $this->admin_model->get_load_lead_record();
+    public function load_lead_records_get() {
+        $result = $this->admin_model->get_load_lead_records();
         $this->returns($result);
     }
 
+    public function load_lead_record_get() {
+        $result = $this->admin_model->get_load_lead_record($this->get('sequence'));
+        $this->returns($result);
+    }
+
+    public function load_not_lead_record_get() {
+        $result = $this->admin_model->get_load_not_lead_record();
+        $this->returns($result);
+    }
+
+    public function load_allocated_lead_record_get() {
+        $result = $this->admin_model->get_load_allocated_lead_record();
+        $this->returns($result);
+    }
 
     public function search_lead_get(){
         $data = [
@@ -145,8 +174,8 @@ class Admin extends REST_Controller {
 		}
     }
 
-    public function load_user_record_get() {
-        $result = $this->admin_model->get_load_user_record();
+    public function load_users_record_get() {
+        $result = $this->admin_model->get_load_users_record();
         $this->returns($result);
     }
     

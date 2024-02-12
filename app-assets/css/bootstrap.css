@@ -5463,6 +5463,9 @@ button.bg-dark:focus {
   display: block;
   clear: both;
   content: ""; }
+.text-dark-white {
+  color: #d0d2d6;
+}
 
 .d-none {
   display: none !important; }

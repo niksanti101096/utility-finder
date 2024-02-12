@@ -56,7 +56,7 @@
                             <h4>Fields to Display</h4>
                             <div class="row">
                                 <div class="form-group col-12">
-                                    <select class="form_control select2" name="allocated_leads_filter_display[]" id="allocated-leads-filter-display" multiple="true" onchange="loadLeads()">
+                                    <select class="form_control select2" name="allocated_leads_filter_display[]" id="allocated-leads-filter-display" multiple="true" onchange="loadLeadsRecords()">
                                         <option value="1">Lead ID</option>
                                         <option value="2">Business Name</option>
                                         <option value="3">Phone</option>
@@ -106,5 +106,5 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/admin/allocated-leads.js"></script>
 <!-- END: Content-->
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/admin/allocated-leads.js"></script>

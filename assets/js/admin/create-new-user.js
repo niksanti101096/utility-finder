@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    $('#create-new-user-form').submit(function(e) {
+    $('#user-form').submit(function(e) {
         e.preventDefault();
         $.blockUI({
             message:
@@ -14,19 +14,19 @@ $(document).ready(function() {
                 opacity: 0.8
             }
         });
-        console.log($("#create-new-user-form").serialize());
+        
         $.ajax({
 			type: "POST",
 			url: url + "authentication/create-new-user", 
 			dataType: "JSON",
-			data: $("#create-new-user-form").serialize(),
+			data: $("#user-form").serialize(),
             success: function (response) {
                 if(response.success){
                     setTimeout(() => {
                         Swal.fire('Success!', 'Successfully created new user.', 'success').then(function () {
-                            location.href = url_extended + 'settings/';
+                            location.href = url_extended + 'settings';
                             $.unblockUI();
-                            $("#create-new-user-modal").modal("hide");
+                            $("#user-modal").modal("hide");
                         });
                     }, 2000);
                 }else{

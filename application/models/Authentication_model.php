@@ -24,8 +24,21 @@ Class Authentication_Model extends CI_Model {
         }
     }
 
-    public function create_new_user($data) {
-        $data['password'] = password_hash($data['password'],PASSWORD_BCRYPT);
-        return $this->db->insert('users', $data);
+    public function user_records($data) {
+        if($data['user_id'] !== 0){
+            unset($data['password']);
+            $this->db->where('user_id', $data['user_id'])->update('users', $data);
+            return true;
+        }else{
+            $data['password'] = password_hash($data['password'],PASSWORD_BCRYPT);
+            $this->db->insert('users', $data);
+            return $this->db->insert_id() ? ['user_id' => $this->db->insert_id()] : false;
+        }
+        return true;
+    }
+
+    public function delete_user($id) {
+        $this->db->where('user_id', $id)->update('users', array('status' => 0));
+        return $this->db->affected_rows() ? true : false;
     }
 }

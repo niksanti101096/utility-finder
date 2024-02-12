@@ -20,8 +20,23 @@ Class Admin_Model extends CI_Model {
         return $this->db->insert('lead_records', $data);
     }
 
-    public function get_load_lead_record(){
+    public function get_load_lead_records(){
         $query = $this->db->select('*')->from('lead_records')->where('status !=', 0)->get()->result();
+        return $query ? array('data' => $query) : false;
+    }
+
+    public function get_load_lead_record($sequence){
+        $query = $this->db->select('*')->from('lead_records')->where('sequence =', $sequence)->get()->result();
+        return $query ? array('data' => $query) : false;
+    }
+
+    public function get_load_not_lead_record(){
+        $query = $this->db->select('*')->from('lead_records')->where('status =', 1)->get()->result();
+        return $query ? array('data' => $query) : false;
+    }
+
+    public function get_load_allocated_lead_record(){
+        $query = $this->db->select('*')->from('lead_records')->where('status =', 2)->get()->result();
         return $query ? array('data' => $query) : false;
     }
 
@@ -56,7 +71,7 @@ Class Admin_Model extends CI_Model {
         return $query->num_rows();
     }
 
-    public function get_load_user_record(){
+    public function get_load_users_record(){
         $query = $this->db->select('*')->from('users')->where('status !=', 0)->get()->result();
         return $query ? array('data' => $query) : false;
     }

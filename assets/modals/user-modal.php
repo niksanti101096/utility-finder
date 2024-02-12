@@ -54,16 +54,17 @@
     }
 </style>
 
-<div class="modal fade text-left" id="create-new-user-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
+<div class="modal fade text-left" id="user-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel1">Create New User</h4>
+                <h4 class="modal-title" id="myModalLabel1" id="modal-title">Create New User</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="create-new-user-form">
+            <form id="user-form">
+                <input type="hidden" name="user_id">
                 <div class="modal-body">
                     <div class="form form-horizontal">
                         <div class="row pt-0">
@@ -79,11 +80,11 @@
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 d-flex align-items-center">
-                                        <label class="col-form-label" for="new-user-salutation">Salutation</label>
+                                        <label class="col-form-label" for="salutation">Salutation</label>
                                     </div>
                                     <div class="col-sm-9 d-flex align-items-center">
                                         <div class="col-12 p-0">
-                                            <select class="select2 form-control form-control-lg col-12" id="new-user-salutation" name="new_user_salutation">
+                                            <select class="select2 form-control form-control-lg col-12" id="salutation" name="salutation">
                                                 <option value=""></option>
                                                 <option value="Mr">Mr</option>
                                                 <option value="Ms">Ms</option>
@@ -98,31 +99,31 @@
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 d-flex align-items-center">
-                                        <label class="col-form-label" for="new-user-firstname">Firstname</label>
+                                        <label class="col-form-label" for="firstname">Firstname</label>
                                     </div>
                                     <div class="col-sm-9 d-flex align-items-center">
-                                        <input type="text" id="new-user-firstname" class="form-control" name="new_user_firstname" placeholder="John"/>
+                                        <input type="text" id="firstname" class="form-control" name="firstname" placeholder="..."/>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 d-flex align-items-center">
-                                        <label class="col-form-label" for="new-user-lastname">Lastname</label>
+                                        <label class="col-form-label" for="lastname">Lastname</label>
                                     </div>
                                     <div class="col-sm-9 d-flex align-items-center">
-                                        <input type="text" id="new-user-lastname" class="form-control" name="new_user_lastname" placeholder="Doe"/>
+                                        <input type="text" id="lastname" class="form-control" name="lastname" placeholder="..."/>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 d-flex align-items-center">
-                                        <label class="col-form-label" for="new-user-department">Department</label>
+                                        <label class="col-form-label" for="department">Department</label>
                                     </div>
                                     <div class="col-sm-9 d-flex align-items-center">
                                         <div class="col-12 p-0">
-                                            <select class="select2 form-control form-control-lg col-12" id="new-user-department" name="new_user_department">
+                                            <select class="select2 form-control form-control-lg col-12" id="department" name="department">
                                                 <option value=""></option>
                                                 <option value="Management">Management</option>
                                                 <option value="Staff">Staff</option>
@@ -134,30 +135,30 @@
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 d-flex align-items-center">
-                                        <label class="col-form-label" for="new-user-email">Email</label>
+                                        <label class="col-form-label" for="email">Email</label>
                                     </div>
                                     <div class="col-sm-9 d-flex align-items-center">
-                                        <input type="email" id="new-user-email" class="form-control" name="new_user_email" placeholder="email@mail.com"/>
+                                        <input type="email" id="email" class="form-control" name="email" placeholder="..."/>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 d-flex align-items-center">
-                                        <label class="col-form-label" for="new-user-phone">Phone</label>
+                                        <label class="col-form-label" for="phone">Phone</label>
                                     </div>
                                     <div class="col-sm-9 d-flex align-items-center">
-                                        <input type="number" id="new-user-phone" class="form-control" name="new_user_phone" placeholder="..."/>
+                                        <input type="number" id="phone" class="form-control" name="phone" placeholder="..."/>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 d-flex align-items-center">
-                                        <label class="col-form-label" for="new-user-extention">Extention</label>
+                                        <label class="col-form-label" for="extention">Extention</label>
                                     </div>
                                     <div class="col-sm-9 d-flex align-items-center">
-                                        <input type="text" id="new-user-extention" class="form-control" name="new_user_extention" placeholder="Jr"/>
+                                        <input type="text" id="extention" class="form-control" name="extention" placeholder="..."/>
                                     </div>
                                 </div>
                             </div>
@@ -167,11 +168,11 @@
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 d-flex align-items-center">
-                                        <label class="col-form-label" for="new-user-type">User Type</label>
+                                        <label class="col-form-label" for="type">User Type</label>
                                     </div>
                                     <div class="col-sm-9 d-flex align-items-center">
                                         <div class="col-12 p-0">
-                                            <select class="select2 form-control form-control-lg col-12" id="new-user-type" name="new_user_type">
+                                            <select class="select2 form-control form-control-lg col-12" id="user-type" name="user_type">
                                                 <option value=""></option>
                                                 <option value="1">Admin</option>
                                                 <option value="2">Standard</option>
@@ -183,21 +184,21 @@
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-3 d-flex align-items-center">
-                                        <label class="col-form-label" for="new-user-username">Username</label>
+                                        <label class="col-form-label" for="username">Username</label>
                                     </div>
                                     <div class="col-sm-9 d-flex align-items-center">
-                                        <input type="text" id="new-user-username" class="form-control" name="new_user_username" placeholder="..."/>
+                                        <input type="text" id="username" class="form-control" name="username" placeholder="..."/>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12">
+                            <div class="col-12" id="div-password">
                                 <div class="form-group row">
                                     <div class="col-sm-3 d-flex align-items-center">
-                                        <label class="col-form-label" for="new-user-password">Password</label>
+                                        <label class="col-form-label" for="password">Password</label>
                                     </div>
                                     <div class="col-sm-9 d-flex align-items-center">
                                         <div class="input-group input-group-merge form-password-toggle">
-                                            <input type="password" class="form-control" id="new-user-password" placeholder="..." name="new_user_password" />
+                                            <input type="password" class="form-control" id="password" placeholder="..."/>
                                             <div class="input-group-append">
                                                 <span class="input-group-text cursor-pointer"><i data-feather="eye"></i></span>
                                             </div>
@@ -205,14 +206,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12">
+                            <div class="col-12" id="div-repassword">
                                 <div class="form-group row">
                                     <div class="col-sm-3 d-flex align-items-center">
-                                        <label class="col-form-label" for="new-user-repassword">Confirm Password</label>
+                                        <label class="col-form-label" for="repassword">Confirm Password</label>
                                     </div>
                                     <div class="col-sm-9 d-flex align-items-center">
                                         <div class="input-group input-group-merge form-password-toggle">
-                                            <input type="password" class="form-control" id="new-user-repassword" placeholder="..." name="new_user_repassword" />
+                                            <input type="password" class="form-control" id="repassword" placeholder="..."/>
                                             <div class="input-group-append">
                                                 <span class="input-group-text cursor-pointer"><i data-feather="eye"></i></span>
                                             </div>
@@ -225,7 +226,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Add</button>
+                    <button type="submit" class="btn btn-primary" id="user-btn-add">Add</button>
+                    <button type="button" class="btn btn-primary" id="user-btn-edit" hidden>Edit</button>
+                    <button type="button" class="btn btn-primary" id="user-btn-update" hidden>Update</button>
                 </div>
             </form>
         </div>

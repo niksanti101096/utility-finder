@@ -56,7 +56,7 @@
                             <h4>Fields to Display</h4>
                             <div class="row">
                                 <div class="form-group col-12">
-                                    <select class="form_control select2" name="new_leads_filter_display[]" id="new-leads-filter-display" multiple="true" onchange="loadLeads()">
+                                    <select class="form_control select2" name="new_leads_filter_display[]" id="new-leads-filter-display" multiple="true" onchange="loadNotLeads()">
                                         <option value="1">Lead ID</option>
                                         <option value="2">Business Name</option>
                                         <option value="3">Phone</option>

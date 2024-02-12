@@ -12,9 +12,7 @@ class Authentication extends REST_Controller {
 	{
 		if($this->session->userdata('uf_session')){
 			$sess = $this->session->userdata('uf_session');
-			if(strpos(strtoupper($sess['role']), 'ADMIN') !== false){
-                return redirect(base_url('admin'), 'refresh');
-            }
+            return redirect(base_url('app'), 'refresh');
 		}else{
 			$this->load->view('login'); // return to login if not logged in
 		}
@@ -86,18 +84,19 @@ class Authentication extends REST_Controller {
         if ($this->session->userdata('uf_session')) {
             $sess = $this->session->userdata('uf_session');
             $data = [
-                'salutation' => $this->post('new_user_salutation') ? $this->post('new_user_salutation') : '',
-                'firstname' => $this->post('new_user_firstname') ? $this->post('new_user_firstname') : '',
-                'lastname' => $this->post('new_user_lastname') ? $this->post('new_user_lastname') : '',
-                'department' => $this->post('new_user_department') ? $this->post('new_user_department') : '',
-                'email' => $this->post('new_user_email') ? $this->post('new_user_email') : '',
-                'phone' => $this->post('new_user_phone') ? $this->post('new_user_phone') : '',
-                'extention' => $this->post('new_user_extention') ? $this->post('new_user_extention') : '',
-                'user_type' => $this->post('new_user_type') ? $this->post('new_user_type') : '',
-                'username' => $this->post('new_user_username') ? $this->post('new_user_username') : '',
-                'password' => $this->post('new_user_password') ? $this->post('new_user_password') : '',
+                'user_id' => $this->post('user_id') ? $this->post('user_id') : 0,
+                'salutation' => $this->post('salutation') ? $this->post('salutation') : '',
+                'firstname' => $this->post('firstname') ? $this->post('firstname') : '',
+                'lastname' => $this->post('lastname') ? $this->post('lastname') : '',
+                'department' => $this->post('department') ? $this->post('department') : '',
+                'email' => $this->post('email') ? $this->post('email') : '',
+                'phone' => $this->post('phone') ? $this->post('phone') : '',
+                'extention' => $this->post('extention') ? $this->post('extention') : '',
+                'user_type' => $this->post('user_type') ? $this->post('user_type') : '',
+                'username' => $this->post('username') ? $this->post('username') : '',
+                'password' => $this->post('password') ? $this->post('password') : '',
             ];
-            $result = $this->authentication_model->create_new_user($data);
+            $result = $this->authentication_model->user_records($data);
             if(gettype($result) == "array"){
             $this->response(array('success'=>true,'message'=>'Success'), REST_Controller::HTTP_OK);
         }else{
@@ -107,6 +106,50 @@ class Authentication extends REST_Controller {
                 $this->response(array('success'=>false,'message'=>'Failed Saving'), REST_Controller::HTTP_OK);
             }
         }
+		}else{
+			return redirect(base_url('admin/settings'), 'refresh');
+		}
+    }
+
+    public function update_user_post() {
+        if ($this->session->userdata('uf_session')) {
+            $sess = $this->session->userdata('uf_session');
+            $data = [
+                'user_id' => $this->post('user_id') ? $this->post('user_id') : 0,
+                'salutation' => $this->post('salutation') ? $this->post('salutation') : '',
+                'firstname' => $this->post('firstname') ? $this->post('firstname') : '',
+                'lastname' => $this->post('lastname') ? $this->post('lastname') : '',
+                'department' => $this->post('department') ? $this->post('department') : '',
+                'email' => $this->post('email') ? $this->post('email') : '',
+                'phone' => $this->post('phone') ? $this->post('phone') : '',
+                'extention' => $this->post('extention') ? $this->post('extention') : '',
+                'user_type' => $this->post('user_type') ? $this->post('user_type') : '',
+                'username' => $this->post('username') ? $this->post('username') : '',
+                'password' => $this->post('password') ? $this->post('password') : '',
+            ];
+            $result = $this->authentication_model->user_records($data);
+            if(gettype($result) == "array"){
+            $this->response(array('success'=>true,'message'=>'Success', 'data'=>$data), REST_Controller::HTTP_OK);
+            }else{
+                if($result){
+                    $this->response(array('success'=>true,'message'=>'Successfully saved.','data'=>$data), REST_Controller::HTTP_OK);
+                }else{
+                    $this->response(array('success'=>false,'message'=>'Failed Saving'), REST_Controller::HTTP_OK);
+                }
+            }
+		}else{
+			return redirect(base_url('admin/settings'), 'refresh');
+		}
+    }
+    public function user_archive_delete() {
+        if ($this->session->userdata('uf_session')) {
+            $sess = $this->session->userdata('uf_session');
+            $result = $this->authentication_model->delete_user($this->delete('id'));
+            if($result){
+                $this->response(array('success'=>true,'message'=>'Successfully deleted user.'), REST_Controller::HTTP_OK);
+            }else{
+                $this->response(array('success'=>false,'message'=>'Failed deleting user!'), REST_Controller::HTTP_OK);
+            }
 		}else{
 			return redirect(base_url('admin/settings'), 'refresh');
 		}
