@@ -5,15 +5,15 @@ Class Admin_Model extends CI_Model {
         $result = [];
         $this->db->select('*');
         $this->db->from('lead_records');
-        if($data['search_lead_id_number'] != '') $this->db->where('lead_id_number', $data['search_lead_id_number']);
-        if($data['search_business_name'] != '') $this->db->where('business_name', $data['search_business_name']);
-        if($data['search_post_code'] != '') $this->db->where('post_code', $data['search_post_code']);
-        if($data['search_contact_name'] != '') $this->db->where('contact_name', $data['search_contact_name']);
-        if($data['search_phone_number'] != '') $this->db->where('phone_number', $data['search_phone_number']);
-        if($data['search_email'] != '') $this->db->where('email_address', $data['search_email']);
+        if($data['lead_id'] != '') $this->db->where('lead_id', $data['lead_id']);
+        if($data['business_name'] != '') $this->db->where('business_name', $data['business_name']);
+        if($data['post_code'] != '') $this->db->where('post_code', $data['post_code']);
+        if($data['contact_name'] != '') $this->db->where('contact_name', $data['contact_name']);
+        if($data['phone_number'] != '') $this->db->where('phone_number', $data['phone_number']);
+        if($data['email_address'] != '') $this->db->where('email_address', $data['email_address']);
 
         $query = $this->db->get()->result();
-        return $query ? array('data'=>$query) : false;
+        return $query ? array('data' => $query) : false;
     }
 
     public function create_new_lead($data){
@@ -21,12 +21,12 @@ Class Admin_Model extends CI_Model {
     }
 
     public function get_load_lead_records(){
-        $query = $this->db->select('*')->from('lead_records')->where('status !=', 0)->get()->result();
+        $query = $this->db->select('*')->from('lead_records lr')->join('partner_records pr', 'lr.partner_id = pr.partner_id', 'left')->where('lr.status !=', 0)->get()->result();
         return $query ? array('data' => $query) : false;
     }
 
     public function get_load_lead_record($sequence){
-        $query = $this->db->select('*')->from('lead_records')->where('sequence =', $sequence)->get()->result();
+        $query = $this->db->select('*')->from('lead_records lr')->join('partner_records pr', 'lr.partner_id = pr.partner_id', 'left')->where('lr.sequence =', $sequence)->get()->result();
         return $query ? array('data' => $query) : false;
     }
 
@@ -38,6 +38,16 @@ Class Admin_Model extends CI_Model {
     public function get_load_allocated_lead_record(){
         $query = $this->db->select('*')->from('lead_records')->where('status =', 2)->get()->result();
         return $query ? array('data' => $query) : false;
+    }
+
+    public function get_load_partner_details($partner_id){
+        $query = $this->db->select('*')->from('partner_records')->where('partner_id =', $partner_id)->get()->result();
+        return $query ? array('data' => $query, 'success' => true) : false;
+    }
+
+    public function get_load_all_partners(){
+        $query = $this->db->select('*')->from('partner_records')->get()->result();
+        return $query ? array('data' => $query, 'success' => true) : false;
     }
 
     public function get_hits_allocation($date_from, $date_to){

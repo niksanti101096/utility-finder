@@ -59,7 +59,8 @@
     <script src="<?php echo base_url('app-assets/js/scripts/tables/table-datatables-basic.js');?>"></script>
     <script src="<?php echo base_url('app-assets/js/scripts/extensions/ext-component-sweet-alerts.js');?>"></script>
     <script src="<?php echo base_url('app-assets/js/scripts/components/components-popovers.js');?>"></script>
-    <script src="<?php echo base_url('assets/js/horizontal-menu-search.js'); ?>"></script>
+
+    <script src="<?php echo base_url('assets/js/menu-search.js'); ?>"></script>
     <script src="<?php echo base_url('assets/js/create-new-lead.js'); ?>"></script>
     <script src="<?php echo base_url('assets/js/chart.js'); ?>"></script>
     <!-- END: Page JS-->

@@ -128,14 +128,24 @@ class Admin extends REST_Controller {
         $this->returns($result);
     }
 
+    public function load_partner_details_get() {
+        $result = $this->admin_model->get_load_partner_details($this->get('partner_id'));
+        $this->returns($result);
+    }
+
+    public function load_all_partners_get() {
+        $result = $this->admin_model->get_load_all_partners();
+        $this->returns($result);
+    }
+
     public function search_lead_get(){
         $data = [
-            'search_lead_id_number' => $this->get('search_lead_id_number') ? $this->get('search_lead_id_number') : '',
-            'search_business_name' => $this->get('search_business_name') ? $this->get('search_business_name') : '',
-            'search_post_code' => $this->get('search_post_code') ? $this->get('search_post_code') : '',
-            'search_contact_name' => $this->get('search_contact_name') ? $this->get('search_contact_name') : '',
-            'search_phone_number' => $this->get('search_phone_number') ? $this->get('search_phone_number') : '',
-            'search_email' => $this->get('search_email') ? $this->get('search_email') : '',
+            'lead_id' => $this->get('lead_id') ? $this->get('lead_id') : '',
+            'business_name' => $this->get('business_name') ? $this->get('business_name') : '',
+            'post_code' => $this->get('post_code') ? $this->get('post_code') : '',
+            'contact_name' => $this->get('contact_name') ? $this->get('contact_name') : '',
+            'phone_number' => $this->get('phone_number') ? $this->get('phone_number') : '',
+            'email_address' => $this->get('email_address') ? $this->get('email_address') : '',
         ];
         $result = $this->admin_model->get_lead_search($data);
         $this->returns($result);

@@ -89,6 +89,7 @@ function loadLeads() {
         data: {},
         success: function (response) {
             if (response.data.length > 0) {
+                console.log(response.data);
                 response.data.forEach(function (data) {
                     leadRecords.push(data);
                 });
@@ -131,15 +132,7 @@ function loadLeads() {
                                 else return "Allocated";
                             }
                         },
-                        {
-                            data: null,
-                            render: function(data, type, row) {
-                                if (row.status == 1) {
-                                    return "";
-                                }
-                                return "Admin";
-                            }
-                        },
+                        {data: "partner_name"},
                         {
                             data: null,
                             render: function (data, type, row) {
@@ -188,7 +181,6 @@ function metricHits(type = "date range") {
         error: function () {},
     });
 }
-
 
 function viewLeadRecord(id) {
 	location.href = url_extended + "lead-record/" + id;

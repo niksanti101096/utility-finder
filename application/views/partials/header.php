@@ -232,3 +232,4 @@
     <?php include_once('assets/modals/search-lead-records-modal.php'); ?>
     <?php include_once('assets/modals/create-new-lead-modal.php'); ?>
     <?php include_once('assets/modals/notification-modal.php'); ?>
+    <?php include_once('assets/modals/search-lead-result-modal.php'); ?>

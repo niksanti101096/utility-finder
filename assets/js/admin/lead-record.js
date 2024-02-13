@@ -33,11 +33,27 @@ var supplierWater = '<option value=""></option>';
     supplierWater += '<option value="Yu Water">Yu Water</option>';
     supplierWater += '<option value="Other">Other</option>';
 
+var partnerName;
+var leadID;
+var partnerID;
+
 $(document).ready(function () {
     loadLeadRecord(sequence);
 
-    $('.btn-allocate-lead').click(function() {
+    $('.btn-allocate-lead').click(function(e) {
         $('#allocate-lead-modal').modal('show');
+        $('.allocated-lead-label').attr('hidden', true);
+        $('.unallocated-lead-label').attr('hidden', false);
+        $('.modal-title').html('Allocate Lead ' + leadID);
+    });
+
+    $('.btn-reallocate-lead').click(function(e) {
+        $('#allocate-lead-modal').modal('show');
+        $('.allocated-lead-label span').html(partnerName);
+        $('.allocated-lead-label').attr('hidden', false);
+        $('.unallocated-lead-label').attr('hidden', true);
+        $('.modal-title').html('Reallocate Lead ' + leadID);
+        loadAllPartners();
     });
 });
 
@@ -51,22 +67,34 @@ function loadLeadRecord(sequence) {
             if (response) {
                 var div = "#lead-details";
                 var data = response.data[0];
-
+                leadID = response.data[0]['lead_id'];
+                partnerID = response.data[0]['partner_id'];
                 var selectedSupplier = "";
 
-                $('#content-header-title').html('Lead ID: '+response.data[0]['lead_id']+' / '+response.data[0]['business_name']);
+                $('#content-header-title').html('Lead ID: '+leadID+' / '+response.data[0]['business_name']);
 
                 const status = response.data[0]['status'];
+                
+                $('.btn-edit-lead').attr('hidden', false);
+                $('.btn-archive-lead').attr('hidden', false);
                 if (status == 1) {
                     $('#status').html('Unallocated');
-                    $('.btn-allocate-lead').removeAttr('hidden');
+                    $('.btn-allocate-lead').attr('hidden', false);
                     $('.btn-reallocate-lead').attr('hidden', true);
+                    $('.re-allocate-label').attr('hidden', true);
                 } else if (status == 2) {
+                    loadPartnerDetails();
                     $('#status').html("Allocated");
-                    $('.btn-reallocate-lead').removeAttr('hidden');
                     $('.btn-allocate-lead').attr('hidden', true);
+                    $('.btn-reallocate-lead').attr('hidden', false);
+                    $('.re-allocate-label').attr('hidden', false);
                 } else {
                     $('#status').html("Deleted");
+                    $('.btn-allocate-lead').attr('hidden', true);
+                    $('.btn-reallocate-lead').attr('hidden', true);
+                    $('.re-allocate-label').attr('hidden', true);
+                    $('.btn-edit-lead').attr('hidden', true);
+                    $('.btn-archive-lead').attr('hidden', true);
                 }
 
                 $('#current-supplier').append(supplierWater + supplierElect);
@@ -105,8 +133,42 @@ function loadLeadRecord(sequence) {
     });
 }
 
+function loadPartnerDetails() {
+    $.ajax({
+        type: "GET",
+        url: url + "admin/load-partner-details", 
+        dataType: "JSON",
+        data: {partner_id: partnerID},
+        success: function (response) {
+            if (response.success) {
+                partnerName = response.data[0]['partner_name'];
+                $('#allocated-to').html(response.data[0]['partner_name']);
+            }
+        }
+    });
+}
+
 function newLeadTypeValues() {
     $('#current-supplier').empty();                                
     if ($("#lead-details [name=lead_type][value=5]").is(':checked')) $('#current-supplier').append(supplierWater);
     else $('#current-supplier').append(supplierElect);
+}
+
+function loadAllPartners() {
+    var allocateOptions;
+    $.ajax({
+        type: "GET",
+        url: url + "admin/load-all-partners",
+        dataType: "JSON",
+        data: {},
+        success: function (response) {
+            allocateOptions = '<option value=""></option>';
+            for (const key in response.data) {
+                if (response.data[key]['partner_id'] != partnerID) {
+                    allocateOptions += '<option value="'+response.data[key]['partner_id']+'">'+response.data[key]['partner_name']+'</option>';
+                }
+            }
+            $('#allocate-lead').html(allocateOptions);
+        }
+    });
 }

@@ -13,16 +13,7 @@
                         <div class="col-12">
                             <div class="form-group row">
                                 <div class="col-sm-8">
-                                    <label class="col-form-label" for="search-lead-id-number">New lead received by Contact Form</label>
-                                </div>
-                                <div class="col-sm-4">
-                                    <button class="btn btn-secondary btn-sm">Clear</button>
-                                    <button class="btn btn-success btn-sm">View</button>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-sm-8">
-                                    <label class="col-form-label" for="search-lead-id-number">New PPC Lead Received</label>
+                                    <label class="col-form-label">Still work in progress</label>
                                 </div>
                                 <div class="col-sm-4">
                                     <button class="btn btn-secondary btn-sm">Clear</button>
