@@ -10,18 +10,6 @@ $(document).ready(function () {
 
 	$("#search-lead-records-form").submit(function (e) {
         e.preventDefault();
-        // $.blockUI({
-        //     message:
-        //         '<div class="d-flex justify-content-center align-items-center"><p class="mr-50 mb-0">Searching...</p> <div class="spinner-grow spinner-grow-sm text-white" role="status"></div> </div>',
-        //     css: {
-        //         backgroundColor: 'transparent',
-        //         color: '#fff',
-        //         border: '0'
-        //     },
-        //     overlayCSS: {
-        //         opacity: 0.8
-        //     }
-        // });
         $('#btn-search').attr('hidden', true);
         $('#btn-search-disabled').removeAttr('hidden');
         $('#search-lead-records-modal').modal({backdrop:'static', keyboard:false});
@@ -48,10 +36,8 @@ function loadLeadRecords() {
                 response.data.forEach(function (data) {
                     leadRecords.push(data);
                 });
-                // $.unblockUI();
                 searchLeadRecordsTable();
             } else {
-                // $.unblockUI();
                 noRecordFound();
             }
             

@@ -47,8 +47,33 @@
                                     <div class="col-sm-2 d-flex align-items-center">
                                         <label class="col-form-label"  for="new-lead-source">Source</label>
                                     </div>
+                                    <div class="col-sm-10 d-flex flex-wrap align-items-center justify-content-start">
+                                        <!-- <input type="text" id="new-lead-source" class="form-control" name="new_lead_source" placeholder="..." /> -->
+                                        <div class="custom-control custom-radio flex-fill">
+                                            <input type="radio" id="new-lead-source-manual" name="new_lead_source_radio" class="custom-control-input" value="1" onclick="newLeadSourceClick()">
+                                            <label for="new-lead-source-manual" class="custom-control-label">Manual Entry</label>
+                                        </div>
+                                        <div class="custom-control custom-radio flex-fill">
+                                            <input type="radio" id="new-lead-source-webform" name="new_lead_source_radio" class="custom-control-input" value="Webform" onclick="newLeadSourceClick()">
+                                            <label for="new-lead-source-webform" class="custom-control-label">Webform</label>
+                                        </div>
+                                        <div class="custom-control custom-radio flex-fill">
+                                            <input type="radio" id="new-lead-source-ppc" name="new_lead_source_radio" class="custom-control-input" value="PPC" onclick="newLeadSourceClick()">
+                                            <label for="new-lead-source-ppc" class="custom-control-label">PPC</label>
+                                        </div>
+                                        <div class="custom-control custom-radio flex-fill">
+                                            <input type="radio" id="new-lead-email-campaign" name="new_lead_source_radio" class="custom-control-input" value="Email Campaign" onclick="newLeadSourceClick()">
+                                            <label for="new-lead-email-campaign" class="custom-control-label">Email Campaign</label>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <div class="col-sm-2 d-flex align-items-center"></div>
                                     <div class="col-sm-10 d-flex align-items-center">
-                                        <input type="text" id="new-lead-source" class="form-control" name="new_lead_source" placeholder="..." />
+                                        <input type="text" id="new-lead-source" class="form-control" name="new_lead_source" placeholder="..." hidden/>
                                     </div>
                                 </div>
                             </div>
@@ -99,6 +124,7 @@
                                         <div class="col-12 p-0">
                                             <select class="select2 form-control" name="new_lead_contract_end_date" id="new-lead-contract-end-date">
                                                 <option value=""></option>
+                                                <option value="Out of Contract">Out of Contract</option>
                                                 <option value="January">January</option>
                                                 <option value="February">February</option>
                                                 <option value="March">March</option>

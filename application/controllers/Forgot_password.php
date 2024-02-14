@@ -52,6 +52,7 @@ class Forgot_Password extends REST_Controller {
 				$mail->AddAddress(trim($user_email));
 
 				// Send email
+				
 				if($mail->send()){
 					$this->authentication_model->reset_password($user_id, $new_password);
 					$data = array(
@@ -62,7 +63,8 @@ class Forgot_Password extends REST_Controller {
 				}else{
 					$data = array(
 						'success' => false,
-						'message' => 'Something went wrong while sending email. Please contact your administrator.'
+						// 'message' => $mail->ErrorInfo,
+						'message' => 'Something went wrong while sending email. Please contact your administrator.',
 					);
 					$this->load->view('forgot-password', $data);
 				}

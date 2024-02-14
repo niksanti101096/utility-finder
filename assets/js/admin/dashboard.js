@@ -89,7 +89,6 @@ function loadLeads() {
         data: {},
         success: function (response) {
             if (response.data.length > 0) {
-                console.log(response.data);
                 response.data.forEach(function (data) {
                     leadRecords.push(data);
                 });

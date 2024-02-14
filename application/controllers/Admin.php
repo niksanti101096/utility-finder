@@ -118,8 +118,8 @@ class Admin extends REST_Controller {
         $this->returns($result);
     }
 
-    public function load_not_lead_record_get() {
-        $result = $this->admin_model->get_load_not_lead_record();
+    public function load_not_lead_records_get() {
+        $result = $this->admin_model->get_load_not_lead_records();
         $this->returns($result);
     }
 
@@ -171,14 +171,14 @@ class Admin extends REST_Controller {
 
             $result = $this->admin_model->create_new_lead($data);
             if(gettype($result) == "array"){
-            $this->response(array('success'=>true,'message'=>'Success', 'id' => $result['id']), REST_Controller::HTTP_OK);
-        }else{
-            if($result){
-                $this->response(array('success'=>true,'message'=>'Successfully saved.'), REST_Controller::HTTP_OK);
-            }else{
-                $this->response(array('success'=>false,'message'=>'Failed Saving'), REST_Controller::HTTP_OK);
+                $this->response(array('success'=>true,'message'=>'Success', 'id' => $result['id']), REST_Controller::HTTP_OK);
+            } else {
+                if($result){
+                    $this->response(array('success'=>true,'message'=>'Successfully saved.'), REST_Controller::HTTP_OK);
+                } else {
+                    $this->response(array('success'=>false,'message'=>'Failed Saving'), REST_Controller::HTTP_OK);
+                }
             }
-        }
 		}else{
 			return redirect(base_url('admin'), 'refresh');
 		}
@@ -188,5 +188,28 @@ class Admin extends REST_Controller {
         $result = $this->admin_model->get_load_users_record();
         $this->returns($result);
     }
-    
+
+    public function assign_partner_post() {
+        if($this->session->userdata('uf_session')){
+            $sess = $this->session->userdata('uf_session');
+            $data = [
+                'status' => 2,
+                'partner_id' => $this->post('partner_id'),
+                'allocated_by' => $sess['id'],
+            ];
+            $result = $this->admin_model->post_assign_partner($data, $this->post('lead_id'));
+            if($result){
+                if ($this->post('lead_status') == 1) {
+                    $returnMessage = 'Successfully allocated lead!';
+                } else {
+                    $returnMessage = 'Successfully reallocated lead!';
+                }
+                $this->response(array('success'=>true,'message'=>$returnMessage), REST_Controller::HTTP_OK);
+            } else {
+                $this->response(array('success'=>false,'message'=>'Something went wrong!'), REST_Controller::HTTP_OK);
+            }
+        } else {
+			return redirect(base_url('admin'), 'refresh');
+		}
+    }
 }

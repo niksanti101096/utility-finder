@@ -109,7 +109,20 @@ function newLeadTypeClick() {
     supplierWater += '<option value="Yu Water">Yu Water</option>';
     supplierWater += '<option value="Other">Other</option>';
 
-    $('#new-lead-supplier').empty();                                
+    $('#new-lead-supplier').empty();
     if ($("#create-new-lead-form [name=new_lead_type][value=5]").is(':checked')) $('#new-lead-supplier').append(supplierWater);
     else $('#new-lead-supplier').append(supplierElect);
+}
+
+function newLeadSourceClick() {
+    const leadSourceValue = $("#create-new-lead-form [name=new_lead_source_radio]:checked").val();
+    $('#new-lead-source').attr('hidden', false);
+    $('#new-lead-source').attr('disabled', false);
+    $('#new-lead-source').val('');
+    if ($('#create-new-lead-form [name=new_lead_source_radio][value=1]').is(':checked')) {
+        $('#new-lead-source').attr('placeholder','Enter Lead Source or Enter Incoming Lead!');
+    } else {
+        $('#new-lead-source').val(leadSourceValue);
+        $('#new-lead-source').attr('disabled', true);
+    }
 }

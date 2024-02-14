@@ -30,8 +30,8 @@ Class Admin_Model extends CI_Model {
         return $query ? array('data' => $query) : false;
     }
 
-    public function get_load_not_lead_record(){
-        $query = $this->db->select('*')->from('lead_records')->where('status =', 1)->get()->result();
+    public function get_load_not_lead_records(){
+        $query = $this->db->select('*')->from('lead_records lr')->join('partner_records pr', 'lr.partner_id = pr.partner_id', 'left')->where('lr.status =', 1)->get()->result();
         return $query ? array('data' => $query) : false;
     }
 
@@ -85,4 +85,10 @@ Class Admin_Model extends CI_Model {
         $query = $this->db->select('*')->from('users')->where('status !=', 0)->get()->result();
         return $query ? array('data' => $query) : false;
     }
+    
+    public function post_assign_partner($data, $lead_id){
+        $query = $this->db->where('lead_id', $lead_id)->update('lead_records', $data);
+        return $query ? true : false;
+    }
+
 }

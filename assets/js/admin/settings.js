@@ -235,7 +235,7 @@ function deleteUser(id) {
                             data.message,
                             'success'
                         ).then(function(){
-                            location.href = url_extended + 'settings';
+                            loadUserRecords();
                         });
                     }
                 },

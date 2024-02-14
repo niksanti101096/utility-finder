@@ -23,6 +23,17 @@ Class Authentication_Model extends CI_Model {
             }
         }
     }
+    
+    public function reset_password($user_id, $password) {
+        $this->db->where('user_id',$user_id);
+        $this->db->update('users', array('password'=>$password));
+        return $this->db->affected_rows() > 0 ? 'Successfully Changed Password.' : false;
+    }
+
+    public function check_email_exists($email) {
+        $query = $this->db->select('user_id')->from('users')->where('email', $email)->where('status', 1)->get()->result();
+        return $query ? true : false;
+    }
 
     public function user_records($data) {
         if($data['user_id'] !== 0){

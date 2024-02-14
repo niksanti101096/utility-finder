@@ -36,6 +36,7 @@ var supplierWater = '<option value=""></option>';
 var partnerName;
 var leadID;
 var partnerID;
+var lead_status;
 
 $(document).ready(function () {
     loadLeadRecord(sequence);
@@ -44,7 +45,11 @@ $(document).ready(function () {
         $('#allocate-lead-modal').modal('show');
         $('.allocated-lead-label').attr('hidden', true);
         $('.unallocated-lead-label').attr('hidden', false);
-        $('.modal-title').html('Allocate Lead ' + leadID);
+        $('.allocate-title-modal').html('Allocate Lead ' + leadID);
+        $('#btn-allocate').attr('hidden', false);
+        $('#btn-reallocate').attr('hidden', true);
+        $('#btn-allocate-disabled').attr('hidden', true);
+        loadAllPartners();
     });
 
     $('.btn-reallocate-lead').click(function(e) {
@@ -52,8 +57,28 @@ $(document).ready(function () {
         $('.allocated-lead-label span').html(partnerName);
         $('.allocated-lead-label').attr('hidden', false);
         $('.unallocated-lead-label').attr('hidden', true);
-        $('.modal-title').html('Reallocate Lead ' + leadID);
+        $('.allocate-title-modal').html('Reallocate Lead ' + leadID);
+        $('#btn-allocate').attr('hidden', true);
+        $('#btn-reallocate').attr('hidden', false);
+        $('#btn-allocate-disabled').attr('hidden', true);
         loadAllPartners();
+    });
+
+    $('#btn-allocate , #btn-reallocate').click(function() {
+        const partnerVal = $('#allocate-lead').val();
+        if (partnerVal != "") {
+            $('#btn-allocate-disabled').attr('hidden', false);
+            $('#btn-allocate').attr('hidden', true);
+            $('#btn-reallocate').attr('hidden', true);
+            allocateLead(partnerVal);
+        } else {
+            Swal.fire(
+                'Oppss..',
+                'Please select a partner!',
+                'warning'
+            );
+        }
+        
     });
 });
 
@@ -73,16 +98,16 @@ function loadLeadRecord(sequence) {
 
                 $('#content-header-title').html('Lead ID: '+leadID+' / '+response.data[0]['business_name']);
 
-                const status = response.data[0]['status'];
+                lead_status = response.data[0]['status'];
                 
                 $('.btn-edit-lead').attr('hidden', false);
                 $('.btn-archive-lead').attr('hidden', false);
-                if (status == 1) {
+                if (lead_status == 1) {
                     $('#status').html('Unallocated');
                     $('.btn-allocate-lead').attr('hidden', false);
                     $('.btn-reallocate-lead').attr('hidden', true);
                     $('.re-allocate-label').attr('hidden', true);
-                } else if (status == 2) {
+                } else if (lead_status == 2) {
                     loadPartnerDetails();
                     $('#status').html("Allocated");
                     $('.btn-allocate-lead').attr('hidden', true);
@@ -169,6 +194,38 @@ function loadAllPartners() {
                 }
             }
             $('#allocate-lead').html(allocateOptions);
+        }
+    });
+}
+
+function allocateLead(partnerVal) {
+    $.ajax({
+        type: "POST",
+        url: url + "admin/assign-partner",
+        dataType: "JSON",
+        data: {
+            partner_id : partnerVal,
+            lead_id : leadID,
+            lead_status: lead_status,
+        },
+        success: function (response) {
+            if (response.success) {
+                Swal.fire(
+                    response.message,
+                    '',
+                    'success',
+                ).then(() => {
+                    $('#btn-allocate-disabled').attr('hidden', true);
+                    $('#allocate-lead-modal').modal('hide');
+                    loadLeadRecord(sequence);
+                });
+            } else {
+                Swal.fire(
+                    response.message,
+                    '',
+                    'error',
+                );
+            }
         }
     });
 }
