@@ -46,7 +46,7 @@ class Admin extends REST_Controller {
 		if($this->session->userdata('uf_session')){
             $sess = $this->session->userdata('uf_session');
             if(strpos(strtoupper($sess['role']), 'ADMIN') !== false){
-                $this->header('Admin New Leads');
+                $this->header('New Leads');
                 $this->load->view('admin/new-leads');
                 $this->footer();
             }else{
@@ -61,8 +61,23 @@ class Admin extends REST_Controller {
 		if($this->session->userdata('uf_session')){
             $sess = $this->session->userdata('uf_session');
             if(strpos(strtoupper($sess['role']), 'ADMIN') !== false){
-                $this->header('Admin Allocated Leads');
+                $this->header('Allocated Leads');
                 $this->load->view('admin/allocated-leads');
+                $this->footer();
+            }else{
+                return redirect(base_url('app'), 'refresh');
+            }
+		}else{
+			return redirect(base_url('authentication'), 'refresh');
+		}
+    }
+
+    public function archived_leads_get() {
+		if($this->session->userdata('uf_session')){
+            $sess = $this->session->userdata('uf_session');
+            if(strpos(strtoupper($sess['role']), 'ADMIN') !== false){
+                $this->header('Archived Leads');
+                $this->load->view('admin/archived-leads');
                 $this->footer();
             }else{
                 return redirect(base_url('app'), 'refresh');
@@ -165,20 +180,60 @@ class Admin extends REST_Controller {
                 'contact_name' => $this->post('new_lead_contact_name') ? $this->post('new_lead_contact_name') : '',
                 'phone_number' => $this->post('new_lead_phone_number') ? $this->post('new_lead_phone_number') : '',
                 'email_address' => $this->post('new_lead_email') ? $this->post('new_lead_email') : '',
-                'notes' => $this->post('new_lead_notes') ? $this->post('new_lead_notes') : '',
                 'created_by' => $sess['id'],
             ];
 
             $result = $this->admin_model->create_new_lead($data);
             if(gettype($result) == "array"){
-                $this->response(array('success'=>true,'message'=>'Success', 'id' => $result['id']), REST_Controller::HTTP_OK);
-            } else {
-                if($result){
-                    $this->response(array('success'=>true,'message'=>'Successfully saved.'), REST_Controller::HTTP_OK);
+                $notes = $this->post('new_lead_notes');
+                $lead_sequence = $result['id'];
+                $id = $sess['id'];
+                if ($notes != "") {
+                    $data = [
+                        'lead_sequence' => $lead_sequence,
+                        'notes' => $notes,
+                        'notes_added_by' => $id
+                    ];
+                    $result = $this->admin_model->post_save_notes($data);
+                    if ($result) {
+                        $this->response(array('success'=>true,'message'=>'Successfully Created Lead.'), REST_Controller::HTTP_OK);
+                    } else {
+                        $this->response(array('success'=>false,'message'=>'Failed Saving'), REST_Controller::HTTP_OK);
+                    }
                 } else {
-                    $this->response(array('success'=>false,'message'=>'Failed Saving'), REST_Controller::HTTP_OK);
+                    $this->response(array('success'=>true,'message'=>'Successfully Created Lead.'), REST_Controller::HTTP_OK);
                 }
+            } else {
+                $this->response(array('success'=>false,'message'=>'Failed Saving'), REST_Controller::HTTP_OK);
             }
+		}else{
+			return redirect(base_url('admin'), 'refresh');
+		}
+    }
+
+    public function update_lead_record_post(){
+        if($this->session->userdata('uf_session')){
+            $sess = $this->session->userdata('uf_session');
+            $data = [
+                'lead_source' => $this->post('lead_source') ? $this->post('lead_source') : '',
+                'lead_type' => $this->post('lead_type') ? $this->post('lead_type') : '',
+                'current_supplier' => $this->post('current_supplier') ? $this->post('current_supplier') : '',
+                'current_contract_ends' => $this->post('current_contract_ends') ? $this->post('current_contract_ends') : '',
+                'business_name' => $this->post('business_name') ? $this->post('business_name') : '',
+                'post_code' => $this->post('post_code') ? $this->post('post_code') : '',
+                'contact_name' => $this->post('contact_name') ? $this->post('contact_name') : '',
+                'phone_number' => $this->post('phone_number') ? $this->post('phone_number') : '',
+                'email_address' => $this->post('email_address') ? $this->post('email_address') : '',
+            ];
+            $lead_sequence = $this->post('lead_sequence');
+            $result = $this->admin_model->post_update_lead_record($data, $lead_sequence);
+
+            if ($result) {
+                $this->response(array('success'=>true,'message'=>'Successfully Updated Lead.'), REST_Controller::HTTP_OK);
+            } else {
+                $this->response(array('success'=>false,'message'=>'Failed Updating Lead'), REST_Controller::HTTP_OK);
+            }
+            
 		}else{
 			return redirect(base_url('admin'), 'refresh');
 		}
@@ -212,4 +267,34 @@ class Admin extends REST_Controller {
 			return redirect(base_url('admin'), 'refresh');
 		}
     }
+
+    public function load_notes_get() {
+        $result = $this->admin_model->get_load_notes($this->get('lead_sequence'));
+        $this->returns($result);
+    }
+
+    public function save_note_post() {
+        $sess = $this->session->userdata('uf_session');
+        $data = [
+            'lead_sequence' => $this->post('lead_sequence'),
+            'notes' => $this->post('notes'),
+            'notes_added_by' => $sess['id'],
+        ];
+        $result = $this->admin_model->post_save_notes($data);
+        if ($result) {
+            $this->response(array('success'=>true,'message'=>'Successfully Added Note.'), REST_Controller::HTTP_OK);
+        } else {
+            $this->response(array('success'=>false,'message'=>'Failed Adding Note.'), REST_Controller::HTTP_OK);
+        }
+    }
+
+    public function archive_lead_post() {
+        $result = $this->admin_model->post_archive_lead($this->post('lead_sequence'));
+        if ($result) {
+            $this->response(array('success'=>true,'message'=>'Successfully Archived Lead!'), REST_Controller::HTTP_OK);
+        } else {
+            $this->response(array('success'=>true,'message'=>'Something went wrong!'), REST_Controller::HTTP_OK);
+        }
+    }
+    
 }

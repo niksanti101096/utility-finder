@@ -71,7 +71,7 @@ function loadLeadsRecords() {
                         {data: "business_name"},
                         {data: "phone_number"},
                         {data: "email_address"},
-                        {data: "date_created"},
+                        {data: "current_contract_ends"},
                         {data: "lead_source"},
                         {
                             data: null,
@@ -80,6 +80,7 @@ function loadLeadsRecords() {
                                 else return "Allocated";
                             }
                         },
+                        {data: "partner_name"},
                         {
                             data: null,
                             render: function (data, type, row) {
@@ -90,11 +91,15 @@ function loadLeadsRecords() {
                                 )
                             }
                         },
+                        {
+                            data: "date_created",
+                            visible: false,
+                        }, // this column is for sorting only
                     ],
                     select: true,
                     displayLength: 50,
                     lengthMenu: [50, 75, 100],
-                    order: [[4, 'desc']],
+                    order: [[9, 'desc']],
                     "paging": false,
                     "info": false,
                     "filter": false,

@@ -50,6 +50,8 @@ function loadLeadRecords() {
 function searchLeadRecordsTable(){
     $('#search-lead-result-modal').modal('show');
     $('#lead-search-result-table tbody').empty();
+    $('#search-result-modal').removeClass('modal-dialog-centered');
+    $('#search-result-modal').addClass('modal-dialog-scrollable');
     leadRecords.forEach(element => {
         var btn = '<button type="button" class="btn btn-success btn-sm" onclick="viewLeadRecord('+element.sequence+')">Go to Lead</button>';
         var status;
@@ -84,6 +86,8 @@ function searchLeadRecordsTable(){
 function noRecordFound() {
     $('#search-lead-result-modal').modal('show');
     $('#lead-search-result-table tbody').empty();
+    $('#search-result-modal').addClass('modal-dialog-centered');
+    $('#search-result-modal').removeClass('modal-dialog-scrollable');
     tdTable =
         '<tr>'+
             '<td colspan=5 class="text-center"> No records found! </td>'+

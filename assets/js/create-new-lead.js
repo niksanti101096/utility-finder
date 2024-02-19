@@ -57,7 +57,7 @@ $(document).ready(function () {
             success: function (response) {
                 if(response.success){
                     setTimeout(() => {
-                        Swal.fire('Success!', 'Successfully created new lead!', 'success').then(function () {
+                        Swal.fire('Success!', response.message, 'success').then(function () {
                             $.unblockUI();
                             $('#create-new-lead-modal').modal('hide');
                             location.href = url_extended;

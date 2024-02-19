@@ -94,7 +94,7 @@ function loadNotLeads() {
                         {data: "business_name"},
                         {data: "phone_number"},
                         {data: "email_address"},
-                        {data: "date_created"},
+                        {data: "current_contract_ends"},
                         {data: "lead_source"},
                         {
                             data: null,
@@ -116,11 +116,15 @@ function loadNotLeads() {
                                 )
                             }
                         },
+                        {
+                            data: "date_created",
+                            visible: false,
+                        }, // this column is for sorting only
                     ],
                     select: true,
                     displayLength: 50,
                     lengthMenu: [50, 75, 100],
-                    order: [[4, 'desc']],
+                    order: [[8, 'desc']],
                     "paging": false,
                     "info": false,
                     "filter": false,

@@ -34,9 +34,13 @@ var supplierWater = '<option value=""></option>';
     supplierWater += '<option value="Other">Other</option>';
 
 var partnerName;
+var lead_sequence;
 var leadID;
 var partnerID;
 var lead_status;
+var tdTable;
+var note;
+var oldSource;
 
 $(document).ready(function () {
     loadLeadRecord(sequence);
@@ -80,7 +84,97 @@ $(document).ready(function () {
         }
         
     });
+
+    $('#btn-save-note').click(function() {
+        $('#btn-save-note').attr('hidden', true);
+        $('#btn-save-disabled').attr('hidden', false);
+
+        if ($('#lead-note-form #lead-notes').val() == "") {
+            Swal.fire(
+                'You should add some notes!',
+                "",
+                'info'
+            );
+            $('#btn-save-note').attr('hidden', false);
+            $('#btn-save-disabled').attr('hidden', true);
+        } else {
+            Swal.fire({
+                title: "Do you want to add the note?",
+                showDenyButton: true,
+                confirmButtonText: "Add",
+                denyButtonText: `Don't add`
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    setTimeout(() => {
+                        saveNote();
+                    }, 1000);
+                } else if (result.isDenied) {
+                    $('#btn-save-note').attr('hidden', false);
+                    $('#btn-save-disabled').attr('hidden', true);
+                }
+            });
+        }
+    });
+
+    $('#btn-edit-lead').click(function() {
+        $('.btn-update-cancel-lead').attr('hidden',false);
+        $('#btn-edit-lead').attr('hidden',true);
+        $('#lead-record-form input, #lead-record-form select').attr('disabled', false);
+        $('#lead-id, #date-created').attr('disabled', true);
+        $('.btn-allocate-lead, .re-allocate-label').attr('disabled', true);
+    });
+
+    $('.btn-cancel-edit, #nav-lead-details').click(function() {
+        $('.btn-update-cancel-lead').attr('hidden',true);
+        $('#btn-edit-lead').attr('hidden',false);
+        $('#lead-record-form input, #lead-record-form select').attr('disabled', true);
+        $('.btn-allocate-lead, .re-allocate-label').attr('disabled', false);
+        loadLeadRecord(sequence);
+    });
+
+    $('#btn-update-lead').click(function() {
+        $.blockUI({
+            message:
+                '<div class="d-flex justify-content-center align-items-center"><p class="mr-50 mb-0">Updating lead record...</p> <div class="spinner-grow spinner-grow-sm text-white" role="status"></div> </div>',
+            css: {
+                backgroundColor: 'transparent',
+                color: '#fff',
+                border: '0'
+            },
+            overlayCSS: {
+                opacity: 0.8
+            }
+        });
+        setTimeout(() => {
+            saveUpdatedLead();
+        }, 1500);
+    });
+
+    $('#btn-archive-lead').click(function() {
+        Swal.fire({
+            title: "Are you sure to delete this lead?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showDenyButton: true,
+            confirmButtonText: "Yes",
+            denyButtonText: `Cancel`
+        }).then((result) => {
+            if (result.isConfirmed) {
+                archiveLead();
+            } else if (result.isDenied) {
+                Swal.fire(
+                    'The lead is safe!',
+                    '',
+                    'info',
+                );
+            }
+        });
+    });
 });
+
+
+// functions
+
 
 function loadLeadRecord(sequence) {
     $.ajax({
@@ -92,6 +186,7 @@ function loadLeadRecord(sequence) {
             if (response) {
                 var div = "#lead-details";
                 var data = response.data[0];
+                lead_sequence = response.data[0]['sequence'];
                 leadID = response.data[0]['lead_id'];
                 partnerID = response.data[0]['partner_id'];
                 var selectedSupplier = "";
@@ -142,6 +237,19 @@ function loadLeadRecord(sequence) {
                         if (key == 'current_supplier') {
                             selectedSupplier = data[key];
                         }
+                        if (key == 'lead_source') {
+                            oldSource = data[key];
+                            $(div + " [name=" + key + "]").val(data[key]);
+                            if ($('#lead-source').val() == "Email Campaign") {
+                                $("#lead-email-campaign").prop('checked', true);
+                            } else if ($('#lead-source').val() == "PPC") {
+                                $("#lead-source-ppc").prop('checked', true);
+                            } else if ($('#lead-source').val() == "Webform") {
+                                $("#lead-source-webform").prop('checked', true);
+                            } else {
+                                $("#lead-source-manual").prop('checked', true);
+                            }
+                        }
                         if($(div + " [name="+key+"]").hasClass('select2')){
                             $(div + " [name="+key+"]").val(data[key]).change();
                         } else {
@@ -149,6 +257,9 @@ function loadLeadRecord(sequence) {
                         }
                     }
                 }
+
+                loadNotes();
+                leadSourceClick();
                 setTimeout(() => {
                     newLeadTypeValues();
                     $(div + " [name=current_supplier]").val(selectedSupplier).change();
@@ -228,4 +339,140 @@ function allocateLead(partnerVal) {
             }
         }
     });
+}
+
+function loadNotes() {
+    $.ajax({
+        type: "GET",
+        url: url + "admin/load-notes",
+        dataType: "JSON",
+        data: {
+            lead_sequence : lead_sequence,
+        },
+        success: function (response) {
+            $('#notes-table tbody').empty();
+            if (response.data.length > 0) {
+                response.data.forEach(element => {
+
+                    const dateNow = new Date(element.notes_date_created),
+                        month = '' + ("0" + (dateNow.getMonth() + 1)).slice(-2),
+                        day = '' + ("0" + dateNow.getDate()).slice(-2),
+                        year = dateNow.getFullYear();
+                    tdTable = 
+                        '<tr>'+
+                            '<td>'+[year,month,day].join('-')+'</td>'+
+                            '<td>'+element.notes+'</td>'+
+                            '<td>'+element.user+'</td>'+
+                    '</tr>';
+                    $('#notes-table tbody').append(tdTable);
+                });
+            } else {
+                tdTable = 
+                    '<tr>'+
+                        '<td colspan=3 class="text-center">No notes found!</td>'+
+                '</tr>';
+                $('#notes-table tbody').append(tdTable);
+            }
+        }
+    });
+}
+
+function saveNote() {
+    $.ajax({
+        type: "POST",
+        url: url + "admin/save-note",
+        dataType: "JSON",
+        data: $('#lead-note-form').serialize() + "&lead_sequence=" + lead_sequence,
+        success: function (response) {
+            if (response.success) {
+                Swal.fire(
+                    response.message,
+                    "",
+                    'success'
+                );
+                loadLeadRecord(sequence);
+                $('textarea#lead-notes').val("");
+                $('#btn-save-note').attr('hidden', false);
+                $('#btn-save-disabled').attr('hidden', true);
+            } else {
+                Swal.fire(
+                    response.message,
+                    "",
+                    'error'
+                );
+            }
+        }
+    });
+}
+
+function saveUpdatedLead() {
+    $.ajax({
+        type: "POST",
+        url: url + "admin/update-lead-record",
+        dataType: "JSON",
+        data: $('#lead-record-form').serialize() + "&lead_sequence=" + lead_sequence,
+        success: function (response) {
+            if (response.success) {
+                Swal.fire(
+                    response.message,
+                    '',
+                    'success'
+                );
+                $('.btn-update-cancel-lead').attr('hidden',true);
+                $('#btn-edit-lead').attr('hidden',false);
+                $('#lead-record-form input, #lead-record-form select').attr('disabled', true);
+                $('.btn-allocate-lead, .re-allocate-label').attr('disabled', false);
+                loadLeadRecord(sequence);
+                $.unblockUI();
+            } else {
+                Swal.fire(
+                    response.message,
+                    '',
+                    'error'
+                );
+                $.unblockUI();
+            }
+        }
+    });
+}
+
+function archiveLead() {
+    $.ajax({
+        type: "POST",
+        url: url + "admin/archive-lead",
+        dataType: "JSON",
+        data: {
+            lead_sequence: lead_sequence,
+        },
+        success: function(response) {
+            if (response.success) {
+                Swal.fire({
+                    title: response.message,
+                    confirmButtonText: "Proceed",
+                    icon: "success",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.href = url_extended + "dasboard";
+                    }
+                });
+            } else {
+                Swal.fire(
+                    response.message,
+                    '',
+                    'error'
+                );
+            }
+        }
+    });
+}
+
+function leadSourceClick() {
+    const leadSourceValue = $("#lead-record-form [name=lead_source_radio]:checked").val();
+    if ($('#lead-record-form [name=lead_source_radio][value=1]').is(':checked')) {
+        $('#lead-source').val(oldSource);
+    } else {
+        $('#lead-source').val(leadSourceValue);
+    }
 }

@@ -113,16 +113,16 @@ function loadLeads() {
                         {data: "business_name"},
                         {data: "phone_number"},
                         {data: "email_address"},
-                        {data: "date_created"},
-                        {
-                            data: null,
-                            render: function(data, type, row) {
-                                if(row.lead_type == 2) return "Electricity & Gas";
-                                if(row.lead_type == 3) return "Gas";
-                                if(row.lead_type == 4) return "Electricity";
-                                if(row.lead_type == 5) return "Water";
-                            }
-                        },
+                        {data: "current_contract_ends"},
+                        // {
+                        //     data: null,
+                        //     render: function(data, type, row) {
+                        //         if(row.lead_type == 2) return "Electricity & Gas";
+                        //         if(row.lead_type == 3) return "Gas";
+                        //         if(row.lead_type == 4) return "Electricity";
+                        //         if(row.lead_type == 5) return "Water";
+                        //     }
+                        // },
                         {data: "lead_source"},
                         {
                             data: null,
@@ -141,6 +141,10 @@ function loadLeads() {
                                 )
                             }
                         },
+                        {
+                            data: "date_created",
+                            visible: false,
+                        }, // this column is for sorting only
                     ],
                     select: true,
                     buttons: [
@@ -152,7 +156,7 @@ function loadLeads() {
                     ],
                     displayLength: 50,
                     lengthMenu: [50, 75, 100],
-                    order: [[4, 'desc']],
+                    order: [[9, 'desc']],
                 });
             }
         },

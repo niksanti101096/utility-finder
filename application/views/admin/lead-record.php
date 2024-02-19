@@ -12,8 +12,9 @@
                     <div class="ml-auto">
                         <button type="button" class="btn btn-primary btn-allocate-lead" hidden>Allocate</button>
                         <button type="button" class="btn btn-primary btn-reallocate-lead" hidden>Reallocate</button>
-                        <button type="button" class="btn mx-1 btn-warning btn-edit-lead" hidden>Edit</button>
-                        <button type="button" class="btn btn-danger btn-archive-lead" hidden>Archive</button>
+                        <button type="button" class="btn mx-1 btn-warning btn-edit-lead" id="btn-edit-lead" hidden>Edit</button>
+                        <button type="button" class="btn btn-danger mx-1 btn-update-cancel-lead btn-cancel-edit" hidden>Cancel</button>
+                        <button type="button" class="btn btn-danger btn-archive-lead" id="btn-archive-lead" hidden>Archive</button>
                     </div>
                 </div>
             </div>
@@ -65,14 +66,48 @@
                                                 <div class="col-sm-2 d-flex align-items-center">
                                                     <label class="col-form-label" for="lead-source">Source</label>
                                                 </div>
-                                                <div class="col-sm-10 d-flex align-items-center">
-                                                    <input type="text" id="lead-source" class="form-control" name="lead_source" placeholder="..." disabled />
+                                                <div class="col-sm-10 d-flex flex-wrap align-items-center justify-content-start">
+                                                    <div class="custom-control custom-radio flex-fill">
+                                                        <input type="radio" id="lead-source-manual" name="lead_source_radio" class="custom-control-input" value="1" onclick="leadSourceClick()" disabled>
+                                                        <label for="lead-source-manual" class="custom-control-label">Manual Entry</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio flex-fill">
+                                                        <input type="radio" id="lead-source-webform" name="lead_source_radio" class="custom-control-input" value="Webform" onclick="leadSourceClick()" disabled>
+                                                        <label for="lead-source-webform" class="custom-control-label">Webform</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio flex-fill">
+                                                        <input type="radio" id="lead-source-ppc" name="lead_source_radio" class="custom-control-input" value="PPC" onclick="leadSourceClick()" disabled>
+                                                        <label for="lead-source-ppc" class="custom-control-label">PPC</label>
+                                                    </div>
+                                                    <div class="custom-control custom-radio flex-fill">
+                                                        <input type="radio" id="lead-email-campaign" name="lead_source_radio" class="custom-control-input" value="Email Campaign" onclick="leadSourceClick()" disabled>
+                                                        <label for="lead-email-campaign" class="custom-control-label">Email Campaign</label>
+                                                    </div>
+                                                    
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-12">
+                                            <div class="form-group row">
+                                                <div class="col-sm-2 d-flex align-items-center"></div>
+                                                <div class="col-sm-10 d-flex align-items-center">
+                                                    <input type="text" id="lead-source" class="form-control" name="lead_source" placeholder="..." disabled/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="col-12">
+                                            <div class="form-group row">
+                                                <div class="col-sm-2 d-flex align-items-center">
+                                                    <label class="col-form-label" for="lead-source">Source</label>
+                                                </div>
+                                                <div class="col-sm-10 d-flex align-items-center">
+                                                    <input type="text" id="lead-source" class="form-control" name="lead_source" placeholder="..." disabled />
+                                                </div>
+                                            </div>
+                                        </div> -->
+                                        <div class="col-12">
                                             <h4 class="text-decoration-underline">
-                                                Details
+                                                Additional Details
                                             </h4>
                                         </div>
                                         <div class="col-12">
@@ -195,13 +230,48 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12">
-                                            <h4 class="text-decoration-underline">
-                                                Notes
-                                            </h4>
+                                        <div class="col-12 d-flex justify-content-between">
+                                            <div class="form-group row flex-fill justify-content-center">
+                                                <button type="button" class="btn btn-warning btn-update-cancel-lead" id="btn-update-lead" hidden>Update Lead</button>
+                                                <button type="button" class="btn btn-danger ml-1 btn-update-cancel-lead btn-cancel-edit" hidden>Cancel</button>
+                                            </div>
                                         </div>
-                                        <div class="col-12">
-                                            <textarea class="form-control" id="notes" name="notes" placeholder="Add Note..." disabled></textarea>
+                                        
+                                    </div>
+                                </form>
+                                <form id="lead-note-form" name="lead_note_form">
+                                    <div class="col-12 p-0">
+                                        <h4 class="text-decoration-underline">
+                                            Notes
+                                        </h4>
+                                    </div>
+                                    <div class="col-12 p-0">
+                                        <div class="table-responsive">
+                                            <table class="table" id="notes-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="10%">Date</th>
+                                                        <th width="70%">Notes</th>
+                                                        <th width="20%">User</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mt-1 p-0">
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <textarea class="form-control" id="lead-notes" name="notes" placeholder="Add Note..."></textarea>
+                                            </div>
+                                            <div class="col-md-2 d-flex justify-content-center align-items-center">
+                                                <button type="button" class="btn btn-success" id="btn-save-note">Save Note</button>
+                                                <button class="btn btn-success" type="button" id="btn-save-disabled" disabled hidden>
+                                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                                    <span class="ml-25 align-middle">Loading...</span>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </form>

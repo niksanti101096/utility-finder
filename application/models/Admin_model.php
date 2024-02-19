@@ -17,7 +17,17 @@ Class Admin_Model extends CI_Model {
     }
 
     public function create_new_lead($data){
-        return $this->db->insert('lead_records', $data);
+        $this->db->insert('lead_records', $data);
+        return $this->db->insert_id() ? ['id' => $this->db->insert_id()] : false;
+    }
+
+    public function post_update_lead_record($data, $lead_sequence){
+        $query = $this->db->where('sequence', $lead_sequence)->update('lead_records', $data);
+        return $query ? true : false;
+    }
+
+    public function post_save_notes($data){
+        return $this->db->insert('notes', $data);
     }
 
     public function get_load_lead_records(){
@@ -36,7 +46,7 @@ Class Admin_Model extends CI_Model {
     }
 
     public function get_load_allocated_lead_record(){
-        $query = $this->db->select('*')->from('lead_records')->where('status =', 2)->get()->result();
+        $query = $this->db->select('*')->from('lead_records lr')->join('partner_records pr', 'lr.partner_id = pr.partner_id', 'left')->where('lr.status =', 2)->get()->result();
         return $query ? array('data' => $query) : false;
     }
 
@@ -88,6 +98,16 @@ Class Admin_Model extends CI_Model {
     
     public function post_assign_partner($data, $lead_id){
         $query = $this->db->where('lead_id', $lead_id)->update('lead_records', $data);
+        return $query ? true : false;
+    }
+
+    public function get_load_notes($lead_sequence){
+        $query = $this->db->select('n.notes_date_created, n.notes, CONCAT(u.firstname," ", u.lastname) AS user')->from('notes n')->join('users u', 'n.notes_added_by = u.user_id')->where('n.lead_sequence =', $lead_sequence)->get()->result();
+        return $query ? array('data' => $query) : false;
+    }
+
+    public function post_archive_lead($lead_sequence) {
+        $query = $this->db->set('status', 0)->where('sequence', $lead_sequence)->update('lead_records');
         return $query ? true : false;
     }
 

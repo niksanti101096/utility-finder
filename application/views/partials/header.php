@@ -195,7 +195,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link d-flex align-items-center" href="<?php echo base_url('admin'); ?>" data-i18n="Archived Leads">
+                        <a class="nav-link d-flex align-items-center" href="<?php echo base_url('admin/archived-leads'); ?>" data-i18n="Archived Leads">
                             <i data-feather="user-minus"></i>
                             <span data-i18n="Archived Leads">Archived Leads</span>
                         </a>

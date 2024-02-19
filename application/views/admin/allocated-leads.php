@@ -82,9 +82,11 @@
                                                             <th>Business Name</th>
                                                             <th>Phone</th>
                                                             <th>Email</th>
-                                                            <th>Date</th>
-                                                            <th>Source</th>
+                                                            <th>Contract End</th>
+                                                            <!-- <th>Lead Type</th> -->
+                                                            <th>Lead Source</th>
                                                             <th>Status</th>
+                                                            <th>Allocated to</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </thead>
