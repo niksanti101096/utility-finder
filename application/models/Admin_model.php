@@ -45,6 +45,11 @@ Class Admin_Model extends CI_Model {
         return $query ? array('data' => $query) : false;
     }
 
+    public function get_load_archiived_lead_records(){
+        $query = $this->db->select('*')->from('lead_records')->where('status =', 0)->get()->result();
+        return $query ? array('data' => $query) : false;
+    }
+
     public function get_load_allocated_lead_record(){
         $query = $this->db->select('*')->from('lead_records lr')->join('partner_records pr', 'lr.partner_id = pr.partner_id', 'left')->where('lr.status =', 2)->get()->result();
         return $query ? array('data' => $query) : false;
@@ -73,22 +78,28 @@ Class Admin_Model extends CI_Model {
         return ['hits' => $hits, 'not_allocated' => $not_allocated, 'allocated' => $allocated];
     }
 
-    public function get_count_hits(){
-        $this->db->where('status !=', 0);
-        $query = $this->db->get('lead_records');
-        return $query->num_rows();
-    }
+    public function get_leads_lead_source($date_from, $date_to){
+        $manual_entry = $this->db->where('status !=', 0)
+            ->where('date_created BETWEEN "'.$date_from.'" AND "'.$date_to.'"')
+            ->where_not_in('lead_source', ['Webform', 'PPC', 'Email Campaign'])
+            ->get('lead_records')->num_rows();
 
-    public function get_count_not_yet_allocated(){
-        $this->db->where('status =', 1);
-        $query = $this->db->get('lead_records');
-        return $query->num_rows();
-    }
+        $webform = $this->db->where('status !=', 0)
+            ->where('date_created BETWEEN "'.$date_from.'" AND "'.$date_to.'"')
+            ->where('lead_source =', 'Webform')
+            ->get('lead_records')->num_rows();
 
-    public function get_count_allocated(){
-        $this->db->where('status =', 2);
-        $query = $this->db->get('lead_records');
-        return $query->num_rows();
+        $ppc = $this->db->where('status !=', 0)
+            ->where('date_created BETWEEN "'.$date_from.'" AND "'.$date_to.'"')
+            ->where('lead_source =', 'PPC')
+            ->get('lead_records')->num_rows();
+
+        $email_campaign = $this->db->where('status !=', 0)
+            ->where('date_created BETWEEN "'.$date_from.'" AND "'.$date_to.'"')
+            ->where('lead_source =', 'Email Campaign')
+            ->get('lead_records')->num_rows();
+
+        return ['manual_entry' => $manual_entry, 'webform' => $webform, 'ppc' => $ppc, 'email_campaign' => $email_campaign];
     }
 
     public function get_load_users_record(){
@@ -96,8 +107,8 @@ Class Admin_Model extends CI_Model {
         return $query ? array('data' => $query) : false;
     }
     
-    public function post_assign_partner($data, $lead_id){
-        $query = $this->db->where('lead_id', $lead_id)->update('lead_records', $data);
+    public function post_assign_partner($data, $lead_sequence){
+        $query = $this->db->where('sequence', $lead_sequence)->update('lead_records', $data);
         return $query ? true : false;
     }
 

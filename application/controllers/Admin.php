@@ -138,6 +138,11 @@ class Admin extends REST_Controller {
         $this->returns($result);
     }
 
+    public function load_archived_lead_records_get() {
+        $result = $this->admin_model->get_load_archiived_lead_records();
+        $this->returns($result);
+    }
+
     public function load_allocated_lead_record_get() {
         $result = $this->admin_model->get_load_allocated_lead_record();
         $this->returns($result);
@@ -252,7 +257,7 @@ class Admin extends REST_Controller {
                 'partner_id' => $this->post('partner_id'),
                 'allocated_by' => $sess['id'],
             ];
-            $result = $this->admin_model->post_assign_partner($data, $this->post('lead_id'));
+            $result = $this->admin_model->post_assign_partner($data, $this->post('lead_sequence'));
             if($result){
                 if ($this->post('lead_status') == 1) {
                     $returnMessage = 'Successfully allocated lead!';

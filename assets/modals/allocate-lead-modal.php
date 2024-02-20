@@ -9,6 +9,8 @@
             </div>
             <div class="modal-body">
                 <div class="row">
+                    <input type="hidden" name="lead_sequence" id="lead-sequence">
+                    <input type="hidden" name="lead_status" id="lead-status">
                     <div class="col-12">
                         <div class="row">
                             <div class="col-sm-7">

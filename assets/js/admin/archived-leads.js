@@ -1,0 +1,79 @@
+var leadTable;
+var archivedLeads;
+
+$(document).ready(function () {
+    defaultFieldsDisplay();
+
+});
+
+function defaultFieldsDisplay() {
+    $("#archived-leads-filter-display").val([1,2,3,4,5,6,7,8]).change();
+}
+
+function loadArchivedLeads() {
+
+    archivedLeads = [];
+    
+    $.ajax({
+        type: "GET",
+        url: url + "admin/load-archived-lead-records", 
+        dataType: "JSON",
+        data: {},
+        success: function (response) {
+            if (response.data.length > 0) {
+                response.data.forEach(function (data) {
+                    archivedLeads.push(data);
+                });
+                
+
+                $("#list-leads-table").DataTable().destroy();
+                leadTable = $("#list-leads-table").DataTable({
+                    responsive: true,
+                    initComplete : function( settings, json ) {
+                        $('.datatable-leads-title').html('Leads');
+                        $('.datatable-leads-title').addClass('h1');
+                        $('.datatable-leads-title').css('color','inherit');
+                },
+                    data: archivedLeads,
+                    columns: [
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+                                return `${row.lead_id}`;
+                            }
+                        },
+                        {data: "business_name"},
+                        {data: "phone_number"},
+                        {data: "email_address"},
+                        {data: "current_contract_ends"},
+                        {data: "lead_source"},
+                        {
+                            data: null,
+                            render: function(data, type, row) {
+                                if(row.status == 0) return "Archived";
+                                else return "Error";
+                            }
+                        },
+                    ],
+                    select: true,
+                    displayLength: 50,
+                    lengthMenu: [50, 75, 100],
+                    "paging": false,
+                    "info": false,
+                    "filter": false,
+                });
+
+                for (let index = 0; index < 7; index++) {
+                    leadTable.column(index).visible(false);
+                }
+
+                var columns = $('#archived-leads-filter-display').val();
+
+                columns.forEach(element => {
+                    leadTable.column(parseInt(element) - 1).visible(true);
+                });
+            };
+        },
+        error : function() {},
+    });
+}

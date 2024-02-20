@@ -55,7 +55,7 @@
                                                     <input type="date" class="form-control" id="hits-allocation-to" name="hits_allocation_to" disabled>
                                                 </div>
                                                 <div>
-                                                    <button class="btn btn-sm btn-primary" type="button" id="hits-allocation-btn-submit" style="display:none;" onclick="metricHits()">Submit</button>
+                                                    <button class="btn btn-sm btn-primary" type="button" id="hits-allocation-btn-submit" style="display:none;" onclick="metricHits()">Filter</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -126,7 +126,7 @@
                                                     <input type="date" class="form-control" id="leads-lead-source-to" name="leads_lead_source_to" disabled>
                                                 </div>
                                                 <div>
-                                                    <button class="btn btn-sm btn-primary" type="button" id="leads-lead-source-btn-submit" style="display:none;">Submit</button>
+                                                    <button class="btn btn-sm btn-primary" type="button" id="leads-lead-source-btn-submit" style="display:none;" onclick="leadsByLeadSource()">Filter</button>
                                                 </div>
                                             </div>
                                         </div>

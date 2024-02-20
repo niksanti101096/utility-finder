@@ -1,8 +1,5 @@
 var leadTable;
 var notAllocatedLeads;
-var leadId;
-var partnerId;
-var leadStatus;
 
 $(document).ready(function () {
     defaultFieldsDisplay();
@@ -50,9 +47,6 @@ $(document).ready(function () {
         }
         
     });
-
-    
-
 });
 
 function defaultFieldsDisplay() {
@@ -111,20 +105,15 @@ function loadNotLeads() {
                                 leadStatus= row.status;
                                 return (
                                     '<button type="button" class="btn btn-success btn-sm w-100" onclick="viewLeadRecord('+row.sequence+')">View</button>' +
-                                    '<button type="button" class="btn btn-secondary btn-sm w-100" onclick="loadAllocateModal()">Allocate</button>' +
-                                    '<button type="button" class="btn btn-danger btn-sm w-100">Archive</button>'
+                                    '<button type="button" class="btn btn-secondary btn-sm w-100" onclick="loadReallocateModal(\''+encodeURIComponent(JSON.stringify(data))+'\')">Allocate</button>' +
+                                    '<button type="button" class="btn btn-danger btn-sm w-100" onclick="archiveLead('+row.sequence+')">Archive</button>'
                                 )
                             }
                         },
-                        {
-                            data: "date_created",
-                            visible: false,
-                        }, // this column is for sorting only
                     ],
                     select: true,
                     displayLength: 50,
                     lengthMenu: [50, 75, 100],
-                    order: [[8, 'desc']],
                     "paging": false,
                     "info": false,
                     "filter": false,
@@ -148,18 +137,22 @@ function viewLeadRecord(id) {
 	location.href = url_extended + "lead-record/" + id;
 }
 
-function loadAllocateModal() {
+function loadReallocateModal(encryptedData) {
+    const data = JSON.parse(decodeURIComponent(encryptedData));
+
     $('#allocate-lead-modal').modal('show');
     $('.allocated-lead-label').attr('hidden', true);
     $('.unallocated-lead-label').attr('hidden', false);
-    $('.allocate-title-modal').html('Allocate Lead ' + leadId);
+    $('.allocate-title-modal').html('Allocate Lead ' + data.lead_id);
     $('#btn-allocate').attr('hidden', false);
     $('#btn-reallocate').attr('hidden', true);
     $('#btn-allocate-disabled').attr('hidden', true);
-    loadAllPartners(partnerId);
+    $('#lead-sequence').val(data.sequence);
+    $('#lead-status').val(data.status);
+    loadAllPartners(data.partner_id);
 }
 
-function loadAllPartners(partnerID) {
+function loadAllPartners(partnerId) {
     var allocateOptions;
     $.ajax({
         type: "GET",
@@ -169,7 +162,7 @@ function loadAllPartners(partnerID) {
         success: function (response) {
             allocateOptions = '<option value=""></option>';
             for (const key in response.data) {
-                if (response.data[key]['partner_id'] != partnerID) {
+                if (response.data[key]['partner_id'] != partnerId) {
                     allocateOptions += '<option value="'+response.data[key]['partner_id']+'">'+response.data[key]['partner_name']+'</option>';
                 }
             }
@@ -179,14 +172,16 @@ function loadAllPartners(partnerID) {
 }
 
 function allocateLead(partnerVal) {
+    const sequence = $('#lead-sequence').val();
+    const lead_status = $('#lead-status').val();
     $.ajax({
         type: "POST",
         url: url + "admin/assign-partner",
         dataType: "JSON",
         data: {
             partner_id : partnerVal,
-            lead_id : leadId,
-            lead_status: leadStatus,
+            lead_sequence : sequence,
+            lead_status: lead_status,
         },
         success: function (response) {
             if (response.success) {
@@ -206,6 +201,55 @@ function allocateLead(partnerVal) {
                     'error',
                 );
             }
+        }
+    });
+}
+
+function archiveLead(id) {
+    Swal.fire({
+        title: "Are you sure to delete this lead?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showDenyButton: true,
+        confirmButtonText: "Yes",
+        denyButtonText: `Cancel`
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: "POST",
+                url: url + "admin/archive-lead",
+                dataType: "JSON",
+                data: {
+                    lead_sequence: id,
+                },
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: response.message,
+                            confirmButtonText: "Proceed",
+                            icon: "success",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                loadNotLeads();
+                            }
+                        });
+                    } else {
+                        Swal.fire(
+                            response.message,
+                            '',
+                            'error'
+                        );
+                    }
+                }
+            });
+        } else if (result.isDenied) {
+            Swal.fire(
+                'The lead is safe!',
+                '',
+                'info',
+            );
         }
     });
 }

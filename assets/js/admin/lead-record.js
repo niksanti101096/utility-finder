@@ -34,7 +34,6 @@ var supplierWater = '<option value=""></option>';
     supplierWater += '<option value="Other">Other</option>';
 
 var partnerName;
-var lead_sequence;
 var leadID;
 var partnerID;
 var lead_status;
@@ -186,7 +185,6 @@ function loadLeadRecord(sequence) {
             if (response) {
                 var div = "#lead-details";
                 var data = response.data[0];
-                lead_sequence = response.data[0]['sequence'];
                 leadID = response.data[0]['lead_id'];
                 partnerID = response.data[0]['partner_id'];
                 var selectedSupplier = "";
@@ -316,7 +314,7 @@ function allocateLead(partnerVal) {
         dataType: "JSON",
         data: {
             partner_id : partnerVal,
-            lead_id : leadID,
+            lead_sequence : sequence,
             lead_status: lead_status,
         },
         success: function (response) {
@@ -347,7 +345,7 @@ function loadNotes() {
         url: url + "admin/load-notes",
         dataType: "JSON",
         data: {
-            lead_sequence : lead_sequence,
+            lead_sequence : sequence,
         },
         success: function (response) {
             $('#notes-table tbody').empty();
@@ -382,7 +380,7 @@ function saveNote() {
         type: "POST",
         url: url + "admin/save-note",
         dataType: "JSON",
-        data: $('#lead-note-form').serialize() + "&lead_sequence=" + lead_sequence,
+        data: $('#lead-note-form').serialize() + "&lead_sequence=" + sequence,
         success: function (response) {
             if (response.success) {
                 Swal.fire(
@@ -410,7 +408,7 @@ function saveUpdatedLead() {
         type: "POST",
         url: url + "admin/update-lead-record",
         dataType: "JSON",
-        data: $('#lead-record-form').serialize() + "&lead_sequence=" + lead_sequence,
+        data: $('#lead-record-form').serialize() + "&lead_sequence=" + sequence,
         success: function (response) {
             if (response.success) {
                 Swal.fire(
@@ -442,7 +440,7 @@ function archiveLead() {
         url: url + "admin/archive-lead",
         dataType: "JSON",
         data: {
-            lead_sequence: lead_sequence,
+            lead_sequence: sequence,
         },
         success: function(response) {
             if (response.success) {
@@ -454,7 +452,7 @@ function archiveLead() {
                     allowEscapeKey: false,
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        location.href = url_extended + "dasboard";
+                        location.href = url_extended;
                     }
                 });
             } else {

@@ -12,8 +12,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 // email constants
-define('MAIL_PRECOM_HOST', 'email-smtp.us-east-1.amazonaws.com/');
-define('MAIL_PRECOM_PORT', '25');
+define('MAIL_PRECOM_HOST', 'email-smtp.us-east-1.amazonaws.com');
+define('MAIL_PRECOM_PORT', '465');
 define('MAIL_PRECOM_USERNAME', 'AKIAIPANZD7G2OAHJGNQ');
 define('MAIL_PRECOM_PASSWORD', 'AiBcrgVkW8jZWW/g6Oy0Z4SPkug9Ah4bp6LIhnTQY1ZD');
 define('EMAIL_PRECOM', 'notifications@a2server.co.uk');

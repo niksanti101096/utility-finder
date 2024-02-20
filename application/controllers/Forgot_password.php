@@ -39,7 +39,7 @@ class Forgot_Password extends REST_Controller {
 				$mail->CharSet = 'UTF-8';
 				$mail->Host = MAIL_PRECOM_HOST;
 				$mail->SMTPAuth = true;
-				$mail->SMTPSecure = 'tls';//ssl for gmail testing
+				$mail->SMTPSecure = 'ssl';//ssl for gmail testing
 				$mail->Port = MAIL_PRECOM_PORT;
 				$mail->Username = MAIL_PRECOM_USERNAME;
 				$mail->Password = MAIL_PRECOM_PASSWORD;              
@@ -63,7 +63,6 @@ class Forgot_Password extends REST_Controller {
 				}else{
 					$data = array(
 						'success' => false,
-						// 'message' => $mail->ErrorInfo,
 						'message' => 'Something went wrong while sending email. Please contact your administrator.',
 					);
 					$this->load->view('forgot-password', $data);

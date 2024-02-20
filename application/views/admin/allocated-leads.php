@@ -110,3 +110,5 @@
 </div>
 <!-- END: Content-->
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/admin/allocated-leads.js"></script>
+<!-- Modals -->
+<?php include_once('assets/modals/allocate-lead-modal.php'); ?>

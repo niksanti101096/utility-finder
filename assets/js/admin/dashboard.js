@@ -2,11 +2,14 @@
 var leadTable;
 var leadViewRecord;
 var leadRecords;
+var dashboardChart;
 
 $(document).ready(function () {
 
     loadLeads();
+    dashboardGraph();
     metricHits('today');
+    leadsByLeadSource('today');
     
     $("#hits-allocation-today").click(function() {
         $("#hits-allocation-from").attr("disabled", "disabled");
@@ -34,6 +37,7 @@ $(document).ready(function () {
         $("#leads-lead-source-from").val("");
         $("#leads-lead-source-to").val("");
         $("#leads-lead-source-btn-submit").css("display","none");
+        leadsByLeadSource('today');
     });
 
     $("#leads-lead-source-range-date").click(function() {
@@ -44,36 +48,6 @@ $(document).ready(function () {
     $("#leads-lead-source-to").change(function() {
         if ($("#leads-lead-source-from").val()) {
             $("#leads-lead-source-btn-submit").css("display","block");
-        }
-    });
-
-    // Bar Graph
-    const ctx = document.getElementById('bar-chart-leads-lead-source');
-    const xValues = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'];
-    const yValues = [12, 59, 3, 5, 2, 3];
-
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: xValues,
-            datasets: [{
-                // label: '# of Leads',
-                data: yValues,
-                // borderWidth: 1
-            }]
-        },
-        options: {
-            plugins: {
-                legend: {
-                    display: false
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            },
-            maintainAspectRatio: false,
         }
     });
 
@@ -137,7 +111,7 @@ function loadLeads() {
                             render: function (data, type, row) {
                                 return (
                                     '<button type="button" class="btn btn-success btn-sm w-100" onclick="viewLeadRecord('+row.sequence+')">View</button>' +
-                                    '<button type="button" class="btn btn-danger btn-sm w-100">Archive</button>'
+                                    '<button type="button" class="btn btn-danger btn-sm w-100" onclick="archiveLead('+row.sequence+')">Archive</button>'
                                 )
                             }
                         },
@@ -164,6 +138,43 @@ function loadLeads() {
     });
 }
 
+function dashboardGraph(source = [0,0,0,0]) {
+    const ctx = document.getElementById('bar-chart-leads-lead-source');
+    const xValues = ['Manual Entry', 'Webform', 'PPC', 'Email Campaign'];
+    const yValues = [source[0], source[1], source[2], source[3]];
+
+    const configuration = {
+        type: 'bar',
+        data: {
+            labels: xValues,
+            datasets: [{
+                // label: '# of Leads',
+                data: yValues,
+                // borderWidth: 1
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            maintainAspectRatio: false,
+        }
+    }
+    if (dashboardChart) {
+        dashboardChart.destroy();
+        dashboardChart = new Chart(ctx, configuration);
+    } else {
+        dashboardChart = new Chart(ctx, configuration);
+    }
+}
+
 function metricHits(type = "date range") {
     $.ajax({
         type: "GET",
@@ -185,6 +196,76 @@ function metricHits(type = "date range") {
     });
 }
 
+function leadsByLeadSource(type = "date range") {
+    $.ajax({
+        type: "GET",
+        url: url + "count/count-leads", 
+        dataType: "JSON",
+        data: {
+            type: type,
+            date_from: $('#leads-lead-source-from').val(),
+            date_to: $('#leads-lead-source-to').val(),
+        },
+        success: function (response) {
+            if (response) {
+                console.log(response.manual_entry)
+                dashboardGraph([response.manual_entry, response.webform, response.ppc, response.email_campaign]);
+            }
+        },
+        error: function () {},
+    });
+}
+
 function viewLeadRecord(id) {
 	location.href = url_extended + "lead-record/" + id;
+}
+
+function archiveLead(id) {
+
+    Swal.fire({
+        title: "Are you sure to delete this lead?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showDenyButton: true,
+        confirmButtonText: "Yes",
+        denyButtonText: `Cancel`
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: "POST",
+                url: url + "admin/archive-lead",
+                dataType: "JSON",
+                data: {
+                    lead_sequence: id,
+                },
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: response.message,
+                            confirmButtonText: "Proceed",
+                            icon: "success",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.href = url_extended;
+                            }
+                        });
+                    } else {
+                        Swal.fire(
+                            response.message,
+                            '',
+                            'error'
+                        );
+                    }
+                }
+            });
+        } else if (result.isDenied) {
+            Swal.fire(
+                'The lead is safe!',
+                '',
+                'info',
+            );
+        }
+    });
 }

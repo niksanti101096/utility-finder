@@ -34,13 +34,18 @@ class Count extends REST_Controller {
         $this->returns($result);
     }
 
-    function count_not_yet_allocated_get($dateFilter){
-        $result = $this->admin_model->get_count_not_yet_allocated();
-        $this->returns($result);
-    }
-
-    function count_allocated_get($dateFilter){
-        $result = $this->admin_model->get_count_allocated();
+    function count_leads_get(){
+        $type = $this->get('type');
+        $date_from = $this->get('date_from');
+        $date_to = $this->get('date_to');
+        if($type == 'today'){
+            $date_from = date('Y-m-d 00:00:01');
+            $date_to = date('Y-m-d 23:59:59');
+        } else {
+            $date_from = date('Y-m-d 00:00:01', strtotime($date_from));
+            $date_to = date('Y-m-d 23:59:59', strtotime($date_to));
+        }
+        $result = $this->admin_model->get_leads_lead_source($date_from, $date_to);
         $this->returns($result);
     }
 }
