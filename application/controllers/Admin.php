@@ -7,6 +7,7 @@ class Admin extends REST_Controller {
     {
         parent::__construct();
         $this->load->model('admin_model');
+        $this->load->model('audit_log_model');
     }
     protected $helpers = ['display', 'form', 'date', 'download'];
     private function header($title){
@@ -193,6 +194,15 @@ class Admin extends REST_Controller {
                 $notes = $this->post('new_lead_notes');
                 $lead_sequence = $result['id'];
                 $id = $sess['id'];
+
+                $data = [
+                    'lead_sequence' => $lead_sequence,
+                    'action' => "Lead Created.",
+                    'action_by' => $id,
+                ];
+                $this->audit_log_model->post_audit_log($data);
+
+
                 if ($notes != "") {
                     $data = [
                         'lead_sequence' => $lead_sequence,
@@ -201,6 +211,14 @@ class Admin extends REST_Controller {
                     ];
                     $result = $this->admin_model->post_save_notes($data);
                     if ($result) {
+
+                        $data = [
+                            'lead_sequence' => $lead_sequence,
+                            'action' => "Note Added.",
+                            'action_by' => $id,
+                        ];
+                        $this->audit_log_model->post_audit_log($data);
+
                         $this->response(array('success'=>true,'message'=>'Successfully Created Lead.'), REST_Controller::HTTP_OK);
                     } else {
                         $this->response(array('success'=>false,'message'=>'Failed Saving'), REST_Controller::HTTP_OK);
@@ -219,6 +237,7 @@ class Admin extends REST_Controller {
     public function update_lead_record_post(){
         if($this->session->userdata('uf_session')){
             $sess = $this->session->userdata('uf_session');
+            $lead_sequence = $this->post('lead_sequence');
             $data = [
                 'lead_source' => $this->post('lead_source') ? $this->post('lead_source') : '',
                 'lead_type' => $this->post('lead_type') ? $this->post('lead_type') : '',
@@ -230,10 +249,16 @@ class Admin extends REST_Controller {
                 'phone_number' => $this->post('phone_number') ? $this->post('phone_number') : '',
                 'email_address' => $this->post('email_address') ? $this->post('email_address') : '',
             ];
-            $lead_sequence = $this->post('lead_sequence');
+
             $result = $this->admin_model->post_update_lead_record($data, $lead_sequence);
 
             if ($result) {
+                $data = [
+                    'lead_sequence' => $lead_sequence,
+                    'action' => "Lead Details Edited.",
+                    'action_by' => $sess['id'],
+                ];
+                $this->audit_log_model->post_audit_log($data);
                 $this->response(array('success'=>true,'message'=>'Successfully Updated Lead.'), REST_Controller::HTTP_OK);
             } else {
                 $this->response(array('success'=>false,'message'=>'Failed Updating Lead'), REST_Controller::HTTP_OK);
@@ -252,16 +277,29 @@ class Admin extends REST_Controller {
     public function assign_partner_post() {
         if($this->session->userdata('uf_session')){
             $sess = $this->session->userdata('uf_session');
+            $lead_sequence = $this->post('lead_sequence');
             $data = [
                 'status' => 2,
                 'partner_id' => $this->post('partner_id'),
                 'allocated_by' => $sess['id'],
             ];
-            $result = $this->admin_model->post_assign_partner($data, $this->post('lead_sequence'));
+            $result = $this->admin_model->post_assign_partner($data, $lead_sequence);
             if($result){
                 if ($this->post('lead_status') == 1) {
+                    $data = [
+                        'lead_sequence' => $lead_sequence,
+                        'action' => "Lead Allocated - " . $this->post('partner_name'),
+                        'action_by' => $sess['id'],
+                    ];
+                    $this->audit_log_model->post_audit_log($data);
                     $returnMessage = 'Successfully allocated lead!';
                 } else {
+                    $data = [
+                        'lead_sequence' => $lead_sequence,
+                        'action' => "Lead Re-Allocated - " . $this->post('partner_name'),
+                        'action_by' => $sess['id'],
+                    ];
+                    $this->audit_log_model->post_audit_log($data);
                     $returnMessage = 'Successfully reallocated lead!';
                 }
                 $this->response(array('success'=>true,'message'=>$returnMessage), REST_Controller::HTTP_OK);
@@ -280,13 +318,20 @@ class Admin extends REST_Controller {
 
     public function save_note_post() {
         $sess = $this->session->userdata('uf_session');
+        $lead_sequence = $this->post('lead_sequence');
         $data = [
-            'lead_sequence' => $this->post('lead_sequence'),
+            'lead_sequence' => $lead_sequence,
             'notes' => $this->post('notes'),
             'notes_added_by' => $sess['id'],
         ];
         $result = $this->admin_model->post_save_notes($data);
         if ($result) {
+            $data = [
+                'lead_sequence' => $lead_sequence,
+                'action' => "Note Added.",
+                'action_by' => $sess['id'],
+            ];
+            $this->audit_log_model->post_audit_log($data);
             $this->response(array('success'=>true,'message'=>'Successfully Added Note.'), REST_Controller::HTTP_OK);
         } else {
             $this->response(array('success'=>false,'message'=>'Failed Adding Note.'), REST_Controller::HTTP_OK);
@@ -294,8 +339,16 @@ class Admin extends REST_Controller {
     }
 
     public function archive_lead_post() {
-        $result = $this->admin_model->post_archive_lead($this->post('lead_sequence'));
+        $sess = $this->session->userdata('uf_session');
+        $lead_sequence = $this->post('lead_sequence');
+        $result = $this->admin_model->post_archive_lead($lead_sequence);
         if ($result) {
+            $data = [
+                'lead_sequence' => $lead_sequence,
+                'action' => "Lead Archived.",
+                'action_by' => $sess['id'],
+            ];
+            $this->audit_log_model->post_audit_log($data);
             $this->response(array('success'=>true,'message'=>'Successfully Archived Lead!'), REST_Controller::HTTP_OK);
         } else {
             $this->response(array('success'=>true,'message'=>'Something went wrong!'), REST_Controller::HTTP_OK);

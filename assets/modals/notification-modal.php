@@ -1,5 +1,5 @@
 <div class="modal fade text-left" id="notifcation-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel1">Notification</h4>
@@ -8,19 +8,13 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="form form-horizontal">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group row">
-                                <div class="col-sm-8">
-                                    <label class="col-form-label">Still work in progress</label>
-                                </div>
-                                <div class="col-sm-4">
-                                    <button class="btn btn-secondary btn-sm">Clear</button>
-                                    <button class="btn btn-success btn-sm">View</button>
-                                </div>
-                            </div>
-                        </div>
+                <div class="row" id="notifications">
+                    <div class="col-sm-8">
+                        <label class="col-form-label">Still work in progress</label>
+                    </div>
+                    <div class="col-sm-4">
+                        <button class="btn btn-secondary btn-sm">Clear</button>
+                        <button class="btn btn-success btn-sm">View</button>
                     </div>
                 </div>
             </div>

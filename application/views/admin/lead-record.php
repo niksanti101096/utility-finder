@@ -10,11 +10,11 @@
                         <h2 id="content-header-title"></h2>
                     </div>
                     <div class="ml-auto">
-                        <button type="button" class="btn btn-primary btn-allocate-lead" hidden>Allocate</button>
-                        <button type="button" class="btn btn-primary btn-reallocate-lead" hidden>Reallocate</button>
-                        <button type="button" class="btn mx-1 btn-warning btn-edit-lead" id="btn-edit-lead" hidden>Edit</button>
-                        <button type="button" class="btn btn-danger mx-1 btn-update-cancel-lead btn-cancel-edit" hidden>Cancel</button>
-                        <button type="button" class="btn btn-danger btn-archive-lead" id="btn-archive-lead" hidden>Archive</button>
+                        <button type="button" class="btn btn-primary btn-allocate-lead" hidden><i data-feather='file-plus'></i> Allocate</button>
+                        <button type="button" class="btn btn-primary btn-reallocate-lead" hidden><i data-feather='file-plus'></i> Reallocate</button>
+                        <button type="button" class="btn mx-1 btn-warning btn-edit-lead" id="btn-edit-lead" hidden><i data-feather='edit'></i> Edit</button>
+                        <button type="button" class="btn btn-danger mx-1 btn-update-cancel-lead btn-cancel-edit" hidden><i data-feather='x'></i> Cancel</button>
+                        <button type="button" class="btn btn-danger btn-archive-lead" id="btn-archive-lead" hidden><i data-feather='archive'></i> Archive</button>
                     </div>
                 </div>
             </div>
@@ -214,7 +214,7 @@
                                                     <label class="col-form-label ml-auto fw-bolder" id="status"></label>
                                                 </div>
                                                 <div class="col-sm-4 d-flex align-items-center">
-                                                    <button type="button" class="btn btn-primary btn-allocate-lead" hidden>Allocate</button>
+                                                    <button type="button" class="btn btn-primary btn-allocate-lead" hidden><i data-feather='file-plus'></i> Allocate</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -226,14 +226,14 @@
                                                     <label class="col-form-label ml-auto fw-bolder re-allocate-label" id="allocated-to" hidden></label>
                                                 </div>
                                                 <div class="col-sm-4 d-flex align-items-center">
-                                                    <button type="button" class="btn btn-primary btn-reallocate-lead" hidden>Reallocate</button>
+                                                    <button type="button" class="btn btn-primary btn-reallocate-lead" hidden><i data-feather='file-plus'></i> Reallocate</button>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-12 d-flex justify-content-between">
                                             <div class="form-group row flex-fill justify-content-center">
-                                                <button type="button" class="btn btn-warning btn-update-cancel-lead" id="btn-update-lead" hidden>Update Lead</button>
-                                                <button type="button" class="btn btn-danger ml-1 btn-update-cancel-lead btn-cancel-edit" hidden>Cancel</button>
+                                                <button type="button" class="btn btn-warning btn-update-cancel-lead" id="btn-update-lead" hidden><i data-feather='save'></i> Update Lead</button>
+                                                <button type="button" class="btn btn-danger ml-1 btn-update-cancel-lead btn-cancel-edit" hidden><i data-feather='x'></i> Cancel</button>
                                             </div>
                                         </div>
                                         
@@ -266,7 +266,10 @@
                                                 <textarea class="form-control" id="lead-notes" name="notes" placeholder="Add Note..."></textarea>
                                             </div>
                                             <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                                <button type="button" class="btn btn-success" id="btn-save-note">Save Note</button>
+                                                <button type="button" class="btn btn-success" id="btn-save-note">
+                                                    <i data-feather='save'></i>
+                                                    Save Note
+                                                </button>
                                                 <button class="btn btn-success" type="button" id="btn-save-disabled" disabled hidden>
                                                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                                     <span class="ml-25 align-middle">Loading...</span>
@@ -278,53 +281,24 @@
                             </div>
 
                             <div class="tab-pane" role="tabpanel" id="audit-log">
-                                <div class="row" id="system-setting-list">
-                                    <div class="col-md-4">
-                                        <div class="card bg-gradient-primary text-center">
-                                            <a id="link-energy-supplier">
-                                                <div class="card-body">
-                                                    <h2>Energy Supplier List</h2>
-                                                </div>
-                                            </a>
-                                        </div>
+                                <div class="row" id="logs">
+                                    <div class="col-12">
+                                        <h4 class="text-decoration-underline mb-1">
+                                            Audit Log
+                                        </h4>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="card bg-gradient-primary text-center">
-                                            <a id="link-water-supplier">
-                                                <div class="card-body">
-                                                    <h2>Water Supplier List</h2>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row" id="utility-supplier-list">
-                                    <div class="col-md-10" id="energy-supplier-list" hidden>
-                                        <h4>Energy Supplier List</h4>
+                                    <div class="col-12">
                                         <div class="table-responsive">
-                                            <table class="table" id="energy-supplier-records-table">
+                                            <table class="table" id="audit-log-table">
                                                 <thead>
                                                     <tr>
-                                                        <th>Supplier</th>
-                                                        <th>Action</th>
+                                                        <th width="20%">Timestamp</th>
+                                                        <th width="60%">Action</th>
+                                                        <th width="20%">User</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody></tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-10" id="water-supplier-list" hidden>
-                                        <h4>Water Supplier List</h4>
-                                        <div class="table-responsive">
-                                            <table class="table" id="water-supplier-records-table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Supplier</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody></tbody>
+                                                <tbody>
+                                                </tbody>
                                             </table>
                                         </div>
                                     </div>

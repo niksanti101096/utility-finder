@@ -20,8 +20,8 @@
             </div>
 
             <div class="row">
-                <div class="col-xl-6">
-                    <div class="card">
+                <div class="col-xl-6 d-flex align-items-stretch">
+                    <div class="card w-100">
                         <div class="card-header">
                             <h4>Hits and Allocations</h4>
                         </div>
@@ -90,8 +90,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-6">
-                    <div class="card">
+                <div class="col-xl-6 d-flex align-items-stretch">
+                    <div class="card w-100">
                         <div class="card-header">
                             <h4>Leads by Lead Source</h4>
                         </div>

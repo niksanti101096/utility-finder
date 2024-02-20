@@ -208,7 +208,6 @@ function leadsByLeadSource(type = "date range") {
         },
         success: function (response) {
             if (response) {
-                console.log(response.manual_entry)
                 dashboardGraph([response.manual_entry, response.webform, response.ppc, response.email_campaign]);
             }
         },

@@ -69,11 +69,14 @@ $(document).ready(function () {
 
     $('#btn-allocate , #btn-reallocate').click(function() {
         const partnerVal = $('#allocate-lead').val();
+        const partnerName = $('#allocate-lead option:selected').text();
+        console.log(partnerName);
         if (partnerVal != "") {
             $('#btn-allocate-disabled').attr('hidden', false);
             $('#btn-allocate').attr('hidden', true);
             $('#btn-reallocate').attr('hidden', true);
-            allocateLead(partnerVal);
+            const data = [partnerVal,partnerName];
+            allocateLead(data);
         } else {
             Swal.fire(
                 'Oppss..',
@@ -258,6 +261,8 @@ function loadLeadRecord(sequence) {
 
                 loadNotes();
                 leadSourceClick();
+                loadAuditLog();
+
                 setTimeout(() => {
                     newLeadTypeValues();
                     $(div + " [name=current_supplier]").val(selectedSupplier).change();
@@ -296,6 +301,7 @@ function loadAllPartners() {
         dataType: "JSON",
         data: {},
         success: function (response) {
+
             allocateOptions = '<option value=""></option>';
             for (const key in response.data) {
                 if (response.data[key]['partner_id'] != partnerID) {
@@ -307,15 +313,16 @@ function loadAllPartners() {
     });
 }
 
-function allocateLead(partnerVal) {
+function allocateLead(data) {
     $.ajax({
         type: "POST",
         url: url + "admin/assign-partner",
         dataType: "JSON",
         data: {
-            partner_id : partnerVal,
+            partner_id : data[0],
             lead_sequence : sequence,
             lead_status: lead_status,
+            partner_name: data[1],
         },
         success: function (response) {
             if (response.success) {
@@ -473,4 +480,35 @@ function leadSourceClick() {
     } else {
         $('#lead-source').val(leadSourceValue);
     }
+}
+
+function loadAuditLog() {
+    $.ajax({
+        type: "GET",
+        url: url + "audit-log/load-audit-logs",
+        dataType: "JSON",
+        data: {
+            lead_sequence : sequence,
+        },
+        success: function (response) {
+            $('#audit-log-table tbody').empty();
+            if (response.data.length > 0) {
+                response.data.forEach(element => {
+                    tdTable = 
+                        '<tr>'+
+                            '<td>'+element.date+'</td>'+
+                            '<td>'+element.action+'</td>'+
+                            '<td>'+element.user+'</td>'+
+                    '</tr>';
+                    $('#audit-log-table tbody').append(tdTable);
+                });
+            } else {
+                tdTable = 
+                    '<tr>'+
+                        '<td colspan=3 class="text-center">No audit logs so far!</td>'+
+                '</tr>';
+                $('#audit-log-table tbody').append(tdTable);
+            }
+        }
+    });
 }
