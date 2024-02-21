@@ -194,6 +194,7 @@ class Admin extends REST_Controller {
                 $notes = $this->post('new_lead_notes');
                 $lead_sequence = $result['id'];
                 $id = $sess['id'];
+                $notif_details = $this->post('notif_details');
 
                 $data = [
                     'lead_sequence' => $lead_sequence,
@@ -219,11 +220,24 @@ class Admin extends REST_Controller {
                         ];
                         $this->audit_log_model->post_audit_log($data);
 
+                        $data = [
+                            'lead_sequence' => $lead_sequence,
+                            'notif_details' => $notif_details,
+                            'notif_added_by' => $id,
+                        ];
+                        $this->admin_model->post_notif_details($data);
+
                         $this->response(array('success'=>true,'message'=>'Successfully Created Lead.'), REST_Controller::HTTP_OK);
                     } else {
                         $this->response(array('success'=>false,'message'=>'Failed Saving'), REST_Controller::HTTP_OK);
                     }
                 } else {
+                    $data = [
+                        'lead_sequence' => $lead_sequence,
+                        'notif_details' => $notif_details,
+                        'notif_added_by' => $id,
+                    ];
+                    $this->admin_model->post_notif_details($data);
                     $this->response(array('success'=>true,'message'=>'Successfully Created Lead.'), REST_Controller::HTTP_OK);
                 }
             } else {
@@ -353,6 +367,22 @@ class Admin extends REST_Controller {
         } else {
             $this->response(array('success'=>true,'message'=>'Something went wrong!'), REST_Controller::HTTP_OK);
         }
+    }
+
+    public function load_notif_get() {
+        $sess = $this->session->userdata('uf_session');
+        $result = $this->admin_model->get_load_notif($sess['id']);
+        $this->returns($result);
+    }
+
+    public function set_notif_post() {
+        $sess = $this->session->userdata('uf_session');
+        $data = [
+            'notif_id' => $this->post('notif_id'),
+            'view_by' => $sess['id'],
+        ];
+        $result = $this->admin_model->post_set_notif($data);
+        $this->returns($result);
     }
     
 }

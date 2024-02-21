@@ -63,6 +63,7 @@
     <script src="<?php echo base_url('assets/js/menu-search.js'); ?>"></script>
     <script src="<?php echo base_url('assets/js/create-new-lead.js'); ?>"></script>
     <script src="<?php echo base_url('assets/js/chart.js'); ?>"></script>
+    <script src="<?php echo base_url('assets/js/notification.js'); ?>"></script>
     <!-- END: Page JS-->
     <script>
         $(window).on('load', function() {

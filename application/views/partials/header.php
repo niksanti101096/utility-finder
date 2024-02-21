@@ -135,10 +135,10 @@
 
                 <!-- Notification Section -->
                 <li class="nav-item dropdown dropdown-notification mr-25">
-                    <a class="nav-link" data-toggle="modal" data-target="#notifcation-modal">
+                    <a class="nav-link" data-toggle="modal" data-target="#notifcation-modal" id="notification-head">
                         <!-- <i class="ficon" data-feather="bell"></i> -->
                         Notification
-                        <span class="badge badge-pill badge-danger badge-up">2</span>
+                        
                     </a>
                 </li>
 

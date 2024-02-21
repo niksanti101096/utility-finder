@@ -121,5 +121,26 @@ Class Admin_Model extends CI_Model {
         $query = $this->db->set('status', 0)->where('sequence', $lead_sequence)->update('lead_records');
         return $query ? true : false;
     }
+    
+    public function post_notif_details($data) {
+        $this->db->insert('notification', $data);
+        return $this->db->insert_id() ? ['id' => $this->db->insert_id()] : false;
+    }
 
+    public function get_load_notif($user_id) {
+
+        $query = $this->db->select('*, n.notif_id AS n_notif_id, ns.notif_id AS ns_notif_id')
+            ->from('notification n')
+            ->join('notification_status ns', 'n.notif_id = ns.notif_id', 'left')
+            ->where('n.notif_id NOT IN (SELECT n.notif_id FROM notification n LEFT JOIN notification_status ns ON n.notif_id = ns.notif_id WHERE ns.view_by = '.$user_id.')')
+            // ->or_where(array('ns.notif_id' => NULL))
+            ->where('n.notif_added_by !=', $user_id)
+            ->get()->result();
+        return $query ? array('data' => $query) : false;
+    }
+
+
+    public function post_set_notif($data) {
+        return $this->db->insert('notification_status', $data);
+    }
 }

@@ -48,12 +48,24 @@ $(document).ready(function () {
         });
 
         var disabled = $("#create-new-lead-form").find(':input:disabled').removeAttr('disabled');
+        var source = $("input[name='new_lead_source_radio']:checked").next('label').text();
+        if (source == "Manual Entry") {
+            var moreData = "New Lead Received by Manual Entry";
+        } else if (source == "Webform") {
+            var moreData = "New Lead Received by Webform";
+        } else if (source == "PPC") {
+            var moreData = "New PPC Lead Received";
+        } else if (source == "Email Campaign") {
+            var moreData = "New Lead Received by Email Campaign";
+        } else {
+            var moreData = "New Lead Received";
+        }
 
         $.ajax({
             type: "POST",
             url: url + "admin/create-new-lead",
             dataType: "JSON",
-            data: $("#create-new-lead-form").serialize(),
+            data: $("#create-new-lead-form").serialize() + "&notif_details=" + moreData,
             success: function (response) {
                 if(response.success){
                     setTimeout(() => {
