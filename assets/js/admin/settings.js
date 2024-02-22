@@ -2,6 +2,12 @@
 var userRecords;
 var userTable;
 var userUpdatedData;
+var supplierName;
+var supplierType;
+var supplierLogo;
+var supplierTdTable;
+var supplierRecords;
+var imgLoc = url + 'assets/images/logos/';
 
 $(document).ready(function() {
 
@@ -18,17 +24,28 @@ $(document).ready(function() {
         $('#utility-supplier-list').attr('hidden', 'hidden');
         $('#energy-supplier-records-table tbody').children('tr').remove();
         $('#water-supplier-records-table tbody').children('tr').remove();
+        $('#add-energy-btn').attr('hidden', true);
+        $('#add-water-btn').attr('hidden', true);
+        $('#add-lead-source-btn').attr('hidden', true);
     });
 
     $('#setting-navigation ul.nav > li > a#nav-user-setting').click(function() {
         $('#add-user-btn').removeAttr('hidden');
+        $('#add-energy-btn').attr('hidden', true);
+        $('#add-water-btn').attr('hidden', true);
+        $('#add-lead-source-btn').attr('hidden', true);
     });
 
     $('#link-energy-supplier').click(function() {
         $('#system-setting-list').attr('hidden', 'hidden');
         $('#utility-supplier-list').removeAttr('hidden');
         $('#energy-supplier-list').removeAttr('hidden');
-        $('#water-supplier-list').attr('hidden','hidden');
+        $('#water-supplier-list').attr('hidden',true);
+        $('#lead-source-list').attr('hidden',true);
+        $('#add-energy-btn').attr('hidden', false);
+        $('#add-water-btn').attr('hidden', true);
+        $('#add-lead-source-btn').attr('hidden', true);
+        $('#supplier-type').val(1);
         loadEnergySupplierRecords();
     });
 
@@ -36,8 +53,24 @@ $(document).ready(function() {
         $('#system-setting-list').attr('hidden', 'hidden');
         $('#utility-supplier-list').removeAttr('hidden');
         $('#water-supplier-list').removeAttr('hidden');
-        $('#energy-supplier-list').attr('hidden','hidden');
+        $('#energy-supplier-list').attr('hidden',true);
+        $('#lead-source-list').attr('hidden',true);
+        $('#add-water-btn').attr('hidden', false);
+        $('#add-energy-btn').attr('hidden', true);
+        $('#add-lead-source-btn').attr('hidden', true);
+        $('#supplier-type').val(2);
         loadWaterSupplierRecords();
+    });
+
+    $('#link-lead-source').click(function() {
+        $('#system-setting-list').attr('hidden', 'hidden');
+        $('#utility-supplier-list').removeAttr('hidden');
+        $('#lead-source-list').removeAttr('hidden');
+        $('#energy-supplier-list').attr('hidden',true);
+        $('#water-supplier-list').attr('hidden',true);
+        $('#add-water-btn').attr('hidden', true);
+        $('#add-energy-btn').attr('hidden', true);
+        $('#add-lead-source-btn').attr('hidden', false);
     });
     
     $('#add-user-btn').click(function() {
@@ -66,6 +99,67 @@ $(document).ready(function() {
     $('#user-btn-update').click(function() {
         userUpdatedData = $("#user-form").serialize();
         updateUserRecord(userUpdatedData);
+    });
+
+    $('#add-energy-btn').click(function() {
+        $('#supplier-modal').modal('show');
+        $('h4#supplier-title-modal').html('Add Energy Supplier');
+        $('#supplier-name-label').html('Energy Supplier Name');
+        $('#supplier-logo-label').html('Energy Supplier Logo');
+        $('.custom-file-label').html('Choose logo');
+        $('#supplier-name').val('');
+        $('#supplier-logo').val('');
+        $('#btn-edit-supplier').attr('hidden', true);
+        $('#btn-update-supplier, #supplier-img, #btn-edit-logo').attr('hidden', true);
+        $('#btn-add-supplier').attr('hidden', false);
+        $('#supplier-modal input').attr('disabled', false);
+    });
+
+    $('#add-water-btn').click(function() {
+        $('#supplier-modal').modal('show');
+        $('h4#supplier-title-modal').html('Add Water Supplier');
+        $('#supplier-name-label').html('Water Supplier Name');
+        $('#supplier-logo-label').html('Water Supplier Logo');
+        $('.custom-file-label').html('Choose logo');
+        $('#supplier-name').val('');
+        $('#supplier-logo').val('');
+        $('#btn-edit-supplier').attr('hidden', true);
+        $('#btn-update-supplier, #supplier-img, #btn-edit-logo').attr('hidden', true);
+        $('#btn-add-supplier, .custom-file').attr('hidden', false);
+        $('#supplier-modal input').attr('disabled', false);
+    });
+
+    $('#supplier-form').submit(function(e) {
+        e.preventDefault();
+        supplierName = $('#supplier-name').val();
+        supplierLogo = $('#supplier-logo')[0].files[0];
+        supplierType = $('#supplier-type').val();
+        $("#supplier-img").attr("hidden", true);
+        createSupplier();
+    });
+
+    $('#btn-edit-supplier').click(function() {
+        $('#btn-edit-supplier').attr('hidden', true);
+        $('#btn-update-supplier').attr('hidden', false);
+        $('#supplier-modal input, #btn-edit-logo').attr('disabled', false);
+        $('#supplier-logo').attr('required', false);
+    });
+
+    $('#btn-update-supplier').click(function() {
+        supplierName = $('#supplier-name').val();
+        supplierLogo = $('#supplier-logo')[0].files[0];
+        supplierType = $('#supplier-type').val();
+        updateSupplier();
+    });
+
+    $('#btn-edit-logo').click(function() {
+        $('.custom-file').attr('hidden', false);
+    });
+
+    $('#supplier-logo').change(function(e) {
+        var imgURL = URL.createObjectURL(e.target.files[0]);
+        $("#supplier-img").attr("src", imgURL);
+        $("#supplier-img").attr("hidden", false);
     });
 
 });
@@ -191,7 +285,6 @@ function updateUserRecord(data) {
         dataType: "JSON",
         data: data,
         success: function (response) {
-            console.log(response);
             if(response.success){
                 setTimeout(() => {
                     Swal.fire('Success!', 'Successfully updated user '+ response.data['email'] +'.', 'success').then(function () {
@@ -244,3 +337,125 @@ function deleteUser(id) {
         }
     })
 }
+
+function createSupplier() {
+    var fd = new FormData();
+
+    fd.append("name", supplierName);
+    fd.append("logo", supplierLogo);
+    fd.append("type", supplierType);
+
+    $.ajax({
+        type: "POST",
+        url: url + "admin/store-supplier-logo",
+        processData: false,
+        contentType: false,
+        cache: false,
+        enctype: 'multipart/form-data',
+        data: fd,
+        success: function (response) {
+            if(response.success){
+                Swal.fire(
+                    response.message,
+                    '',
+                    'success'
+                ).then(function(){
+                    $('#supplier-modal').modal('hide');
+                    if (supplierType == 1) {
+                        loadEnergySupplierRecords();
+                    } else {
+                        loadWaterSupplierRecords();
+                    }
+                });
+            }
+            if (response.error) {
+                Swal.fire(
+                    response.error,
+                    '',
+                    'error'
+                );
+            }
+        },
+        error: function () {}
+    });
+}
+
+function loadEnergySupplierRecords() {
+    var imgLoc = url + 'assets/images/logos/';
+    $.ajax({
+        type: "GET",
+        url: url + "admin/load-energy-supp",
+        dataType: "JSON",
+        data: {},
+        success: function (response) {
+            if (response.data.length > 0) {
+                response.data.forEach(element => {
+                    supplierTdTable = 
+                        '<tr>' +
+                            '<td width="30%">'+element.supplier_name+'</td>' +
+                            '<td width="50"><img src="'+ imgLoc + element.supplier_logo+'" alt="'+element.supplier_name+'" width="150px"></td>' +
+                            '<td width="20%">' +
+                                '<button type="button" class="btn btn-success btn-sm" onclick="viewSupplierRecord(\''+encodeURIComponent(JSON.stringify(element))+'\')">View</button>' +
+                                '<button type="button" class="btn btn-info btn-sm mx-1">Edit</button>' +
+                                '<button type="button" class="btn btn-danger btn-sm">Delete</button>' +
+                            '</td>' +
+                        '</tr>';
+                    $('#energy-supplier-records-table tbody').append(supplierTdTable);
+                });
+            }
+        }
+    })
+}
+
+function loadWaterSupplierRecords() {
+    $.ajax({
+        type: "GET",
+        url: url + "admin/load-water-supp",
+        dataType: "JSON",
+        data: {},
+        success: function (response) {
+            if (response.data.length > 0) {
+                response.data.forEach(element => {
+                    supplierTdTable = 
+                        '<tr>' +
+                            '<td width="30%">'+element.supplier_name+'</td>' +
+                            '<td width="50"><img src="'+ imgLoc + element.supplier_logo+'" alt="'+element.supplier_name+'" width="150px"></td>' +
+                            '<td width="20%">' +
+                            '<button type="button" class="btn btn-success btn-sm" onclick="viewSupplierRecord(\''+encodeURIComponent(JSON.stringify(element))+'\')">View</button>' +
+                                '<button type="button" class="btn btn-info btn-sm mx-1">Edit</button>' +
+                                '<button type="button" class="btn btn-danger btn-sm">Delete</button>' +
+                            '</td>' +
+                        '</tr>';
+                    $('#water-supplier-records-table tbody').append(supplierTdTable);
+                });
+            }
+        }
+    })
+}
+
+function viewSupplierRecord(encryptedData) {
+    const data = JSON.parse(decodeURIComponent(encryptedData));
+    if (data.supplier_type == 1) {
+        var tempSuppName = "Energy";
+    } else {
+        var tempSuppName = "Water";
+    }
+    $('#supplier-modal').modal('show');
+    $('h4#supplier-title-modal').html('Add '+tempSuppName+' Supplier');
+    $('#supplier-name-label').html(''+tempSuppName+' Supplier Name');
+    $('#supplier-logo-label').html(''+tempSuppName+' Supplier Logo');
+    $('.custom-file').attr('hidden', true);
+    $('#supplier-img, #btn-edit-logo').attr('hidden', false);
+    $('#supplier-img').attr('src', imgLoc + data.supplier_logo);
+    $('#supplier-name').val(data.supplier_name);
+    $('#btn-add-supplier').attr('hidden', true);
+    $('#btn-edit-supplier').attr('hidden', false);
+    $('#supplier-modal input, #btn-edit-logo').attr('disabled', true);
+    $('#btn-update-supplier').attr('hidden', true);
+}
+
+// function updateSupplier() {
+//     console.log(supplierName);
+//     console.log(supplierLogo);
+//     console.log(supplierType);
+// }

@@ -139,8 +139,23 @@ Class Admin_Model extends CI_Model {
         return $query ? array('data' => $query) : false;
     }
 
-
     public function post_set_notif($data) {
         return $this->db->insert('notification_status', $data);
     }
+
+    public function post_supplier($data) {
+        return $this->db->insert('supplier_records', $data);
+    }
+
+    public function get_load_energy_supp() {
+        $query = $this->db->select('*')->from('supplier_records')->where('supplier_type = 1')->get()->result();
+        return $query ? array('data' => $query) : false ;
+    }
+
+    public function get_load_water_supp() {
+        $query = $this->db->select('*')->from('supplier_records')->where('supplier_type = 2')->get()->result();
+        return $query ? array('data' => $query) : false ;
+    }
+
+    
 }

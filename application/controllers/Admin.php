@@ -8,8 +8,11 @@ class Admin extends REST_Controller {
         parent::__construct();
         $this->load->model('admin_model');
         $this->load->model('audit_log_model');
+        $this->load->helper(array('form', 'url'));
     }
+
     protected $helpers = ['display', 'form', 'date', 'download'];
+
     private function header($title){
         $sess = $this->session->userdata('uf_session');
         return $this->load->view('partials/header', ['title' => $title, 'session' => $sess]);
@@ -382,6 +385,52 @@ class Admin extends REST_Controller {
             'view_by' => $sess['id'],
         ];
         $result = $this->admin_model->post_set_notif($data);
+        $this->returns($result);
+    }
+
+    public function store_supplier_logo_post() {
+        $sess = $this->session->userdata('uf_session');
+        $fileName = $_FILES["logo"]['name'];
+        $supplierName = $this->post('name');
+        $supplierType = $this->post('type');
+
+
+
+        $config['upload_path'] = './assets/images/logos/';
+        $config['allowed_types'] = 'gif|jpg|png|jpeg';
+        $config['max_size'] = 1000;
+        // $config['max_width'] = 1200;
+        // $config['max_height'] = 1200;
+        $config['file_name'] = $fileName;
+
+        $this->load->library('upload', $config);
+
+        if (!$this->upload->do_upload('logo')) {
+            $error = array('error' => $this->upload->display_errors());
+            $this->returns($error);
+        }
+        else {
+            $data = array('success' => $this->upload->data());
+
+            $data = [
+                'supplier_name' => $supplierName,
+                'supplier_logo' => $data['success']['file_name'],
+                'supplier_type' => $supplierType,
+                'added_by' => $sess['id'],
+            ];
+            
+            $result = $this->admin_model->post_supplier($data);
+            $this->response(array('success'=>true,'message'=>'Successfully Added '.$supplierType.' Supplier!'), REST_Controller::HTTP_OK);
+        }
+    }
+
+    public function load_energy_supp_get() {
+        $result = $this->admin_model->get_load_energy_supp();
+        $this->returns($result);
+    }
+
+    public function load_water_supp_get() {
+        $result = $this->admin_model->get_load_water_supp();
         $this->returns($result);
     }
     

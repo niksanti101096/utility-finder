@@ -87,6 +87,10 @@
             text-transform: uppercase;
         }
 
+        .navigation {
+            min-height: 80vh !important;
+        }
+
     </style>
 
 </head>
@@ -144,7 +148,7 @@
 
                 <!-- Contact -->
                 <li class="nav-item">
-                    <a class="nav-link" id="navbar-profile" href="http://localhost/contact/contact_form.php">
+                    <a class="nav-link" id="navbar-profile" href="<?php echo base_url('contact/contact_form.php')?>">
                         <!-- <i class="ficon" data-feather="bell"></i> -->
                         Contact 
                     </a>
@@ -168,7 +172,8 @@
             <ul class="nav navbar-nav flex-row">
                 <li class="nav-item m-auto d-flex">
                     <a class="navbar-brand" href="<?php echo base_url('admin'); ?>">
-                        <h2 class="brand-text">Utility Finder</h2>
+                        <!-- <h2 class="brand-text">Utility Finder</h2> -->
+                        <img src="<?php echo base_url('assets/images/Both.png'); ?>" alt="" width="125rem">
                     </a>
                 </li>
                 <!-- <li class="nav-item nav-toggle">
@@ -182,7 +187,7 @@
         </div>
         <div class="shadow-bottom"></div>
         <div class="main-menu-content">
-            <ul class="navigation navigation-main h-100 d-flex flex-column" id="main-menu-navigation" data-menu="menu-navigation">
+            <ul class="navigation navigation-main d-flex flex-column" id="main-menu-navigation" data-menu="menu-navigation">
                 <?php if(strtoupper($session['role']) === 'ADMIN'): ?>
                     <li class="nav-item">
                         <a class="nav-link d-flex align-items-center" href="<?php echo base_url('admin'); ?>" data-i18n="Dashboard">

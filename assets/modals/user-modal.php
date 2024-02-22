@@ -141,7 +141,7 @@
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-4 d-flex align-items-center">
-                                        <label class="col-form-label" for="type">User Type</label>
+                                        <label class="col-form-label" for="user-type">User Type</label>
                                     </div>
                                     <div class="col-sm-8 d-flex align-items-center">
                                         <div class="col-12 p-0">
@@ -186,7 +186,7 @@
                             <div class="col-12" id="div-repassword">
                                 <div class="form-group row">
                                     <div class="col-sm-4 d-flex align-items-center">
-                                        <label class="col-form-label" for="repassword">Confirm Password</label>
+                                        <label class="col-form-label" for="re-password">Confirm Password</label>
                                     </div>
                                     <div class="col-sm-8 d-flex align-items-center">
                                         <div class="col-12 p-0">

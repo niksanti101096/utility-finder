@@ -83,16 +83,26 @@
                                             </a>
                                         </div>
                                     </div>
+                                    <div class="col-md-4">
+                                        <div class="card bg-gradient-primary text-center">
+                                            <a id="link-lead-source">
+                                                <div class="card-body">
+                                                    <h2>Lead Source</h2>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="row" id="utility-supplier-list">
-                                    <div class="col-md-10" id="energy-supplier-list" hidden>
+                                    <div class="col-md-12" id="energy-supplier-list" hidden>
                                         <h4>Energy Supplier List</h4>
                                         <div class="table-responsive">
                                             <table class="table" id="energy-supplier-records-table">
                                                 <thead>
                                                     <tr>
                                                         <th>Supplier</th>
+                                                        <th>Logo</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -100,10 +110,25 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div class="col-md-10" id="water-supplier-list" hidden>
+                                    <div class="col-md-12" id="water-supplier-list" hidden>
                                         <h4>Water Supplier List</h4>
                                         <div class="table-responsive">
                                             <table class="table" id="water-supplier-records-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Supplier</th>
+                                                        <th>Logo</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-10" id="lead-source-list" hidden>
+                                        <h4>Lead Sources</h4>
+                                        <div class="table-responsive">
+                                            <!-- <table class="table" id="water-supplier-records-table">
                                                 <thead>
                                                     <tr>
                                                         <th>Supplier</th>
@@ -111,7 +136,7 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody></tbody>
-                                            </table>
+                                            </table> -->
                                         </div>
                                     </div>
                                 </div>
@@ -123,6 +148,18 @@
                         <button type="button" class="btn btn-primary" id="add-user-btn">
                             <i data-feather="plus"></i>
                             <span>Add user</span>
+                        </button>
+                        <button type="button" class="btn btn-primary" id="add-energy-btn" hidden>
+                            <i data-feather="plus"></i>
+                            <span>Add energy supplier</span>
+                        </button>
+                        <button type="button" class="btn btn-primary" id="add-water-btn" hidden>
+                            <i data-feather="plus"></i>
+                            <span>Add water supplier</span>
+                        </button>
+                        <button type="button" class="btn btn-primary" id="add-lead-source-btn" hidden>
+                            <i data-feather="plus"></i>
+                            <span>Add lead source</span>
                         </button>
                     </div>
                 </div>
@@ -137,3 +174,4 @@
 
 <!-- Modal -->
 <?php include_once('assets/modals/user-modal.php'); ?>
+<?php include_once('assets/modals/supplier-modal.php'); ?>
