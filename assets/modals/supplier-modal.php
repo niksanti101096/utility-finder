@@ -43,7 +43,7 @@
                     <button type="submit" class="btn btn-primary" id="btn-add-supplier">Add</button>
                     <button type="button" class="btn btn-info" id="btn-edit-supplier" hidden>Edit</button>
                     <button type="button" class="btn btn-info" id="btn-update-supplier" hidden>Update</button>
-                    <button class="btn btn-primary" type="button" id="btn-disabled" disabled hidden>
+                    <button class="btn " type="button" id="btn-disabled" disabled hidden>
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                         <span class="ml-25 align-middle">Loading...</span>
                     </button>

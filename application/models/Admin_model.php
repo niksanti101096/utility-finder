@@ -148,13 +148,28 @@ Class Admin_Model extends CI_Model {
     }
 
     public function get_load_energy_supp() {
-        $query = $this->db->select('*')->from('supplier_records')->where('supplier_type = 1')->get()->result();
+        $query = $this->db->select('*')->from('supplier_records')->where('supplier_type = 1')->where('status = 1')->get()->result();
         return $query ? array('data' => $query) : false ;
     }
 
     public function get_load_water_supp() {
-        $query = $this->db->select('*')->from('supplier_records')->where('supplier_type = 2')->get()->result();
+        $query = $this->db->select('*')->from('supplier_records')->where('supplier_type = 2')->where('status = 1')->get()->result();
         return $query ? array('data' => $query) : false ;
+    }
+
+    public function post_update_supplier_name($data) {
+        $query = $this->db->set('supplier_name', $data['supplier_name'])->where('supplier_id', $data['supplier_id'])->update('supplier_records');
+        return $query ? true : false;
+    }
+
+    public function post_update_supplier_logo($data) {
+        $query = $this->db->set('supplier_logo', $data['supplier_logo'])->where('supplier_id', $data['supplier_id'])->update('supplier_records');
+        return $query ? true : false;
+    }
+
+    public function post_archive_supplier($id) {
+        $query = $this->db->set('status', 0)->where('supplier_id', $id)->update('supplier_records');
+        return $query ? true : false;
     }
 
     

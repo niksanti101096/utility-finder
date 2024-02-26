@@ -388,13 +388,11 @@ class Admin extends REST_Controller {
         $this->returns($result);
     }
 
-    public function store_supplier_logo_post() {
+    public function store_supplier_post() {
         $sess = $this->session->userdata('uf_session');
         $fileName = $_FILES["logo"]['name'];
         $supplierName = $this->post('name');
         $supplierType = $this->post('type');
-
-
 
         $config['upload_path'] = './assets/images/logos/';
         $config['allowed_types'] = 'gif|jpg|png|jpeg';
@@ -419,8 +417,46 @@ class Admin extends REST_Controller {
                 'added_by' => $sess['id'],
             ];
             
+            $retVal = ($supplierType == 1) ? "Energy" : "Water";
+
             $result = $this->admin_model->post_supplier($data);
-            $this->response(array('success'=>true,'message'=>'Successfully Added '.$supplierType.' Supplier!'), REST_Controller::HTTP_OK);
+            $this->response(array('success'=>true,'message'=>'Successfully Added '.$retVal.' Supplier!'), REST_Controller::HTTP_OK);
+        }
+    }
+
+    public function update_supplier_logo_post() {
+        $fileName = $_FILES["logo"]['name'];
+        $supplierId = $this->post('id');
+        $oldLogoPath = $this->post('imgLocation');
+
+        if (file_exists($oldLogoPath)) {
+            unlink($oldLogoPath); // To delete the old logo
+        }
+
+        $config['upload_path'] = './assets/images/logos/';
+        $config['allowed_types'] = 'gif|jpg|png|jpeg';
+        $config['max_size'] = 1000;
+        // $config['max_width'] = 1200;
+        // $config['max_height'] = 1200;
+        $config['file_name'] = $fileName;
+
+        $this->load->library('upload', $config);
+
+        if (!$this->upload->do_upload('logo')) {
+            $error = array('error' => $this->upload->display_errors());
+            $this->returns($error);
+        }
+        else {
+            $data = array('success' => $this->upload->data());
+
+            $data = [
+                'supplier_id' => $supplierId,
+                'supplier_logo' => $data['success']['file_name'],
+            ];
+            
+            $result = $this->admin_model->post_update_supplier_logo($data);
+
+            $this->response(array('success'=>true,'message'=>'Successfully Updated the Logo'), REST_Controller::HTTP_OK);
         }
     }
 
@@ -431,6 +467,20 @@ class Admin extends REST_Controller {
 
     public function load_water_supp_get() {
         $result = $this->admin_model->get_load_water_supp();
+        $this->returns($result);
+    }
+
+    public function archive_supplier_post() {
+        $result = $this->admin_model->post_archive_supplier($this->post('supplier_id'));
+        $this->returns($result);
+    }
+
+    public function update_supplier_name_post() {
+        $data = [
+            'supplier_id' => $this->post('supplier_id'),
+            'supplier_name' => $this->post('supplier_name'),
+        ];
+        $result = $this->admin_model->post_update_supplier_name($data);
         $this->returns($result);
     }
     

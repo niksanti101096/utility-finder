@@ -43,12 +43,12 @@
                                     <table class="table" id="user-records-table">
                                         <thead>
                                             <tr>
-                                                <th scope="col">
+                                                <!-- <th scope="col">
                                                     <div class="custom-control custom-checkbox">
                                                         <input class="custom-control-input" type="checkbox" value="" id="check-all-user">
                                                         <label for="check-all-user" class="custom-control-label"></label>
                                                     </div>
-                                                </th>
+                                                </th> -->
                                                 <th scope="col">ID</th>
                                                 <th scope="col">Username</th>
                                                 <th scope="col">User Type</th>
@@ -125,18 +125,38 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div class="col-md-10" id="lead-source-list" hidden>
-                                        <h4>Lead Sources</h4>
-                                        <div class="table-responsive">
-                                            <!-- <table class="table" id="water-supplier-records-table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Supplier</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table> -->
+                                    <div class="col-md-12" id="lead-source-list" hidden>
+                                        <h4 class="mb-1">Lead Sources</h4>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="card bg-gradient-primary text-center">
+                                                    <a id="">
+                                                        <div class="card-body">
+                                                            <h2>Webform API</h2>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="card bg-gradient-primary text-center">
+                                                    <a id="">
+                                                        <div class="card-body">
+                                                            <h2>PPC API</h2>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="card bg-gradient-primary text-center">
+                                                    <a id="">
+                                                        <div class="card-body">
+                                                            <h2>Email Campaign</h2>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

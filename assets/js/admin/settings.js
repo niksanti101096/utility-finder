@@ -1,13 +1,15 @@
-
 var userRecords;
 var userTable;
 var userUpdatedData;
 var supplierName;
 var supplierType;
 var supplierLogo;
+var supplierId;
 var supplierTdTable;
 var supplierRecords;
 var imgLoc = url + 'assets/images/logos/';
+var oldSupplierName;
+var oldSupplierLogo;
 
 $(document).ready(function() {
 
@@ -143,6 +145,8 @@ $(document).ready(function() {
         $('#btn-update-supplier').attr('hidden', false);
         $('#supplier-modal input, #btn-edit-logo').attr('disabled', false);
         $('#supplier-logo').attr('required', false);
+        oldSupplierName = $('#supplier-name').val();
+        oldSupplierLogo = $('#supplier-img').attr('src').split('/')[6];
     });
 
     $('#btn-update-supplier').click(function() {
@@ -189,17 +193,17 @@ function loadUserRecords() {
                     },
                     data: userRecords,
                     columns: [
-                        {
-                            data: null,
-                            render: function (data, type, row) {
-                                return (
-                                    '<div class="custom-control custom-checkbox">' +
-                                        '<input class="custom-control-input" type="checkbox" value="" id="check-all-user-'+row.user_id+'">' +
-                                        '<label for="check-all-user-'+row.user_id+'" class="custom-control-label"></label>' +
-                                    '</div>'
-                                )
-                            }
-                        },
+                        // {
+                        //     data: null,
+                        //     render: function (data, type, row) {
+                        //         return (
+                        //             '<div class="custom-control custom-checkbox">' +
+                        //                 '<input class="custom-control-input" type="checkbox" value="" id="check-all-user-'+row.user_id+'">' +
+                        //                 '<label for="check-all-user-'+row.user_id+'" class="custom-control-label"></label>' +
+                        //             '</div>'
+                        //         )
+                        //     }
+                        // },
                         {data: "user_id"},
                         {data: "username"},
                         {
@@ -339,6 +343,12 @@ function deleteUser(id) {
 }
 
 function createSupplier() {
+    if ($('#btn-disabled').hasClass('btn-info')) {
+        $('#btn-disabled').removeClass('btn-info');
+    }
+    $('#btn-disabled').addClass('hidden', false);
+    $('#btn-add-supplier').attr('hidden', true);
+    $('#btn-disabled').attr('hidden', false);
     var fd = new FormData();
 
     fd.append("name", supplierName);
@@ -347,7 +357,7 @@ function createSupplier() {
 
     $.ajax({
         type: "POST",
-        url: url + "admin/store-supplier-logo",
+        url: url + "admin/store-supplier",
         processData: false,
         contentType: false,
         cache: false,
@@ -366,6 +376,8 @@ function createSupplier() {
                     } else {
                         loadWaterSupplierRecords();
                     }
+                    $('#btn-add-supplier').attr('hidden', false);
+                    $('#btn-disabled').attr('hidden', true);
                 });
             }
             if (response.error) {
@@ -389,6 +401,7 @@ function loadEnergySupplierRecords() {
         data: {},
         success: function (response) {
             if (response.data.length > 0) {
+                $('#energy-supplier-records-table tbody').empty()
                 response.data.forEach(element => {
                     supplierTdTable = 
                         '<tr>' +
@@ -396,8 +409,7 @@ function loadEnergySupplierRecords() {
                             '<td width="50"><img src="'+ imgLoc + element.supplier_logo+'" alt="'+element.supplier_name+'" width="150px"></td>' +
                             '<td width="20%">' +
                                 '<button type="button" class="btn btn-success btn-sm" onclick="viewSupplierRecord(\''+encodeURIComponent(JSON.stringify(element))+'\')">View</button>' +
-                                '<button type="button" class="btn btn-info btn-sm mx-1">Edit</button>' +
-                                '<button type="button" class="btn btn-danger btn-sm">Delete</button>' +
+                                '<button type="button" class="btn btn-danger btn-sm ml-1" onclick="archiveSupplierRecord(\''+encodeURIComponent(JSON.stringify(element))+'\')">Delete</button>' +
                             '</td>' +
                         '</tr>';
                     $('#energy-supplier-records-table tbody').append(supplierTdTable);
@@ -415,15 +427,15 @@ function loadWaterSupplierRecords() {
         data: {},
         success: function (response) {
             if (response.data.length > 0) {
+                $('#water-supplier-records-table tbody').empty()
                 response.data.forEach(element => {
                     supplierTdTable = 
                         '<tr>' +
                             '<td width="30%">'+element.supplier_name+'</td>' +
                             '<td width="50"><img src="'+ imgLoc + element.supplier_logo+'" alt="'+element.supplier_name+'" width="150px"></td>' +
                             '<td width="20%">' +
-                            '<button type="button" class="btn btn-success btn-sm" onclick="viewSupplierRecord(\''+encodeURIComponent(JSON.stringify(element))+'\')">View</button>' +
-                                '<button type="button" class="btn btn-info btn-sm mx-1">Edit</button>' +
-                                '<button type="button" class="btn btn-danger btn-sm">Delete</button>' +
+                                '<button type="button" class="btn btn-success btn-sm" onclick="viewSupplierRecord(\''+encodeURIComponent(JSON.stringify(element))+'\')">View</button>' +
+                                '<button type="button" class="btn btn-danger btn-sm ml-1" onclick="archiveSupplierRecord(\''+encodeURIComponent(JSON.stringify(element))+'\')">Delete</button>' +
                             '</td>' +
                         '</tr>';
                     $('#water-supplier-records-table tbody').append(supplierTdTable);
@@ -440,6 +452,7 @@ function viewSupplierRecord(encryptedData) {
     } else {
         var tempSuppName = "Water";
     }
+    supplierId = data.supplier_id;
     $('#supplier-modal').modal('show');
     $('h4#supplier-title-modal').html('Add '+tempSuppName+' Supplier');
     $('#supplier-name-label').html(''+tempSuppName+' Supplier Name');
@@ -448,14 +461,166 @@ function viewSupplierRecord(encryptedData) {
     $('#supplier-img, #btn-edit-logo').attr('hidden', false);
     $('#supplier-img').attr('src', imgLoc + data.supplier_logo);
     $('#supplier-name').val(data.supplier_name);
-    $('#btn-add-supplier').attr('hidden', true);
+    $('#btn-add-supplier, #btn-disabled').attr('hidden', true);
     $('#btn-edit-supplier').attr('hidden', false);
     $('#supplier-modal input, #btn-edit-logo').attr('disabled', true);
     $('#btn-update-supplier').attr('hidden', true);
+
 }
 
-// function updateSupplier() {
-//     console.log(supplierName);
-//     console.log(supplierLogo);
-//     console.log(supplierType);
-// }
+function updateSupplier() {
+    if ($('#btn-disabled').hasClass('btn-primary')) {
+        $('#btn-disabled').removeClass('btn-primary');
+    }
+    $('#btn-disabled').addClass('btn-info');
+    $('#btn-disabled').attr('hidden', false);
+    $('#btn-update-supplier').attr('hidden', true);
+
+    if (supplierName == oldSupplierName && supplierLogo == undefined) {
+        Swal.fire({
+            title : "Nothing to be updated!",
+            icon : "info",
+            confirmButtonText : "Ok",
+            allowOutsideClick: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#supplier-name, #btn-edit-logo').attr('disabled', true);
+                $('#btn-update-supplier').attr('hidden', true);
+                $('#btn-edit-supplier').attr('hidden', false);
+                $('.custom-file').attr('hidden', true);
+            }
+        });
+    }
+    // If only Supplier Name
+    if (supplierName != oldSupplierName) {
+        
+        $.ajax({
+            type: "POST",
+            url: url + "admin/update-supplier-name",
+            dataType: "JSON",
+            data: {
+                supplier_id : supplierId,
+                supplier_name : supplierName
+            },
+            success: function (response) {
+                if (response) {
+                    Swal.fire({
+                        title : "Successfully updated Supplier Name!",
+                        icon : "success",
+                        confirmButtonText : "Ok",
+                        allowOutsideClick: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            if (supplierType == 1) {
+                                loadEnergySupplierRecords();
+                            } else {
+                                loadWaterSupplierRecords();
+                            }
+                            $('#supplier-modal').modal('hide');
+                        }
+                    });
+
+                }
+            }
+        })
+    }
+    // // If only Supplier Logo
+    if (supplierLogo != undefined) {
+        if (supplierLogo["name"] != oldSupplierLogo) {
+            const fd = new FormData();
+
+            fd.append("id", supplierId);
+            fd.append("logo", supplierLogo);
+            fd.append("imgLocation", "assets/images/logos/" + oldSupplierLogo);
+            $.ajax({
+                type: "POST",
+                url: url + "admin/update-supplier-logo",
+                processData: false,
+                contentType: false,
+                cache: false,
+                enctype: 'multipart/form-data',
+                data: fd,
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title : response.message,
+                            icon : "success",
+                            confirmButtonText : "Ok",
+                            allowOutsideClick: false,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                if (supplierType == 1) {
+                                    loadEnergySupplierRecords();
+                                } else {
+                                    loadWaterSupplierRecords();
+                                }
+                                $('#supplier-modal').modal('hide');
+                            }
+                        });
+                    } else {
+                        Swal.fire(
+                            response.message,
+                            "",
+                            "info"
+                        );
+                    }
+                }
+            })
+        } else {
+            Swal.fire(
+                "This is the same Logo",
+                "",
+                "info"
+            );
+        }
+        
+    }
+    $('#btn-disabled').attr('hidden', true);
+    $('#btn-update-supplier').attr('hidden', false);
+}
+
+function archiveSupplierRecord(encryptedData) {
+    const data = JSON.parse(decodeURIComponent(encryptedData));
+
+    Swal.fire({
+        title : 'Are you sure you want to delete "'+data.supplier_name+'"?',
+        text : "You won't be able to revert this action.",
+        icon : "warning",
+        confirmButtonText : "Yes",
+        showDenyButton: true,
+        denyButtonText: "No",
+        allowOutsideClick: false,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: "POST",
+                url: url + "admin/archive-supplier",
+                dataType: "JSON",
+                data: {
+                    supplier_id : data.supplier_id,
+                },
+                success: function (response) {
+                    if (response) {
+                        Swal.fire({
+                            title : "Supplier records has ben deleted!",
+                            icon : "success",
+                            confirmButtonText : "Ok",
+                            allowOutsideClick: false,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                if (data.supplier_type == 1) {
+                                    loadEnergySupplierRecords();
+                                } else {
+                                    loadWaterSupplierRecords();
+                                }
+                                $('#supplier-modal').modal('hide');
+                            }
+                        });
+                    }
+                }
+            });
+        } else if (result.isDenied) {
+            Swal.fire("Cancelled", data.supplier_name+"'s records are safe!", "info");
+        }
+    });
+}
