@@ -1,4 +1,5 @@
 var userRecord;
+var isCheck;
 
 $(document).ready(function() {
     loadUserProfile();
@@ -8,11 +9,17 @@ $(document).ready(function() {
         $('#btn-save-profile').add('#btn-cancel-profile').removeAttr('hidden');
         $('#btn-edit-profile').attr('hidden', true);
         $('.editable').removeAttr('disabled');
+        isCheck = $('#received_email').prop('checked');
     });
     $('#btn-cancel-profile').click(function() {
         $('#btn-save-profile').add('#btn-cancel-profile').attr('hidden', true);
         $('#btn-edit-profile').removeAttr('hidden');
         $('.editable').attr('disabled', true);
+        if (isCheck) {
+            $('#received_email').prop('checked', true);
+        } else {
+            $('#received_email').prop('checked', false);
+        }
         loadUserProfile();
     });
 
@@ -101,12 +108,21 @@ function updateProfileInfo() {
             opacity: 0.8
         }
     });
+    var receivedEmail;
+    isCheck = $('#received_email').prop('checked');
+    if (isCheck) {
+        receivedEmail = 1;
+        $('#received_email').prop('checked', true);
+    } else {
+        receivedEmail = 0;
+        $('#received_email').prop('checked', false);
+    }
 
     $.ajax({
         type: "POST",
         url: url + "profile/update-profile-info",
         dataType: "JSON",
-        data: $("#user-profile-form").serialize(),
+        data: $("#user-profile-form").serialize() + "&received_email" +receivedEmail,
         success: function (response) {
             if (response.success) {
                 Swal.fire(
@@ -134,7 +150,6 @@ function updateProfileInfo() {
             }
         }
     });
-
 }
 
 function changePassword() {

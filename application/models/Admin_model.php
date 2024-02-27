@@ -16,6 +16,11 @@ Class Admin_Model extends CI_Model {
         return $query ? array('data' => $query) : false;
     }
 
+    public function get_check_duplicate($data) {
+        $query = $this->db->select('sequence, email_address, phone_number')->from('lead_records')->where('date_created >= now() - interval 30 day')->where('email_address = ', $data['email'])->or_where('phone_number = ', $data['phone'])->get()->result();
+        return $query ? array('data' => $query) : false;
+    }
+
     public function create_new_lead($data){
         $this->db->insert('lead_records', $data);
         return $this->db->insert_id() ? ['id' => $this->db->insert_id()] : false;
@@ -172,5 +177,9 @@ Class Admin_Model extends CI_Model {
         return $query ? true : false;
     }
 
+    public function get_user_emails() {
+        $query = $this->db->select('email')->from('users')->where('received_email = 1')->where('email != ""')->get()->result();
+        return $query ? array('data' => $query) : false ;
+    }
     
 }

@@ -56,6 +56,7 @@ class Profile extends REST_Controller {
             'extention' => $this->post('extention') ? $this->post('extention') : '',
             'email' => $this->post('email') ? $this->post('email') : '',
             'phone' => $this->post('phone') ? $this->post('phone') : '',
+            'received_email' => $this->post('received_email') ? $this->post('received_email') : '',
         );
         $result = $this->profile_model->save_profile_info($data);
         return $result ? $this->response(array('success'=>true,'message'=>'Successfully updated information'), REST_Controller::HTTP_OK) : $this->response(array('success'=>false,'message'=>'Failed updating information.'), REST_Controller::HTTP_OK);

@@ -1,21 +1,10 @@
+var moreData;
+var email;
+var phone;
+var disabled;
+
 $(document).ready(function () {
 
-    // $("#create-lead-btn").click(function(e) {
-    //     e.preventDefault();
-    //     $("#create-new-lead-form")[0].reset();
-    // });
-
-    function makeid(length) {
-        let result = '';
-        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        const charactersLength = characters.length;
-        let counter = 0;
-        while (counter < length) {
-          result += characters.charAt(Math.floor(Math.random() * charactersLength));
-          counter += 1;
-        }
-        return result;
-    };
 
     $("#create-lead-btn").click(function() {
         $("#create-new-lead-form")[0].reset();
@@ -47,43 +36,21 @@ $(document).ready(function () {
             }
         });
 
-        var disabled = $("#create-new-lead-form").find(':input:disabled').removeAttr('disabled');
+        disabled = $("#create-new-lead-form").find(':input:disabled').removeAttr('disabled');
         var source = $("input[name='new_lead_source_radio']:checked").next('label').text();
         if (source == "Manual Entry") {
-            var moreData = "New Lead Received by Manual Entry";
+            moreData = "New Lead Received by Manual Entry";
         } else if (source == "Webform") {
-            var moreData = "New Lead Received by Webform";
+            moreData = "New Lead Received by Webform";
         } else if (source == "PPC") {
-            var moreData = "New PPC Lead Received";
+            moreData = "New PPC Lead Received";
         } else if (source == "Email Campaign") {
-            var moreData = "New Lead Received by Email Campaign";
+            moreData = "New Lead Received by Email Campaign";
         } else {
-            var moreData = "New Lead Received";
+            moreData = "New Lead Received";
         }
 
-        $.ajax({
-            type: "POST",
-            url: url + "admin/create-new-lead",
-            dataType: "JSON",
-            data: $("#create-new-lead-form").serialize() + "&notif_details=" + moreData,
-            success: function (response) {
-                if(response.success){
-                    setTimeout(() => {
-                        Swal.fire('Success!', response.message, 'success').then(function () {
-                            $.unblockUI();
-                            $('#create-new-lead-modal').modal('hide');
-                            location.href = url_extended;
-                        });
-                    }, 2000);
-                }else{
-                    Swal.fire('Oops!', 'Something went wrong.', 'warning');
-                    $.unblockUI();
-                }
-            },
-            error: function () {},
-        });
-
-        disabled.attr('disabled','disabled');
+        checkDuplicate();
 
     });
 
@@ -137,4 +104,94 @@ function newLeadSourceClick() {
         $('#new-lead-source').val(leadSourceValue);
         $('#new-lead-source').attr('disabled', true);
     }
+}
+
+function makeid(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+};
+
+// To check duplicate of EMAIL and PHONE NUMBER within 30 days
+function checkDuplicate() {
+    email = $('#new-lead-email').val();
+    phone = $('#new-lead-phone-number').val();
+    
+    $.ajax({
+        type: "GET",
+        url: url + "admin/check-duplicate",
+        dataType: "JSON",
+        data: {
+            email : email,
+            phone : phone
+        },
+        success: function(response) {
+            var data = response.data;
+            if (data.length == 1) {
+                $.unblockUI();
+                if (data[0]['email_address'] == email && data[0]['phone_number'] != phone) {
+                    Swal.fire(
+                        "Email Address is already existing!",
+                        "",
+                        "info"
+                    );
+                } else if (data[0]['phone_number'] == phone && data[0]['email_address'] != email) {
+                    Swal.fire(
+                        "Phone Number is already existing!",
+                        "",
+                        "info"
+                    );
+                } else {
+                    Swal.fire(
+                        "Email Address and Phone Number are already existing!",
+                        "",
+                        "info"
+                    );
+                }
+            } else if (data.length > 1) {
+                $.unblockUI();
+                Swal.fire(
+                    "Email Address or Phone Number is already existing!",
+                    "",
+                    "info"
+                );
+            } else {
+                saveNewLead();
+            }
+        }
+    });
+}
+
+
+function saveNewLead() {
+    $.ajax({
+        type: "POST",
+        url: url + "admin/send-email",
+        // url: url + "admin/create-new-lead",
+        dataType: "JSON",
+        data: $("#create-new-lead-form").serialize() + "&notif_details=" + moreData,
+        success: function (response) {
+            console.log(response);
+            if(response.success){
+                setTimeout(() => {
+                    Swal.fire('Success!', response.message, 'success').then(function () {
+                        $.unblockUI();
+                        $('#create-new-lead-modal').modal('hide');
+                        location.href = url_extended;
+                    });
+                }, 2000);
+            }else{
+                Swal.fire('Oops!', response.message, 'warning');
+                $.unblockUI();
+            }
+        },
+        error: function () {},
+    });
+    disabled.attr('disabled','disabled');
 }

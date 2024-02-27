@@ -175,6 +175,20 @@ class Admin extends REST_Controller {
         $this->returns($result);
     }
 
+    public function check_duplicate_get() {
+        if ($this->session->userdata('uf_session')) {
+            $data = [
+                'email' => $this->get('email'),
+                'phone' => $this->get('phone') 
+            ];
+            $result = $this->admin_model->get_check_duplicate($data);
+            $this->returns($result);
+        } else {
+            return redirect(base_url('admin'), 'refresh');
+        }
+        
+    }
+
     public function create_new_lead_post(){
         if($this->session->userdata('uf_session')){
             $sess = $this->session->userdata('uf_session');
@@ -229,8 +243,11 @@ class Admin extends REST_Controller {
                             'notif_added_by' => $id,
                         ];
                         $this->admin_model->post_notif_details($data);
-
-                        $this->response(array('success'=>true,'message'=>'Successfully Created Lead.'), REST_Controller::HTTP_OK);
+                        $data = [
+                            'lead_id' => $this->post('new_lead_id'),
+                            'sequence' => $lead_sequence,
+                        ];
+                        $this->send_email($data);
                     } else {
                         $this->response(array('success'=>false,'message'=>'Failed Saving'), REST_Controller::HTTP_OK);
                     }
@@ -241,7 +258,7 @@ class Admin extends REST_Controller {
                         'notif_added_by' => $id,
                     ];
                     $this->admin_model->post_notif_details($data);
-                    $this->response(array('success'=>true,'message'=>'Successfully Created Lead.'), REST_Controller::HTTP_OK);
+                    $this->send_email($data);
                 }
             } else {
                 $this->response(array('success'=>false,'message'=>'Failed Saving'), REST_Controller::HTTP_OK);
@@ -249,6 +266,46 @@ class Admin extends REST_Controller {
 		}else{
 			return redirect(base_url('admin'), 'refresh');
 		}
+    }
+
+    public function send_email_post() {
+        $this->response(array('success'=>true,'message'=>'Successfully Created Lead.'), REST_Controller::HTTP_OK);
+        
+        // $result = $this->admin_model->get_user_emails();
+        
+        // if(gettype($result) == "array"){
+        //     $this->load->library('phpmailer_library');
+        //     $mail = $this->phpmailer_library->load();
+        //     $mail->SMTPDebug = 0;
+        //     $mail->IsSMTP();
+        //     $mail->CharSet = 'UTF-8';
+        //     $mail->Host = MAIL_PRECOM_HOST;
+        //     $mail->SMTPAuth = true;
+        //     $mail->SMTPSecure = 'ssl';//ssl for gmail testing
+        //     $mail->Port = MAIL_PRECOM_PORT;
+        //     $mail->Username = MAIL_PRECOM_USERNAME;
+        //     $mail->Password = MAIL_PRECOM_PASSWORD;              
+        //     $mail->From = EMAIL_PRECOM;
+        //     $mail->FromName = "A2 SOLUTIONS";
+        //     $mail->Subject = "New Lead is Created";
+        //     // $mail->Body = "A new lead is created with an ID of <b>".$data['lead_id']."</b>.<br><br><a href='".base_url('admin/lead-record')."".$data['sequence']."' target='_blank'>Click here</a> to check the lead created!";
+        //     $mail->Body = "A new lead is created with an ID of <b>".$this->post('new_lead_id')."</b>.<br><br><a href='".base_url('admin/lead-record')."' target='_blank'>Click here</a> to check the lead created!";
+        //     // $mail->Body = "Your new system generated password is <b>" . $system_generated_password . "</b>. You can change it after login.<br><br>Login now <a href='".base_url('authentication')."' target='_blank'>".base_url('authentication')."</a>";
+        //     $mail->IsHTML(true);
+            
+        //     foreach ($result as $key => $value) {
+        //         foreach ($value as $key => $data) {
+        //             $email = $data->email;
+        //             $mail->AddAddress($email);
+        //         }
+        //     }
+        //     // Send email
+        //     if($mail->send()){
+        //         $this->response(array('success'=>true,'message'=>'Successfully Created Lead.'), REST_Controller::HTTP_OK);
+        //     }else{
+        //         $this->response(array('success'=>false,'message'=>$mail->ErrorInfo), REST_Controller::HTTP_OK);
+        //     }
+        // }
     }
 
     public function update_lead_record_post(){

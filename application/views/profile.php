@@ -110,7 +110,13 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="form-group col-12 ">
+                                                    <div class="form-group col-6 d-flex align-items-center">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input type="checkbox" class="custom-control-input editable" id="received_email" checked disabled/>
+                                                            <label class="custom-control-label" for="received_email">Receive an EMAIL everytime a Lead is created.</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-6 ">
                                                         <button type="submit" class="btn btn-primary btn-sm float-right ml-1" id="btn-save-profile" hidden>
                                                             <i data-feather='save'></i>
                                                             Save
