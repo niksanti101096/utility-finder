@@ -24,22 +24,24 @@
                 <div class="modal-body">
                     <div class="form form-horizontal">
                         <div class="row pt-0">
-                            <!-- <div class="col-12">
+                            <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-4">
                                         <div class="avatar-wrapper m-0 p-0 d-flex align-items-center justify-content-center">
-                                            <img src="" alt="" srcset="">
+                                            <img src="" alt="" id="img-avatar" width="100%" height="100%">
                                         </div>
                                     </div>
                                     <div class="col-sm-8 d-flex align-items-center">
-                                        <label class="btn btn-secondary" for="avatar">
-                                            <i data-feather='plus'></i>
-                                            Upload avatar
-                                        </label>
-                                        <input type="file" id="avatar" class="form-control" name="avatar" accept="image/*"/>
+                                        <div class="custom-file">
+                                            <input type="file" id="avatar" class="custom-file-input" name="avatar" accept="image/*"/>
+                                            <label class="custom-file-label" for="avatar">Upload avatar</label>
+                                        </div>
+                                        <div id="change-avatar">
+                                            <button type="button" class="btn btn-outline-info btn-sm" id="btn-change-avatar" disabled>Change avatar</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div> -->
+                            </div>
                             <div class="col-12">
                                 <div class="form-group row">
                                     <div class="col-sm-4 d-flex align-items-center">

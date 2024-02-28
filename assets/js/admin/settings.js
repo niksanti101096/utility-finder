@@ -1,6 +1,8 @@
 var userRecords;
 var userTable;
 var userUpdatedData;
+var avatar;
+var userId;
 var supplierName;
 var supplierType;
 var supplierLogo;
@@ -10,6 +12,7 @@ var supplierRecords;
 var imgLoc = url + 'assets/images/logos/';
 var oldSupplierName;
 var oldSupplierLogo;
+var oldAvatar;
 
 $(document).ready(function() {
 
@@ -18,6 +21,56 @@ $(document).ready(function() {
     $('#check-all-user').click(function(e){
         var table= $(e.target).closest('table');
         $('td input:checkbox',table).prop('checked',this.checked);
+    });
+
+    $('[data-dismiss=modal]').click(function() {
+        validator.resetForm();
+    });
+
+    var validator = $("form[name='user_form']").validate({ 
+        rules: {
+            salutation: {
+                required: true,
+            },
+            firstname: {
+                required: true,
+            },
+            lastname: {
+                required: true,
+            },
+            department: {
+                required: true,
+            },
+            email: {
+                required: true,
+                email: true
+            },
+            phone: {
+                required: true,
+            },
+            user_type: {
+                required: true,
+            },
+            username: {
+                required: true,
+            },
+            password: {
+                required: true,
+                minlength: 8
+            },
+            re_password: {
+                equalTo: "#password"
+            }
+        },
+        messages: {
+            password: {
+                required: "Please enter your new password!",
+                minlength: "Your password must be at least 8 characters long"
+            }
+        },
+        submitHandler: function(form) {
+            createUser();
+        }
     });
     
     $('#setting-navigation ul.nav > li > a#nav-system-setting').click(function() {
@@ -88,19 +141,27 @@ $(document).ready(function() {
         $("[name=department]").val("").change();
         $('#user-modal input, #user-modal select').removeAttr('disabled');
         $('[name=user_id]').removeAttr('value');
-        $('#div-password').removeAttr('hidden');
-        $('#div-repassword').removeAttr('hidden');
+        $('#div-password, #div-repassword, .custom-file').attr('hidden', false);
+        $('#change-avatar').attr('hidden', true);
+        $('.custom-file-label').html("Upload avatar");
+        $("#img-avatar").attr("src", false);
+    });
+
+    $('#avatar').change(function(e) {
+        var imgURL = URL.createObjectURL(e.target.files[0]);
+        $("#img-avatar").attr("src", imgURL);
     });
 
     $('#user-btn-edit').click(function() {
-        $('#user-btn-update').removeAttr('hidden');
-        $('#user-btn-edit').attr('hidden', 'hidden');
-        $('#user-modal input, #user-modal select').removeAttr('disabled');
+        $('#user-btn-update').attr('hidden', false);
+        $('#user-btn-edit').attr('hidden', true);
+        $('#user-modal input, #user-modal select, #btn-change-avatar').removeAttr('disabled');
+
     });
 
     $('#user-btn-update').click(function() {
         userUpdatedData = $("#user-form").serialize();
-        updateUserRecord(userUpdatedData);
+        updateUserAvatar(userUpdatedData);
     });
 
     $('#add-energy-btn').click(function() {
@@ -164,6 +225,11 @@ $(document).ready(function() {
         var imgURL = URL.createObjectURL(e.target.files[0]);
         $("#supplier-img").attr("src", imgURL);
         $("#supplier-img").attr("hidden", false);
+    });
+
+    $('#btn-change-avatar').click(function () {
+        $('.custom-file').attr('hidden', false);
+        $('#change-avatar').attr('hidden', true);
     });
 
 });
@@ -248,28 +314,94 @@ function openUserProfileModal(encryptedData) {
     var data = JSON.parse(decodeURIComponent(encryptedData));
     var form = "#user-form";
     for (var key in data) {
-        var type = $(form + " [name=" + key + "]").attr("type");
         
-        if (type === "radio") {
-            $(form + " [name=" + key + "][value='" + data[key]).prop("checked", true);
-        } else if (type === "checkbox") {
-            var checked = data[key] === "Y" ? true : false;
-            $(form + " [name=" + key + "]").attr("checked", checked);
+        if (key == "avatar") {
+            if (data[key] != null) {
+                $('#img-avatar').attr('src', url + "assets/images/avatars/" + data[key]);
+                oldAvatar = data[key];
+            } else {
+                $('#img-avatar').attr('src', false);
+                oldAvatar = ""; 
+            }
         } else {
-            if($(form + " [name="+key+"]").hasClass('select2')){
-                $(form + " [name="+key+"]").val(data[key]).change();
-            } else $(form + " [name=" + key + "]").val(data[key]);
+            var type = $(form + " [name=" + key + "]").attr("type");
+
+            if (type === "radio") {
+                $(form + " [name=" + key + "][value='" + data[key]).prop("checked", true);
+            } else if (type === "checkbox") {
+                var checked = data[key] === "Y" ? true : false;
+                $(form + " [name=" + key + "]").attr("checked", checked);
+            } else {
+                if($(form + " [name="+key+"]").hasClass('select2')){
+                    $(form + " [name="+key+"]").val(data[key]).change();
+                } else $(form + " [name=" + key + "]").val(data[key]);
+            }
         }
 	}
-    $('#user-btn-edit').removeAttr('hidden');
-    $('#user-btn-add').attr('hidden', 'hidden');
-    $('#user-btn-update').attr('hidden', 'hidden');
-    $('#div-password').attr('hidden', 'hidden');
-    $('#div-repassword').attr('hidden', 'hidden');
+    $('#user-btn-edit, #change-avatar').attr('hidden', false);
+    $('#user-btn-add, #user-btn-update, #div-password, #div-repassword, .custom-file').attr('hidden', true);
+    $('#btn-change-avatar').attr('disabled', true);
     $('#user-modal h4').html('User Record ID ' + data.user_id);
+    userId = data['user_id'];
 };
 
-function updateUserRecord(data) {
+function createUser() {
+    $.blockUI({
+        message:
+            '<div class="d-flex justify-content-center align-items-center"><p class="mr-50 mb-0">Creating new user...</p> <div class="spinner-grow spinner-grow-sm text-white" role="status"></div> </div>',
+        css: {
+            backgroundColor: 'transparent',
+            color: '#fff',
+            border: '0'
+        },
+        overlayCSS: {
+            opacity: 0.8
+        }
+    });
+
+    avatar = $('#avatar')[0].files[0];
+    var fd = new FormData();
+    fd.append('avatar', avatar);
+
+    $.ajax({
+        type: "POST",
+        url: url + "admin/store-avatar",
+        processData: false,
+        contentType: false,
+        cache: false,
+        enctype: 'multipart/form-data',
+        data: fd,
+        success: function (response) {
+            if (response.success) {
+                avatar = response.data;
+                $.ajax({
+                    type: "POST",
+                    url: url + "authentication/create-new-user", 
+                    dataType: "JSON",
+                    data: $("#user-form").serialize() + "&avatar=" + avatar,
+                    success: function (response) {
+                        if(response.success){
+                            setTimeout(() => {
+                                Swal.fire('Success!', 'Successfully created new user.', 'success').then(function () {
+                                    location.href = url_extended + 'settings';
+                                    $.unblockUI();
+                                    $("#user-modal").modal("hide");
+                                });
+                            }, 2000);
+                        }else{
+                            Swal.fire('Oops!', 'Something went wrong.', 'warning');
+                            $.unblockUI();
+                        }
+                    }
+                });
+            }
+        }
+    });
+
+
+}
+
+function updateUserAvatar(data) {
     $.blockUI({
         message:
             '<div class="d-flex justify-content-center align-items-center"><p class="mr-50 mb-0">Updating user...</p> <div class="spinner-grow spinner-grow-sm text-white" role="status"></div> </div>',
@@ -282,7 +414,36 @@ function updateUserRecord(data) {
             opacity: 0.8
         }
     });
-    
+
+    avatar = $('#avatar')[0].files[0];
+
+    if (avatar != undefined) { // To check if there is a avatar selected
+        if (avatar['name'] != oldAvatar) { // To check if the avatar is the same as the current avatar
+            var fd = new FormData();
+            fd.append('avatar', avatar);
+            fd.append('user_id', userId);
+            fd.append('imgLocation', "assets/images/avatars/" + oldAvatar);
+
+            $.ajax({
+                type: "POST",
+                url: url + "admin/update-user-avatar",
+                processData: false,
+                contentType: false,
+                cache: false,
+                enctype: 'multipart/form-data',
+                data: fd,
+                success: function (response) {
+                    if (response.success) {
+                        data = data + "&avatar=" + response.data;
+                        updateUserInfo(data);
+                    }
+                }
+            })
+        }
+    }
+};
+
+function updateUserInfo(data) {
     $.ajax({
         type: "POST",
         url: url + "authentication/update-user", 
@@ -304,7 +465,7 @@ function updateUserRecord(data) {
         },
         error: function () {},
     });
-};
+}
 
 function deleteUser(id) {
     Swal.fire({
@@ -349,6 +510,7 @@ function createSupplier() {
     $('#btn-disabled').addClass('hidden', false);
     $('#btn-add-supplier').attr('hidden', true);
     $('#btn-disabled').attr('hidden', false);
+
     var fd = new FormData();
 
     fd.append("name", supplierName);

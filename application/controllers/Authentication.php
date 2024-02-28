@@ -95,6 +95,7 @@ class Authentication extends REST_Controller {
                 'user_type' => $this->post('user_type') ? $this->post('user_type') : '',
                 'username' => $this->post('username') ? $this->post('username') : '',
                 'password' => $this->post('password') ? $this->post('password') : '',
+                'avatar' => $this->post('avatar') ? $this->post('avatar') : '',
             ];
             $result = $this->authentication_model->user_records($data);
             if(gettype($result) == "array"){
@@ -126,6 +127,7 @@ class Authentication extends REST_Controller {
                 'user_type' => $this->post('user_type') ? $this->post('user_type') : '',
                 'username' => $this->post('username') ? $this->post('username') : '',
                 'password' => $this->post('password') ? $this->post('password') : '',
+                'avatar' => $this->post('avatar') ? $this->post('avatar') : '',
             ];
             $result = $this->authentication_model->user_records($data);
             if(gettype($result) == "array"){

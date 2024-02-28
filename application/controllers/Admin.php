@@ -445,6 +445,28 @@ class Admin extends REST_Controller {
         $this->returns($result);
     }
 
+    public function store_avatar_post() {
+        $fileName = $_FILES["avatar"]['name'];
+        $config['upload_path'] = './assets/images/avatars/';
+        $config['allowed_types'] = 'gif|jpg|png|jpeg';
+        $config['max_size'] = 1000;
+        // $config['max_width'] = 1200;
+        // $config['max_height'] = 1200;
+        $config['file_name'] = $fileName;
+
+        $this->load->library('upload', $config);
+
+        if (!$this->upload->do_upload('avatar')) {
+            $error = array('error' => $this->upload->display_errors());
+            $this->returns($error);
+        }
+        else {
+            $data = array('success' => $this->upload->data());
+
+            $this->response(array('success'=>true,'data'=>$data['success']['file_name']), REST_Controller::HTTP_OK);
+        }
+    }
+
     public function store_supplier_post() {
         $sess = $this->session->userdata('uf_session');
         $fileName = $_FILES["logo"]['name'];
@@ -479,6 +501,35 @@ class Admin extends REST_Controller {
             $result = $this->admin_model->post_supplier($data);
             $this->response(array('success'=>true,'message'=>'Successfully Added '.$retVal.' Supplier!'), REST_Controller::HTTP_OK);
         }
+    }
+
+    public function update_user_avatar_post() {
+        $fileName = $_FILES["avatar"]['name'];
+        $oldAvatarPath = $this->post('imgLocation');
+
+        if (file_exists($oldAvatarPath)) {
+            unlink($oldAvatarPath); // To delete the old logo
+        }
+
+        $config['upload_path'] = './assets/images/avatars/';
+        $config['allowed_types'] = 'gif|jpg|png|jpeg';
+        $config['max_size'] = 1000;
+        // $config['max_width'] = 1200;
+        // $config['max_height'] = 1200;
+        $config['file_name'] = $fileName;
+
+        $this->load->library('upload', $config);
+
+        if (!$this->upload->do_upload('avatar')) {
+            $error = array('error' => $this->upload->display_errors());
+            $this->returns($error);
+        }
+        else {
+            $data = array('success' => $this->upload->data());
+
+            $this->response(array('success'=>true,'data'=>$data['success']['file_name']), REST_Controller::HTTP_OK);
+        }
+
     }
 
     public function update_supplier_logo_post() {
