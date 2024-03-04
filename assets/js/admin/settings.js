@@ -82,6 +82,13 @@ $(document).ready(function() {
         $('#add-energy-btn').attr('hidden', true);
         $('#add-water-btn').attr('hidden', true);
         $('#add-lead-source-btn').attr('hidden', true);
+
+        $('#breadcrumb-dashboard').siblings().remove();
+        $('.breadcrumb').append(
+            '<li class="breadcrumb-item">'+
+                'System Settings'+
+            '</li>'
+        );
     });
 
     $('#setting-navigation ul.nav > li > a#nav-user-setting').click(function() {
@@ -89,6 +96,13 @@ $(document).ready(function() {
         $('#add-energy-btn').attr('hidden', true);
         $('#add-water-btn').attr('hidden', true);
         $('#add-lead-source-btn').attr('hidden', true);
+
+        $('#breadcrumb-dashboard').siblings().remove();
+        $('.breadcrumb').append(
+            '<li class="breadcrumb-item">'+
+                'User Settings'+
+            '</li>'
+        );
     });
 
     $('#link-energy-supplier').click(function() {
@@ -101,6 +115,11 @@ $(document).ready(function() {
         $('#add-water-btn').attr('hidden', true);
         $('#add-lead-source-btn').attr('hidden', true);
         $('#supplier-type').val(1);
+        $('.breadcrumb').append(
+            '<li class="breadcrumb-item active">'+
+                'Energy Supplier List'+
+            '</li>'
+        );
         loadEnergySupplierRecords();
     });
 
@@ -114,6 +133,11 @@ $(document).ready(function() {
         $('#add-energy-btn').attr('hidden', true);
         $('#add-lead-source-btn').attr('hidden', true);
         $('#supplier-type').val(2);
+        $('.breadcrumb').append(
+            '<li class="breadcrumb-item active">'+
+                'Water Supplier List'+
+            '</li>'
+        );
         loadWaterSupplierRecords();
     });
 
@@ -126,6 +150,11 @@ $(document).ready(function() {
         $('#add-water-btn').attr('hidden', true);
         $('#add-energy-btn').attr('hidden', true);
         $('#add-lead-source-btn').attr('hidden', false);
+        $('.breadcrumb').append(
+            '<li class="breadcrumb-item active">'+
+                'Lead Sources'+
+            '</li>'
+        );
     });
     
     $('#add-user-btn').click(function() {

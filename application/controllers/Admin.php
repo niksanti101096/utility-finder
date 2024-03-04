@@ -289,8 +289,8 @@ class Admin extends REST_Controller {
             $mail->From = EMAIL_PRECOM;
             $mail->FromName = "A2 SOLUTIONS";
             $mail->Subject = "New Lead is Created";
-            // $mail->Body = "A new lead is created with an ID of <b>".$data['lead_id']."</b>.<br><br><a href='".base_url('admin/lead-record')."".$data['sequence']."' target='_blank'>Click here</a> to check the lead created!";
-            $mail->Body = "A new lead is created with an ID of <b>".$this->post('new_lead_id')."</b>.<br><br><a href='".base_url('admin/lead-record')."' target='_blank'>Click here</a> to check the lead created!";
+            $mail->Body = "A new lead is created with an ID of <b>".$data['lead_id']."</b>.<br><br><a href='".base_url('admin/lead-record/')."".$data['sequence']."' target='_blank'>Click here</a> to check the lead created!";
+            // $mail->Body = "A new lead is created with an ID of <b>".$this->post('new_lead_id')."</b>.<br><br><a href='".base_url('admin/lead-record')."' target='_blank'>Click here</a> to check the lead created!";
             // $mail->Body = "Your new system generated password is <b>" . $system_generated_password . "</b>. You can change it after login.<br><br>Login now <a href='".base_url('authentication')."' target='_blank'>".base_url('authentication')."</a>";
             $mail->IsHTML(true);
             
@@ -302,9 +302,9 @@ class Admin extends REST_Controller {
             }
             // Send email
             if($mail->send()){
-                return true
+                return true;
             }else{
-                return false
+                return false;
             }
         }
     }

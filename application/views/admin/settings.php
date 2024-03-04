@@ -12,11 +12,11 @@
                             <h2 class="content-header-title float-left mb-0">Settings</h2>
                             <div class="breadcrumb-wrapper">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item">
+                                    <li class="breadcrumb-item" id="breadcrumb-dashboard">
                                         <a href="<?php echo base_url('admin'); ?>">Dashboard</a>
                                     </li>
                                     <li class="breadcrumb-item active">
-                                        Manage Users
+                                        User Settings
                                     </li>
                                 </ol>
                             </div>
