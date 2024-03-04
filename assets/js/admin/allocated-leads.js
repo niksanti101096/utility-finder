@@ -1,7 +1,6 @@
 var leadTable;
 var allocatedLeads;
 
-
 $(document).ready(function () {
     defaultFieldsDisplay();
 
@@ -11,6 +10,7 @@ $(document).ready(function () {
         $("#allocated-leads-from").val("");
         $("#allocated-leads-to").val("");
         $("#allocated-leads-btn-submit").css("display","none");
+        loadAlloLeads("all");
     });
 
     $("#allocated-leads-today").click(function() {
@@ -19,6 +19,7 @@ $(document).ready(function () {
         $("#allocated-leads-from").val("");
         $("#allocated-leads-to").val("");
         $("#allocated-leads-btn-submit").css("display","none");
+        loadAlloLeads("today");
     });
 
     $("#allocated-leads-range-date").click(function() {
@@ -65,6 +66,7 @@ function loadLeadsRecords() {
         data: {},
         success: function (response) {
             if (response.data.length > 0) {
+                allocatedLeads = [];
                 response.data.forEach(function (data) {
                     allocatedLeads.push(data);
                 });
@@ -249,6 +251,88 @@ function archiveLead(id) {
                 '',
                 'info',
             );
+        }
+    });
+}
+
+function loadAlloLeads(type = "dateRange") {
+    $.ajax({
+        type: "GET",
+        url: url + "count/load-allo-leads-filter", 
+        dataType: "JSON",
+        data: {
+            type: type,
+            date_from: $('#allocated-leads-from').val(),
+            date_to: $('#allocated-leads-to').val(),
+        },
+        success: function (response) {
+            if (response.data) {
+                allocatedLeads = [];
+                response.data.forEach(function (data) {
+                    allocatedLeads.push(data);
+                });
+
+                $("#list-leads-table").DataTable().destroy();
+                leadTable = $("#list-leads-table").DataTable({
+                    responsive: true,
+                    initComplete : function( settings, json ) {
+                        $('.datatable-leads-title').html('Leads');
+                        $('.datatable-leads-title').addClass('h1');
+                        $('.datatable-leads-title').css('color','inherit');
+                    },
+                    language: {
+                        infoEmpty: "No records available - Got it?",
+                    },
+                    data: allocatedLeads,
+                    columns: [
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+                                return `${row.lead_id}`;
+                            }
+                        },
+                        {data: "business_name"},
+                        {data: "phone_number"},
+                        {data: "email_address"},
+                        {data: "current_contract_ends"},
+                        {data: "lead_source"},
+                        {
+                            data: null,
+                            render: function(data, type, row) {
+                                if(row.status == 1) return "Unallocated";
+                                else return "Allocated";
+                            }
+                        },
+                        {data: "partner_name"},
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+                                return (
+                                    '<button type="button" class="btn btn-success btn-sm w-100" onclick="viewLeadRecord('+row.sequence+')">View</button>' +
+                                    '<button type="button" class="btn btn-secondary btn-sm w-100" onclick="loadReallocateModal(\''+encodeURIComponent(JSON.stringify(data))+'\')">Reallocate</button>' +
+                                    '<button type="button" class="btn btn-danger btn-sm w-100" onclick="archiveLead('+row.sequence+')">Archive</button>'
+                                )
+                            }
+                        },
+                    ],
+                    select: true,
+                    displayLength: 50,
+                    lengthMenu: [50, 75, 100],
+                    "paging": false,
+                    "info": false,
+                    "filter": false,
+                });
+
+                for (let index = 0; index < 8; index++) {
+                    leadTable.column(index).visible(false);
+                }
+
+                var columns = $('#allocated-leads-filter-display').val();
+
+                columns.forEach(element => {
+                    leadTable.column(parseInt(element) - 1).visible(true);
+                });
+            }
         }
     });
 }

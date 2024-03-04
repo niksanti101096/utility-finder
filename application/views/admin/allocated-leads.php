@@ -46,7 +46,7 @@
                                         <input type="date" class="form-control" id="allocated-leads-to" name="allocated_leads_list_to" disabled>
                                     </div>
                                     <div>
-                                        <button class="btn btn-sm btn-primary" type="button" id="allocated-leads-btn-submit" style="display:none;">Submit</button>
+                                        <button class="btn btn-sm btn-primary" type="button" id="allocated-leads-btn-submit" style="display:none;" onclick="loadAlloLeads()">Submit</button>
                                     </div>
                                 </div>
                             </div>

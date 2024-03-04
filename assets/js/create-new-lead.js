@@ -172,8 +172,7 @@ function checkDuplicate() {
 function saveNewLead() {
     $.ajax({
         type: "POST",
-        url: url + "admin/send-email",
-        // url: url + "admin/create-new-lead",
+        url: url + "admin/create-new-lead",
         dataType: "JSON",
         data: $("#create-new-lead-form").serialize() + "&notif_details=" + moreData,
         success: function (response) {

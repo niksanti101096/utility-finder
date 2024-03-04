@@ -10,6 +10,7 @@ $(document).ready(function () {
         $("#new-leads-from").val("");
         $("#new-leads-to").val("");
         $("#new-leads-btn-submit").css("display","none");
+        loadNewLeads("all");
     });
 
     $("#new-leads-today").click(function() {
@@ -18,6 +19,7 @@ $(document).ready(function () {
         $("#new-leads-from").val("");
         $("#new-leads-to").val("");
         $("#new-leads-btn-submit").css("display","none");
+        loadNewLeads("today");
     });
 
     $("#new-leads-range-date").click(function() {
@@ -64,6 +66,7 @@ function loadNotLeads() {
         data: {},
         success: function (response) {
             if (response.data.length > 0) {
+                notAllocatedLeads = [];
                 response.data.forEach(function (data) {
                     notAllocatedLeads.push(data);
                 });
@@ -251,5 +254,88 @@ function archiveLead(id) {
                 'info',
             );
         }
+    });
+}
+
+function loadNewLeads(type = "dateRange") {
+    $.ajax({
+        type: "GET",
+        url: url + "count/load-leads-filter", 
+        dataType: "JSON",
+        data: {
+            type: type,
+            date_from: $('#new-leads-from').val(),
+            date_to: $('#new-leads-to').val(),
+        },
+        success: function (response) {
+            if (response.data) {
+                notAllocatedLeads = [];
+                response.data.forEach(function (data) {
+                    notAllocatedLeads.push(data);
+                });
+                
+
+                $("#list-leads-table").DataTable().destroy();
+                leadTable = $("#list-leads-table").DataTable({
+                    responsive: true,
+                    initComplete : function( settings, json ) {
+                        $('.datatable-leads-title').html('Leads');
+                        $('.datatable-leads-title').addClass('h1');
+                        $('.datatable-leads-title').css('color','inherit');
+                },
+                    data: notAllocatedLeads,
+                    columns: [
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+                                return `${row.lead_id}`;
+                            }
+                        },
+                        {data: "business_name"},
+                        {data: "phone_number"},
+                        {data: "email_address"},
+                        {data: "current_contract_ends"},
+                        {data: "lead_source"},
+                        {
+                            data: null,
+                            render: function(data, type, row) {
+                                if(row.status == 1) return "Unallocated";
+                                else return "Allocated";
+                            }
+                        },
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+                                leadId = row.lead_id;
+                                partnerId = row.partner_id;
+                                leadStatus= row.status;
+                                return (
+                                    '<button type="button" class="btn btn-success btn-sm w-100" onclick="viewLeadRecord('+row.sequence+')">View</button>' +
+                                    '<button type="button" class="btn btn-secondary btn-sm w-100" onclick="loadReallocateModal(\''+encodeURIComponent(JSON.stringify(data))+'\')">Allocate</button>' +
+                                    '<button type="button" class="btn btn-danger btn-sm w-100" onclick="archiveLead('+row.sequence+')">Archive</button>'
+                                )
+                            }
+                        },
+                    ],
+                    select: true,
+                    displayLength: 50,
+                    lengthMenu: [50, 75, 100],
+                    "paging": false,
+                    "info": false,
+                    "filter": false,
+                });
+
+                for (let index = 0; index < 8; index++) {
+                    leadTable.column(index).visible(false);
+                }
+
+                var columns = $('#new-leads-filter-display').val();
+
+                columns.forEach(element => {
+                    leadTable.column(parseInt(element) - 1).visible(true);
+                });
+            };
+        },
+        error: function () {},
     });
 }

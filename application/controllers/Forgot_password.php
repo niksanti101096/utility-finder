@@ -64,6 +64,7 @@ class Forgot_Password extends REST_Controller {
 					$data = array(
 						'success' => false,
 						'message' => 'Something went wrong while sending email. Please contact your administrator.',
+						'message' => $mail->ErrorInfo,
 					);
 					$this->load->view('forgot-password', $data);
 				}

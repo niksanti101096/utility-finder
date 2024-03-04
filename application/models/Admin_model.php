@@ -50,7 +50,7 @@ Class Admin_Model extends CI_Model {
         return $query ? array('data' => $query) : false;
     }
 
-    public function get_load_archiived_lead_records(){
+    public function get_load_archived_lead_records(){
         $query = $this->db->select('*')->from('lead_records')->where('status =', 0)->get()->result();
         return $query ? array('data' => $query) : false;
     }
@@ -81,6 +81,24 @@ Class Admin_Model extends CI_Model {
             ->where('date_created BETWEEN "'.$date_from.'" AND "'.$date_to.'"')
             ->get('lead_records')->num_rows();
         return ['hits' => $hits, 'not_allocated' => $not_allocated, 'allocated' => $allocated];
+    }
+
+    public function get_load_leads_filter($date_from = "all", $date_to = "all") {
+        if ($date_from == "all") {
+            $query = $this->db->select('*')->from('lead_records lr')->join('partner_records pr', 'lr.partner_id = pr.partner_id', 'left')->where('lr.status =', 1)->get()->result();
+        } else {
+            $query = $this->db->select('*')->from('lead_records lr')->join('partner_records pr', 'lr.partner_id = pr.partner_id', 'left')->where('lr.status =', 1)->where('date_created BETWEEN "'.$date_from.'" AND "'.$date_to.'"')->get()->result();
+        }
+        return $query ? array('data' => $query, 'success' => true) : false;
+    }
+
+    public function get_load_allo_leads_filter($date_from = "all", $date_to = "all") {
+        if ($date_from == "all") {
+            $query = $this->db->select('*')->from('lead_records lr')->join('partner_records pr', 'lr.partner_id = pr.partner_id', 'left')->where('lr.status =', 2)->get()->result();
+        } else {
+            $query = $this->db->select('*')->from('lead_records lr')->join('partner_records pr', 'lr.partner_id = pr.partner_id', 'left')->where('lr.status =', 2)->where('date_created BETWEEN "'.$date_from.'" AND "'.$date_to.'"')->get()->result();
+        }
+        return $query ? array('data' => $query, 'success' => true) : false;
     }
 
     public function get_leads_lead_source($date_from, $date_to){

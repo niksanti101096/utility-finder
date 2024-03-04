@@ -16,11 +16,9 @@
         <div class="row">
             <div class="col-xl-12">
                 <div class="card">
-                    <div class="card-header">
-                        <h4>Date Filters</h4>
-                    </div>
                     <div class="card-body">
-                        <form id="archived-leads-form">
+                        <form id="archived-leads-form" hidden>
+                            <h4>Date Filters</h4>
                             <div class="row">
                                 <div class="col-12 form-group d-flex align-items-center archived-leads-gap">
                                     
@@ -51,7 +49,7 @@
                                 </div>
                             </div>
                         </form>
-                        <div class="row"><div class="col-md-12"><hr></div></div>
+                        <div class="row" hidden><div class="col-md-12"><hr></div></div>
                         <form id="archived-leads-list-form">
                             <h4>Fields to Display</h4>
                             <div class="row">

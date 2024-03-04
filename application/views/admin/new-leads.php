@@ -46,7 +46,7 @@
                                         <input type="date" class="form-control" id="new-leads-to" name="new_leads_list_to" disabled>
                                     </div>
                                     <div>
-                                        <button class="btn btn-sm btn-primary" type="button" id="new-leads-btn-submit" style="display:none;">Submit</button>
+                                        <button class="btn btn-sm btn-primary" type="button" id="new-leads-btn-submit" style="display:none;" onclick="loadNewLeads()">Submit</button>
                                     </div>
                                 </div>
                             </div>
