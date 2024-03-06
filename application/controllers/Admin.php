@@ -349,6 +349,47 @@ class Admin extends REST_Controller {
         $this->returns($result);
     }
 
+    public function assign_partner_bulk_post() {
+        if($this->session->userdata('uf_session')){
+            $sess = $this->session->userdata('uf_session');
+            $lead_sequence = $this->post('lead_sequence');
+            $data = [
+                'status' => 2,
+                'partner_id' => $this->post('partner_id'),
+                'allocated_by' => $sess['id'],
+            ];
+            $result = $this->admin_model->post_assign_partner_bulk($data, $lead_sequence);
+            if($result){
+                if ($this->post('lead_status') == 1) {
+                    foreach ($lead_sequence as $key => $value) {
+                        $data = [
+                            'lead_sequence' => $value,
+                            'action' => "Lead Allocated - " . $this->post('partner_name'),
+                            'action_by' => $sess['id'],
+                        ];
+                        $this->audit_log_model->post_audit_log($data);
+                    }
+                    $returnMessage = 'Successfully allocated lead!';
+                } else {
+                    foreach ($lead_sequence as $key => $value) {
+                        $data = [
+                            'lead_sequence' => $value,
+                            'action' => "Lead Re-Allocated - " . $this->post('partner_name'),
+                            'action_by' => $sess['id'],
+                        ];
+                        $this->audit_log_model->post_audit_log($data);
+                    }
+                    $returnMessage = 'Successfully reallocated lead!';
+                }
+                $this->response(array('success'=>true,'message'=>$returnMessage), REST_Controller::HTTP_OK);
+            } else {
+                $this->response(array('success'=>false,'message'=>'Something went wrong!'), REST_Controller::HTTP_OK);
+            }
+        } else {
+			return redirect(base_url('admin'), 'refresh');
+		}
+    }
+
     public function assign_partner_post() {
         if($this->session->userdata('uf_session')){
             $sess = $this->session->userdata('uf_session');
@@ -410,6 +451,25 @@ class Admin extends REST_Controller {
             $this->response(array('success'=>true,'message'=>'Successfully Added Note.'), REST_Controller::HTTP_OK);
         } else {
             $this->response(array('success'=>false,'message'=>'Failed Adding Note.'), REST_Controller::HTTP_OK);
+        }
+    }
+
+    public function archive_bulk_lead_post() {
+        $sess = $this->session->userdata('uf_session');
+        $lead_sequence = $this->post('lead_sequence');
+        $result = $this->admin_model->post_archive_bulk_lead($lead_sequence);
+        if ($result) {
+            foreach ($lead_sequence as $key => $value) {
+                $data = [
+                    'lead_sequence' => $value,
+                    'action' => "Lead Archived.",
+                    'action_by' => $sess['id'],
+                ];
+                $this->audit_log_model->post_audit_log($data);
+            }
+            $this->response(array('success'=>true,'message'=>'Successfully Archived Leads!'), REST_Controller::HTTP_OK);
+        } else {
+            $this->response(array('success'=>true,'message'=>'Something went wrong!'), REST_Controller::HTTP_OK);
         }
     }
 

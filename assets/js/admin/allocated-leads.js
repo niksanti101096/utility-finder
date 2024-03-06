@@ -1,5 +1,7 @@
 var leadTable;
 var allocatedLeads;
+var checkedLeadsSequence;
+var checkedLeadsId;
 
 $(document).ready(function () {
     defaultFieldsDisplay();
@@ -39,7 +41,11 @@ $(document).ready(function () {
             $('#btn-allocate-disabled').attr('hidden', false);
             $('#btn-allocate').attr('hidden', true);
             $('#btn-reallocate').attr('hidden', true);
-            allocateLead(partnerVal);
+            if ($('#lead-bulk').val() == 1) {
+                bulkAllocateLead(partnerVal, $('#allocate-lead option:selected').text());
+            } else {
+                allocateLead(partnerVal, $('#allocate-lead option:selected').text());
+            }
         } else {
             Swal.fire(
                 'Oppss..',
@@ -50,7 +56,111 @@ $(document).ready(function () {
         
     });
 
+    $('#btn-bulk-cancel').click(function() {
+        leadTable.column(0).visible(false);
+        $('#btn-bulk-reallo, #btn-bulk-import, #btn-bulk-arch').attr('hidden', false);
+        $('#btn-bulk-cancel, .addtional').attr('hidden', true);
+    });
+
+    $('#btn-bulk-reallo').click(function() {
+        leadTable.column(0).visible(true);
+        $('#btn-bulk-reallo, #btn-bulk-import, #btn-bulk-arch').attr('hidden', true);
+        $('#btn-bulk-cancel, .addtional').attr('hidden', false);
+        $('.table-check').prop('checked', false);
+        $('.addtional').attr('id', 'btn-proceed-allo');
+        $('.addtional').addClass('btn-primary');
+        $('.addtional').removeClass('btn-warning btn-danger');
+    });
+
+    $('#btn-bulk-import').click(function() {
+        leadTable.column(0).visible(true);
+        $('#btn-bulk-reallo, #btn-bulk-import, #btn-bulk-arch').attr('hidden', true);
+        $('#btn-bulk-cancel, .addtional').attr('hidden', false);
+        $('.table-check').prop('checked', false);
+        $('.addtional').attr('id', 'btn-proceed-import');
+        $('.addtional').addClass('btn-warning');
+        $('.addtional').removeClass('btn-primary btn-danger');
+    });
+
+    $('#btn-bulk-arch').click(function() {
+        leadTable.column(0).visible(true);
+        $('#btn-bulk-reallo, #btn-bulk-import, #btn-bulk-arch').attr('hidden', true);
+        $('#btn-bulk-cancel, .addtional').attr('hidden', false);
+        $('.table-check').prop('checked', false);
+        $('.addtional').attr('id', 'btn-proceed-arch');
+        $('.addtional').addClass('btn-danger');
+        $('.addtional').removeClass('btn-warning btn-primary');
+    });
+
+    $('#check-all-list').click(function() {
+        if ($('#check-all-list').is(':checked')) {
+            $('.table-check').not(this).prop('checked', true);
+        } else {
+            $('.table-check').not(this).prop('checked', false);
+        }
+    });
+
+    $('#list-leads-table').change('.table-check', function() {
+        if ($('.table-check:checked').length == $('.table-check').length) {
+            $('#check-all-list').prop('checked', true)
+        } else {
+            $('#check-all-list').prop('checked', false)
+        }
+        getCheckRecords();
+    });
+
+    $('.addtional').click(function() {
+        if ($(this).attr('id') == "btn-proceed-allo") {
+            if ($('.table-check:checked').length == 0) {
+                Swal.fire(
+                    'Please select atleast 1 to reallocate.',
+                    '',
+                    'warning'
+                );
+            } else {
+                const tempHolder = [];
+                checkedLeadsId.forEach(element => {
+                    tempHolder.push('<li>'+element+'</li>')
+                })
+                $('#allocate-lead-modal').modal('show');
+                $('#btn-allocate, .unallocated-lead-label, .unallocated-bulk-lead-label, .allocated-lead-label, .allocated-lead-label').attr('hidden', true);
+                $('#btn-reallocate, .allocated-bulk-lead-label, .bulk-lead-sublabel').attr('hidden', false);
+                $('.allocate-title-modal').html('Reallocate Bulk Leads');
+                $('.bulk-lead-sublabel').html(tempHolder);
+                $('#lead-bulk').val(1);
+                loadAllPartners();
+            }
+        } else if ($(this).attr('id') == "btn-proceed-arch") {
+            if ($('.table-check:checked').length == 0) {
+                Swal.fire(
+                    'Please select atleast 1 to archive.',
+                    '',
+                    'warning'
+                );
+            } else {
+                bulkArchiveLeads();
+            }
+        } else {
+            Swal.fire(
+                'This function is to be follow.',
+                '',
+                'warning'
+            );
+        }
+    });
+
 });
+
+function getCheckRecords() {
+    checkedLeadsSequence = [];
+    checkedLeadsId = [];
+    $('.table-check:checked').each(function() {
+        if ($(this).prop('checked')) {
+            checkedLeadsSequence.push($(this).val());
+            checkedLeadsId.push($(this).attr('name'))
+        }
+    });
+}
 
 function defaultFieldsDisplay() {
     $("#allocated-leads-filter-display").val([1,2,3,4,5,6,7,8]).change();
@@ -81,6 +191,17 @@ function loadLeadsRecords() {
                 },
                     data: allocatedLeads,
                     columns: [
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+                                return (
+                                    '<div class="custom-control custom-checkbox">'+
+                                        '<input class="custom-control-input table-check" type="checkbox" value="'+row.sequence+'" name="'+row.lead_id+'" id="check-'+row.sequence+'">'+
+                                        '<label for="check-'+row.sequence+'" class="custom-control-label"></label>'+
+                                    '</div>'
+                                )
+                            }
+                        },
                         {
                             data: null,
                             render: function (data, type, row) {
@@ -128,6 +249,8 @@ function loadLeadsRecords() {
                 columns.forEach(element => {
                     leadTable.column(parseInt(element) - 1).visible(true);
                 });
+
+                leadTable.column(0).visible(false);
             };
         },
         error : function() {},
@@ -146,7 +269,7 @@ function loadReallocateModal(encryptedData) {
     $('.allocate-title-modal').html('Reallocate Lead ' + data.lead_id);
     $('#btn-allocate').attr('hidden', true);
     $('#btn-reallocate').attr('hidden', false);
-    $('#btn-allocate-disabled').attr('hidden', true);
+    $('#btn-allocate-disabled, .allocated-bulk-lead-label, .bulk-lead-sublabel').attr('hidden', true);
     $('#lead-sequence').val(data.sequence);
     $('#lead-status').val(data.status);
     loadAllPartners(data.partner_id);
@@ -171,17 +294,16 @@ function loadAllPartners(partnerId) {
     });
 }
 
-function allocateLead(partnerVal) {
-    const sequence = $('#lead-sequence').val();
-    const lead_status = $('#lead-status').val();
+function bulkAllocateLead(partnerVal, partnerName) {
     $.ajax({
         type: "POST",
-        url: url + "admin/assign-partner",
+        url: url + "admin/assign-partner-bulk",
         dataType: "JSON",
         data: {
+            lead_sequence : checkedLeadsSequence,
             partner_id : partnerVal,
-            lead_sequence : sequence,
-            lead_status: lead_status,
+            lead_status: 2,
+            partner_name: partnerName
         },
         success: function (response) {
             if (response.success) {
@@ -201,6 +323,90 @@ function allocateLead(partnerVal) {
                     'error',
                 );
             }
+        }
+    });
+}
+
+function allocateLead(partnerVal, partnerName) {
+    const sequence = $('#lead-sequence').val();
+    const lead_status = $('#lead-status').val();
+    $.ajax({
+        type: "POST",
+        url: url + "admin/assign-partner",
+        dataType: "JSON",
+        data: {
+            partner_id : partnerVal,
+            lead_sequence : sequence,
+            lead_status: lead_status,
+            partner_name: partnerName
+        },
+        success: function (response) {
+            if (response.success) {
+                Swal.fire(
+                    response.message,
+                    '',
+                    'success',
+                ).then(() => {
+                    $('#btn-allocate-disabled').attr('hidden', true);
+                    $('#allocate-lead-modal').modal('hide');
+                    loadLeadsRecords();
+                });
+            } else {
+                Swal.fire(
+                    response.message,
+                    '',
+                    'error',
+                );
+            }
+        }
+    });
+}
+
+function bulkArchiveLeads() {
+    let tempHolder = "";
+    checkedLeadsId.forEach(element => {
+        tempHolder += ('<li>'+element+'</li>');
+    })
+    Swal.fire({
+        title: "Are you sure to delete the following leads?",
+        html: tempHolder,
+        icon: "warning",
+        showDenyButton: true,
+        confirmButtonText: "Yes",
+        denyButtonText: `Cancel`
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: "POST",
+                url: url + "admin/archive-bulk-lead",
+                dataType: "JSON",
+                data: {
+                    lead_sequence: checkedLeadsSequence,
+                },
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title: response.message,
+                            confirmButtonText: "Proceed",
+                            icon: "success",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                loadLeadsRecords();
+                                $('#btn-bulk-reallo, #btn-bulk-import, #btn-bulk-arch').attr('hidden', false);
+                                $('.addtional, #btn-bulk-cancel').attr('hidden', true);
+                            }
+                        });
+                    } else {
+                        Swal.fire(
+                            response.message,
+                            '',
+                            'error'
+                        );
+                    }
+                }
+            });
         }
     });
 }
@@ -288,6 +494,17 @@ function loadAlloLeads(type = "dateRange") {
                         {
                             data: null,
                             render: function (data, type, row) {
+                                return (
+                                    '<div class="custom-control custom-checkbox">'+
+                                        '<input class="custom-control-input table-check" type="checkbox" value="'+row.sequence+'" name="'+row.lead_id+'" id="check-'+row.sequence+'">'+
+                                        '<label for="check-'+row.sequence+'" class="custom-control-label"></label>'+
+                                    '</div>'
+                                )
+                            }
+                        },
+                        {
+                            data: null,
+                            render: function (data, type, row) {
                                 return `${row.lead_id}`;
                             }
                         },
@@ -332,6 +549,8 @@ function loadAlloLeads(type = "dateRange") {
                 columns.forEach(element => {
                     leadTable.column(parseInt(element) - 1).visible(true);
                 });
+
+                leadTable.column(0).visible(false);
             }
         }
     });

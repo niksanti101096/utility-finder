@@ -130,6 +130,11 @@ Class Admin_Model extends CI_Model {
         return $query ? array('data' => $query) : false;
     }
     
+    public function post_assign_partner_bulk($data, $lead_sequence){
+        $query = $this->db->where_in('sequence', $lead_sequence)->update('lead_records', $data);
+        return $query ? true : false;
+    }
+    
     public function post_assign_partner($data, $lead_sequence){
         $query = $this->db->where('sequence', $lead_sequence)->update('lead_records', $data);
         return $query ? true : false;
@@ -138,6 +143,11 @@ Class Admin_Model extends CI_Model {
     public function get_load_notes($lead_sequence){
         $query = $this->db->select('n.notes_date_created, n.notes, CONCAT(u.firstname," ", u.lastname) AS user')->from('notes n')->join('users u', 'n.notes_added_by = u.user_id')->where('n.lead_sequence =', $lead_sequence)->get()->result();
         return $query ? array('data' => $query) : false;
+    }
+
+    public function post_archive_bulk_lead($lead_sequence) {
+        $query = $this->db->set('status', 0)->where_in('sequence', $lead_sequence)->update('lead_records');
+        return $query ? true : false;
     }
 
     public function post_archive_lead($lead_sequence) {

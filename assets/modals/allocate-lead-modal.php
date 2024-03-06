@@ -11,6 +11,7 @@
                 <div class="row">
                     <input type="hidden" name="lead_sequence" id="lead-sequence">
                     <input type="hidden" name="lead_status" id="lead-status">
+                    <input type="hidden" name="lead_bulk" id="lead-bulk">
                     <div class="col-12">
                         <div class="row">
                             <div class="col-sm-7">
@@ -20,12 +21,19 @@
 
                         <div class="row">
                             <div class="col-sm-7">
-                                <label class="col-form-label allocated-lead-label" for="allocate-lead" hidden>Select New Partner to Allocate to:</label>
                                 <label class="col-form-label unallocated-lead-label" for="allocate-lead" hidden>Select Partner to Allocate lead to:</label>
+                                <label class="col-form-label unallocated-bulk-lead-label" for="allocate-lead" hidden>Select Partner to Allocate the following leads to:</label>
+                                <label class="col-form-label allocated-lead-label" for="allocate-lead" id="allocated-lead-label" hidden>Select New Partner to Allocate to:</label>
+                                <label class="col-form-label allocated-bulk-lead-label" for="allocate-lead" hidden>Select Partner to Reallocate the following leads to:</label>
                             </div>
                             <div class="col-sm-5">
                                 <select class="select2 form-control" name="allocate_lead" id="allocate-lead">
                                 </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-7">
+                                <label class="col-form-label bulk-lead-sublabel" for="allocate-lead" hidden></label>
                             </div>
                         </div>
                     </div>

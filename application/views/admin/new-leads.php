@@ -78,6 +78,12 @@
                                                 <table class="table" id="list-leads-table">
                                                     <thead>
                                                         <tr>
+                                                            <th>
+                                                                <div class="custom-control custom-checkbox">
+                                                                    <input class="custom-control-input" type="checkbox" value="" id="check-all-list">
+                                                                    <label for="check-all-list" class="custom-control-label"></label>
+                                                                </div>
+                                                            </th>
                                                             <th>ID</th>
                                                             <th>Business Name</th>
                                                             <th>Phone</th>
@@ -99,9 +105,11 @@
                         </div>
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-primary">Bulk Allocate</button>
-                        <button class="btn btn-warning">Bulk Import</button>
-                        <button class="btn btn-danger">Bulk Archive</button>
+                        <button class="btn btn-primary addtional" id="btn-proceed-allo" hidden>Proceed</button>
+                        <button class="btn btn-primary" id="btn-bulk-allo">Bulk Allocate</button>
+                        <!-- <button class="btn btn-warning" id="btn-bulk-import">Bulk Import</button> -->
+                        <button class="btn btn-danger" id="btn-bulk-arch">Bulk Archive</button>
+                        <button class="btn btn-danger" id="btn-bulk-cancel" hidden>Cancel</button>
                     </div>
                 </div>
             </div>
