@@ -71,7 +71,7 @@
                                         <input type="text" class="form-control" id="login-username" name="login-username" placeholder="Enter Username" aria-describedby="login-username" tabindex="1" autofocus />
                                     </div>
                                     <div class="form-group">
-                                    <label for="login-password" class="form-label">Password</label>
+                                        <label for="login-password" class="form-label">Password</label>
                                         <div class="input-group input-group-merge form-password-toggle">
                                             <input type="password" class="form-control form-control-merge" id="login-password" name="login-password" tabindex="2" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="login-password" />
                                             <div class="input-group-append">

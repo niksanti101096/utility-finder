@@ -993,7 +993,6 @@ function openThirdPartyDetail(id) {
                     }
                 }
             }
-            console.log(response.data[0]);
         }
     });
 
@@ -1089,5 +1088,12 @@ function openThirdPartyDetail(id) {
             Swal.fire("Cancelled", `${data.partner_name} records are safe!`, "info");
         }
     });
+ }
 
+ function copyToClipboard() {
+    navigator.clipboard.writeText($('#api-key').val());
+    $('#copy-tooltip').attr('data-original-title', 'Copied!').tooltip('show');
+    $('#copy-tooltip').mouseleave(function() {
+        $('#copy-tooltip').attr('data-original-title', 'Copy to clipboard!')
+    })
  }

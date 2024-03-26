@@ -220,7 +220,12 @@
                                                             <div class="row">
                                                                 <div class="form-group col-md-12">
                                                                     <label class="form-label" for="api-key">API Key</label>
-                                                                    <input type="text" id="api-key" class="form-control" name="api_key" placeholder="" disabled/>
+                                                                    <div class="input-group input-group-merge">
+                                                                        <input type="text" id="api-key" class="form-control form-control-merge" name="api_key" placeholder="" disabled/>
+                                                                        <div class="input-group-append">
+                                                                            <span class="input-group-text cursor-pointer" data-toggle="tooltip" data-placement="bottom" title="Copy to clipboard" id="copy-tooltip" onclick="copyToClipboard('#api-key')"><i data-feather='clipboard'></i></span>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                                 <div class="form-group col-md-12">
                                                                     <label class="form-label" for="partner-status">Status</label>
