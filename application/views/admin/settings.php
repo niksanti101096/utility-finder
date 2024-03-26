@@ -12,10 +12,13 @@
                             <h2 class="content-header-title float-left mb-0">Settings</h2>
                             <div class="breadcrumb-wrapper">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item" id="breadcrumb-dashboard">
+                                    <li class="breadcrumb-item">
                                         <a href="<?php echo base_url('admin'); ?>">Dashboard</a>
                                     </li>
-                                    <li class="breadcrumb-item active">
+                                    <li class="breadcrumb-item active" id="breadcrumb-dashboard">
+                                        Settings
+                                    </li>
+                                    <li class="breadcrumb-item active breadcrumb-dashboard">
                                         User Settings
                                     </li>
                                 </ol>
@@ -30,15 +33,18 @@
                 <div class="col-md-12" id="setting-navigation">
                     <ul class="nav nav-tabs justify-content-end mb-0" role="tablist">
                         <li class="nav-item">
-                            <a href="#user-setting" role="tab" data-toggle="tab" class="nav-link active" id="nav-user-setting">User Setting</a>
+                            <a href="#user-setting" role="tab" data-toggle="tab" class="nav-link" id="nav-user-setting">User Setting</a>
                         </li>
                         <li class="nav-item">
                             <a href="#system-setting" role="tab" data-toggle="tab" class="nav-link" id="nav-system-setting">System Setting</a>
                         </li>
+                        <li class="nav-item">
+                            <a href="#third-parties-setting" role="tab" data-toggle="tab" class="nav-link active" id="nav-third-parties-setting">Third Party Setting</a>
+                        </li>
                     </ul>
                     <div class="card">
                         <div class="card-body tab-content">
-                            <div class="tab-pane active" role="tabpanel" id="user-setting">
+                            <div class="tab-pane" role="tabpanel" id="user-setting">
                                 <div class="table-responsive">
                                     <table class="table" id="user-records-table">
                                         <thead>
@@ -161,11 +167,107 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="tab-pane active" role="tabpanel" id="third-parties-setting">
+                                <div class="table-responsive" id="third-party-records">
+                                    <table class="table" id="third-parties-records-table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Name</th>
+                                                <th scope="col">API Key</th>
+                                                <th scope="col">API Access</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                                
+                                <div class="card m-0 p-0" id="third-party-detail" hidden>
+                                    <div class="card-body p-0">
+                                        <section class="vertical-wizard mb-0">
+                                            <div class="bs-stepper vertical vertical-wizard-example">
+                                                <div class="bs-stepper-header">
+                                                    <div class="step" data-target="#partner-information-vertical">
+                                                        <button type="button" class="step-trigger">
+                                                            <span class="bs-stepper-box"><i data-feather='settings'></i></span>
+                                                            <span class="bs-stepper-label">
+                                                                <span class="bs-stepper-title">Partner Information</span>
+                                                                <span class="bs-stepper-subtitle">Setup Partner Information</span>
+                                                            </span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="bs-stepper-content">
+                                                    <div id="partner-information-vertical" class="content">
+                                                        <div class="content-header">
+                                                            <h5 class="mb-0">Partner Information</h5>
+                                                            <small class="text-muted">Enter Partner Information</small>
+                                                        </div>
+                                                        <form class="form" id="third-party-profile-form">
+                                                            <input type="hidden" name="partner_id" id="partner-id">
+                                                            <div class="row">
+                                                                <div class="form-group col-md-6">
+                                                                    <label class="form-label" for="partner-name">Partner Name</label>
+                                                                    <input type="text" id="partner-name" class="form-control editable" name="partner_name" placeholder="" disabled/>
+                                                                </div>
+                                                                <div class="form-group col-md-6">
+                                                                    <label class="form-label" for="tp-info-email">Email Address</label>
+                                                                    <input type="email" id="tp-info-email" class="form-control editable" name="email" placeholder="" disabled/>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="row">
+                                                                <div class="form-group col-md-12">
+                                                                    <label class="form-label" for="api-key">API Key</label>
+                                                                    <input type="text" id="api-key" class="form-control" name="api_key" placeholder="" disabled/>
+                                                                </div>
+                                                                <div class="form-group col-md-12">
+                                                                    <label class="form-label" for="partner-status">Status</label>
+                                                                    <input type="text" id="partner-status" class="form-control" name="partner_status" placeholder="" disabled/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="form-group col-4 d-flex align-items-center">
+                                                                    <div class="custom-control custom-checkbox">
+                                                                        <input type="checkbox" class="custom-control-input editable" id="received-email" name="received_email"checked disabled/>
+                                                                        <label class="custom-control-label" for="received-email">Received Email.</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-4 d-flex align-items-center">
+                                                                    <div class="custom-control custom-checkbox">
+                                                                        <input type="checkbox" class="custom-control-input editable" id="api-access" name="api_access" checked disabled/>
+                                                                        <label class="custom-control-label" for="api-access">API Access.</label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-4 ">
+                                                                    <button type="submit" class="btn btn-primary btn-sm float-right ml-1" id="btn-update-tp-profile" hidden>
+                                                                        <i data-feather='save'></i>
+                                                                        Update
+                                                                    </button>
+                                                                    <button type="button" class="btn btn-danger btn-sm float-right" id="btn-cancel-tp-profile" hidden>
+                                                                        <i data-feather='x'></i>
+                                                                        Cancel
+                                                                    </button>
+                                                                    <button type="button" class="btn btn-success btn-sm float-right" id="btn-edit-tp-profile">
+                                                                        <i data-feather='edit'></i>
+                                                                        Edit
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-primary" id="add-user-btn">
+                        <button type="button" class="btn btn-primary" id="add-user-btn" hidden>
                             <i data-feather="plus"></i>
                             <span>Add user</span>
                         </button>
@@ -181,6 +283,10 @@
                             <i data-feather="plus"></i>
                             <span>Add lead source</span>
                         </button>
+                        <button type="button" class="btn btn-primary" id="add-third-party-btn">
+                            <i data-feather="plus"></i>
+                            <span>Add Third Party</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -194,3 +300,4 @@
 <!-- Modal -->
 <?php include_once('assets/modals/user-modal.php'); ?>
 <?php include_once('assets/modals/supplier-modal.php'); ?>
+<?php include_once('assets/modals/third-party-modal.php'); ?>

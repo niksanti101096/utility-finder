@@ -150,7 +150,7 @@
                 <li class="nav-item">
                     <a class="nav-link" id="navbar-profile" href="<?php echo base_url('contact/contact_form.php')?>">
                         <!-- <i class="ficon" data-feather="bell"></i> -->
-                        Contact 
+                        Contact Form 
                     </a>
                 </li>
 

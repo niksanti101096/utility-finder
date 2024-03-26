@@ -2,7 +2,6 @@ var leadTable;
 var notAllocatedLeads;
 var checkedLeadsSequence;
 var checkedLeadsId;
-var partnerNames;
 
 $(document).ready(function () {
     defaultFieldsDisplay();
@@ -175,7 +174,7 @@ function loadNotLeads() {
         dataType: "JSON",
         data: {},
         success: function (response) {
-            if (response.data.length > 0) {
+            if (response.data) {
                 notAllocatedLeads = [];
                 response.data.forEach(function (data) {
                     notAllocatedLeads.push(data);
@@ -283,9 +282,7 @@ function loadAllPartners() {
         data: {},
         success: function (response) {
             allocateOptions = '<option value=""></option>';
-            partnerNames = [];
             for (const key in response.data) {
-                partnerNames.push(response.data[key]['partner_name']);
                 allocateOptions += '<option value="'+response.data[key]['partner_id']+'">'+response.data[key]['partner_name']+'</option>';
             }
             $('#allocate-lead').html(allocateOptions);

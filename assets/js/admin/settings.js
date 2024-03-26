@@ -13,10 +13,13 @@ var imgLoc = url + 'assets/images/logos/';
 var oldSupplierName;
 var oldSupplierLogo;
 var oldAvatar;
+var partnerRecords;
+var encData;
 
 $(document).ready(function() {
 
     loadUserRecords();
+    loadPartnerDetails();
 
     $('#check-all-user').click(function(e){
         var table= $(e.target).closest('table');
@@ -74,18 +77,15 @@ $(document).ready(function() {
     });
     
     $('#setting-navigation ul.nav > li > a#nav-system-setting').click(function() {
-        $('#add-user-btn').attr('hidden', 'hidden');
-        $('#system-setting-list').removeAttr('hidden');
-        $('#utility-supplier-list').attr('hidden', 'hidden');
+        $('#add-energy-btn, #add-water-btn, #add-lead-source-btn, #add-user-btn, #utility-supplier-list, #add-third-party-btn').attr('hidden', true);
+        $('#system-setting-list').attr('hidden', false);
         $('#energy-supplier-records-table tbody').children('tr').remove();
         $('#water-supplier-records-table tbody').children('tr').remove();
-        $('#add-energy-btn').attr('hidden', true);
-        $('#add-water-btn').attr('hidden', true);
-        $('#add-lead-source-btn').attr('hidden', true);
 
-        $('#breadcrumb-dashboard').siblings().remove();
+        // $('#breadcrumb-dashboard').next().remove();
+        $('.breadcrumb-dashboard').remove();
         $('.breadcrumb').append(
-            '<li class="breadcrumb-item">'+
+            '<li class="breadcrumb-item breadcrumb-dashboard">'+
                 'System Settings'+
             '</li>'
         );
@@ -93,16 +93,29 @@ $(document).ready(function() {
 
     $('#setting-navigation ul.nav > li > a#nav-user-setting').click(function() {
         $('#add-user-btn').removeAttr('hidden');
-        $('#add-energy-btn').attr('hidden', true);
-        $('#add-water-btn').attr('hidden', true);
-        $('#add-lead-source-btn').attr('hidden', true);
+        $('#add-energy-btn, #add-water-btn, #add-lead-source-btn, #add-third-party-btn').attr('hidden', true);
 
-        $('#breadcrumb-dashboard').siblings().remove();
+        // $('#breadcrumb-dashboard').next().remove();
+        $('.breadcrumb-dashboard').remove();
         $('.breadcrumb').append(
-            '<li class="breadcrumb-item">'+
+            '<li class="breadcrumb-item breadcrumb-dashboard">'+
                 'User Settings'+
             '</li>'
         );
+        $('.datatable-user-title').html('User Records');
+    });
+
+    $('#setting-navigation ul.nav > li > a#nav-third-parties-setting').click(function() {
+        $('#add-user-btn, #add-energy-btn, #add-water-btn, #add-lead-source-btn, #third-party-detail').attr('hidden', true);
+        $('#add-third-party-btn, #third-party-records').attr('hidden', false);
+        // $('#breadcrumb-dashboard').next().remove();
+        $('.breadcrumb-dashboard').remove();
+        $('.breadcrumb').append(
+            '<li class="breadcrumb-item breadcrumb-dashboard">'+
+                'Third Party Settings'+
+            '</li>'
+        );
+        $('.datatable-user-title').html('Third Party Records');
     });
 
     $('#link-energy-supplier').click(function() {
@@ -115,8 +128,9 @@ $(document).ready(function() {
         $('#add-water-btn').attr('hidden', true);
         $('#add-lead-source-btn').attr('hidden', true);
         $('#supplier-type').val(1);
+        $('.breadcrumb-dashboard').remove();
         $('.breadcrumb').append(
-            '<li class="breadcrumb-item active">'+
+            '<li class="breadcrumb-item breadcrumb-dashboard">'+
                 'Energy Supplier List'+
             '</li>'
         );
@@ -133,8 +147,9 @@ $(document).ready(function() {
         $('#add-energy-btn').attr('hidden', true);
         $('#add-lead-source-btn').attr('hidden', true);
         $('#supplier-type').val(2);
+        $('.breadcrumb-dashboard').remove();
         $('.breadcrumb').append(
-            '<li class="breadcrumb-item active">'+
+            '<li class="breadcrumb-item breadcrumb-dashboard">'+
                 'Water Supplier List'+
             '</li>'
         );
@@ -150,11 +165,18 @@ $(document).ready(function() {
         $('#add-water-btn').attr('hidden', true);
         $('#add-energy-btn').attr('hidden', true);
         $('#add-lead-source-btn').attr('hidden', false);
+        $('.breadcrumb-dashboard').remove();
         $('.breadcrumb').append(
-            '<li class="breadcrumb-item active">'+
+            '<li class="breadcrumb-item breadcrumb-dashboard">'+
                 'Lead Sources'+
             '</li>'
         );
+    });
+
+    $('#add-third-party-btn').click(function() {
+        $('#third-party-modal').modal('show');
+        document.getElementById('third-party-form').reset();
+        $('#third-party-title-modal').html('Add Third Party');
     });
     
     $('#add-user-btn').click(function() {
@@ -261,6 +283,28 @@ $(document).ready(function() {
         $('#change-avatar').attr('hidden', true);
     });
 
+    $('#third-party-form').submit(function(e) {
+        e.preventDefault();
+        createPartner();
+    });
+
+    $('#btn-edit-tp-profile').click(function() {
+        $('.editable').attr('disabled', false);
+        $('#btn-edit-tp-profile').attr('hidden', true);
+        $('#btn-update-tp-profile, #btn-cancel-tp-profile').attr('hidden', false);
+    });
+
+    $('#btn-cancel-tp-profile').click(function() {
+        $('.editable').attr('disabled', true);
+        $('#btn-update-tp-profile, #btn-cancel-tp-profile').attr('hidden', true);
+        $('#btn-edit-tp-profile').attr('hidden', false);
+        openThirdPartyDetail($('#partner-id').val());
+    });
+
+    $('#third-party-profile-form').submit(function(e) {
+        e.preventDefault();
+        updatePartner();
+    });
 });
 
 function loadUserRecords() {
@@ -329,8 +373,6 @@ function loadUserRecords() {
                     displayLength: 50,
                     lengthMenu: [50, 75, 100],
                 });
-            } else {
-                
             }
         }
     });
@@ -536,7 +578,7 @@ function createSupplier() {
     if ($('#btn-disabled').hasClass('btn-info')) {
         $('#btn-disabled').removeClass('btn-info');
     }
-    $('#btn-disabled').addClass('hidden', false);
+    $('#btn-disabled').addClass('btn-primary');
     $('#btn-add-supplier').attr('hidden', true);
     $('#btn-disabled').attr('hidden', false);
 
@@ -815,3 +857,232 @@ function archiveSupplierRecord(encryptedData) {
         }
     });
 }
+
+function loadPartnerDetails() {
+    partnerRecords = [];
+    $.ajax({
+        type: "GET",
+        url: url + "admin/load-partners-record",
+        dataType: "JSON",
+        data: {},
+        success: function(response){
+            if (response.data) {
+                response.data.forEach(data => {
+                    partnerRecords.push(data);
+                });
+
+                $("#third-parties-records-table").DataTable().destroy();
+                userTable = $("#third-parties-records-table").DataTable({
+                    dom: '<"card-header border-bottom p-1"<"head-label"<"datatable-user-title">>><"card-body"<"d-flex justify-content-between align-items-center mx-0 row">t<"d-flex justify-content-between mx-0 row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>>',
+                    responsive: true,
+                    initComplete : function( settings, json ) {
+                        $('.datatable-user-title').html('Third Party Records');
+                        $('.datatable-user-title').addClass('h4');
+                        $('.datatable-user-title').css('color','inherit');
+                    },
+                    data: partnerRecords,
+                    columns: [
+                        {data: "partner_name"},
+                        {data: "api_key"},
+                        {
+                            data: null,
+                            render: function(data, type, row) {
+                                if(row.api_access == 1) return "On";
+                                else return "Off";
+                            }
+                        },
+                        {
+                            data: null,
+                            render: function(data, type, row) {
+                                if(row.partner_status == 1) return "Active";
+                                else return "Deactivated";
+                            }
+                        },
+                        {
+                            data: null,
+                            render: function (data, type, row) {
+                                return (
+                                    '<button type="button" class="btn btn-success btn-sm mr-1" onclick="openThirdPartyDetail('+row.partner_id+')">View</button>' +
+                                    '<button type="button" class="btn btn-danger btn-sm" onclick="archiveThirdPartyDetail(\''+encodeURIComponent(JSON.stringify(data))+'\')">Archive</button>'
+                                )
+                            }
+                        },
+                    ],
+                    select: true,
+                    displayLength: 50,
+                    lengthMenu: [50, 75, 100],
+                });
+            }
+        }
+    });
+};
+
+function createPartner() {
+    $('#btn-add-third-party').attr('hidden', true);
+    $('#btn-disabled-tp').attr('hidden', false);
+    if ($('#btn-disabled-tp').hasClass('btn-info')) {
+        $('#btn-disabled-tp').removeClass('btn-info')
+    }
+    $('#btn-disabled-tp').addClass('btn-primary');
+
+    $.ajax({
+        type : "POST",
+        url : url + "admin/create-partner",
+        dataType : "JSON",
+        data : $('#third-party-form').serialize(),
+        success: function(response) {
+            if (response.success) {
+                Swal.fire(
+                    'Successfully Created Partner',
+                    '',
+                    'success'
+                );
+                loadPartnerDetails();
+            }
+        }
+    });
+    $('#btn-add-third-party').attr('hidden', false);
+    $('#btn-disabled-tp').attr('hidden', true);
+    $('#third-party-modal').modal('hide');
+}
+
+function openThirdPartyDetail(id) {
+    $.ajax({
+        type: "GET",
+        url: url + "admin/load-partner-record",
+        dataType: "JSON",
+        data: {
+            partner_id : id
+        },
+        success: function(response){
+            if (response.data.length > 0) {
+                $('.editable').attr('disabled', true);
+                $('#btn-update-tp-profile, #btn-cancel-tp-profile, #third-party-records').attr('hidden', true);
+                $('#btn-edit-tp-profile, #third-party-detail').attr('hidden', false);
+                $('.breadcrumb-dash').remove();
+                $('.breadcrumb').append(
+                    '<li class="breadcrumb-item breadcrumb-dashboard breadcrumb-dash">'+
+                        'Third Party Detail'+
+                    '</li>'
+                );
+                var data = response.data[0];
+                var form = "#third-party-profile-form";
+                for (var key in data) {
+                    var type = $(form + " [name=" + key + "]").attr("type");
+                    if (type === "radio") {
+                        $(form + " [name=" + key + "][value='" + data[key]).prop("checked", true);
+                    } else if (type === "checkbox") {
+                        var checked = data[key] === "1" ? true : false;
+                        $(form + " [name=" + key + "]").prop("checked", checked);
+                    } else {
+                        if($(form + " [name="+key+"]").hasClass('select2')){
+                            $(form + " [name="+key+"]").val(data[key]).change();
+                        } else {
+                            if (key == "partner_status") {
+                                if (data[key] == 1) {
+                                    $(form + " [name=" + key + "]").val("Active");
+                                } else {
+                                    $(form + " [name=" + key + "]").val("Deactivated");
+                                }
+                            } else {
+                                $(form + " [name=" + key + "]").val(data[key]);
+                            }
+                        }
+                    }
+                }
+            }
+            console.log(response.data[0]);
+        }
+    });
+
+
+    
+}
+ function updatePartner() {
+    $.blockUI({
+        message:
+            '<div class="d-flex justify-content-center align-items-center"><p class="mr-50 mb-0">Please wait...</p> <div class="spinner-grow spinner-grow-sm text-white" role="status"></div> </div>',
+        css: {
+            backgroundColor: 'transparent',
+            color: '#fff',
+            border: '0'
+        },
+        overlayCSS: {
+            opacity: 0.8
+        }
+    });
+
+    $.ajax({
+        type: "POST",
+        url: url + "admin/update-partner",
+        dataType: "JSON",
+        data: $("#third-party-profile-form").serialize(),
+        success: function (response) {
+            if (response.success) {
+                Swal.fire(
+                    response.message,
+                    '',
+                    'success')
+                    .then( function () {
+                        $.unblockUI();
+                        $('.editable').attr('disabled', true);
+                        $('#btn-update-tp-profile, #btn-cancel-tp-profile').attr('hidden', true);
+                        $('#btn-edit-tp-profile').attr('hidden', false);
+                        openThirdPartyDetail($('#partner-id').val());
+                    }
+                );
+            } else {
+                Swal.fire(
+                    'Failed!',
+                    response.message,
+                    'error')
+                    .then( function () {
+                        $.unblockUI();
+                    }
+                );
+            }
+        }
+    });
+ }
+
+ function archiveThirdPartyDetail(encryptedData) {
+    const data = JSON.parse(decodeURIComponent(encryptedData));
+
+    Swal.fire({
+        title : 'Are you sure you want to deactivate "'+data.partner_name+'"?',
+        text : "You won't be able to revert this action.",
+        icon : "warning",
+        confirmButtonText : "Yes",
+        showDenyButton: true,
+        denyButtonText: "No",
+        allowOutsideClick: false,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: "POST",
+                url: url + "admin/archive-partner",
+                dataType: "JSON",
+                data: {
+                    partner_id : data.partner_id,
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            title : `${data.partner_name} has been deactivated!`,
+                            icon : "success",
+                            confirmButtonText : "Ok",
+                            allowOutsideClick: false,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                loadPartnerDetails();
+                            }
+                        });
+                    }
+                }
+            });
+        } else if (result.isDenied) {
+            Swal.fire("Cancelled", `${data.partner_name} records are safe!`, "info");
+        }
+    });
+
+ }

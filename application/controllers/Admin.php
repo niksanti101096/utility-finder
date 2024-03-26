@@ -205,7 +205,6 @@ class Admin extends REST_Controller {
                 'email_address' => $this->post('new_lead_email') ? $this->post('new_lead_email') : '',
                 'created_by' => $sess['id'],
             ];
-
             $result = $this->admin_model->create_new_lead($data);
             if(gettype($result) == "array"){
                 $notes = $this->post('new_lead_notes');
@@ -247,7 +246,7 @@ class Admin extends REST_Controller {
                             'lead_id' => $this->post('new_lead_id'),
                             'sequence' => $lead_sequence,
                         ];
-                        $return_mail = $this->send_email($data);
+                        // $return_mail = $this->send_email($data);
                         $this->response(array('success'=>true,'message'=>'Successfully Created Lead.'), REST_Controller::HTTP_OK);
                     } else {
                         $this->response(array('success'=>false,'message'=>'Failed Saving'), REST_Controller::HTTP_OK);
@@ -259,7 +258,7 @@ class Admin extends REST_Controller {
                         'notif_added_by' => $id,
                     ];
                     $this->admin_model->post_notif_details($data);
-                    $return_email = $this->send_email($data);
+                    // $return_email = $this->send_email($data);
                     $this->response(array('success'=>true,'message'=>'Successfully Created Lead.'), REST_Controller::HTTP_OK);
                 }
             } else {
@@ -270,7 +269,7 @@ class Admin extends REST_Controller {
 		}
     }
 
-    public function send_email_post() {
+    public function send_email($data) {
         
         $result = $this->admin_model->get_user_emails();
         
@@ -346,6 +345,11 @@ class Admin extends REST_Controller {
 
     public function load_users_record_get() {
         $result = $this->admin_model->get_load_users_record();
+        $this->returns($result);
+    }
+
+    public function load_partners_record_get() {
+        $result = $this->admin_model->get_load_partners_record();
         $this->returns($result);
     }
 
@@ -651,6 +655,62 @@ class Admin extends REST_Controller {
         ];
         $result = $this->admin_model->post_update_supplier_name($data);
         $this->returns($result);
+    }
+
+    public function create_partner_post() {
+        $data = [
+            'partner_id' => 0,
+            'partner_name' => $this->post('partner_name'),
+            'email' => $this->post('email')
+        ];
+
+        $result = $this->admin_model->post_partner($data);
+
+        if ($result) {
+            $this->response(array('success'=>true,'message'=>'Successfully Created Partner'), REST_Controller::HTTP_OK);
+        } else {
+            $this->response(array('success'=>false,'message'=>'Something went wrong!'), REST_Controller::HTTP_OK);
+        }
+    }
+
+    public function update_partner_post() {
+        $data = [
+            'partner_id' => $this->post('partner_id'),
+            'partner_name' => $this->post('partner_name'),
+            'email' => $this->post('email'),
+            'received_email' => $this->post('received_email') == "on" ? 1 : 0,
+            'api_access' => $this->post('api_access') == "on" ? 1 : 0,
+        ];
+
+        $result = $this->admin_model->post_partner($data);
+
+        if ($result) {
+            $this->response(array('success'=>true,'message'=>'Successfully Updated Partner Details'), REST_Controller::HTTP_OK);
+        } else {
+            $this->response(array('success'=>false,'message'=>'Something went wrong!'), REST_Controller::HTTP_OK);
+        }
+    }
+
+    public function archive_partner_post() {
+        $result = $this->admin_model->post_archive_partner($this->post('partner_id'));
+
+        if ($result) {
+            $this->response(array('success'=>true,'message'=>'Successfully Archived Partner Details'), REST_Controller::HTTP_OK);
+        } else {
+            $this->response(array('success'=>false,'message'=>'Something went wrong!'), REST_Controller::HTTP_OK);
+        }
+
+    }
+
+    public function load_partner_record_get() {
+        $id = $this->get('partner_id');
+        $result = $this->admin_model->get_load_partners_record($id);
+
+        if ($result) {
+            $this->response(array('success'=>true,'data'=>$result['data']), REST_Controller::HTTP_OK);
+        } else {
+            $this->response(array('success'=>false,'data'=>[]), REST_Controller::HTTP_OK);
+        }
     }
     
 }

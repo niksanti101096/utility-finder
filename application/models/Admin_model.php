@@ -36,7 +36,7 @@ Class Admin_Model extends CI_Model {
     }
 
     public function get_load_lead_records(){
-        $query = $this->db->select('*')->from('lead_records lr')->join('partner_records pr', 'lr.partner_id = pr.partner_id', 'left')->where('lr.status !=', 0)->get()->result();
+        $query = $this->db->select('*')->from('lead_records lr')->join('partner_records pr', 'lr.partner_id = pr.partner_id', 'left')->where('lr.status !=', 0)->order_by('date_created','desc')->get()->result();
         return $query ? array('data' => $query) : false;
     }
 
@@ -125,6 +125,16 @@ Class Admin_Model extends CI_Model {
         return ['manual_entry' => $manual_entry, 'webform' => $webform, 'ppc' => $ppc, 'email_campaign' => $email_campaign];
     }
 
+    public function get_load_partners_record($id = 0){
+        if ($id != 0) {
+            $query = $this->db->select('*')->from('partner_records')->where('partner_status !=', 0)->where('partner_id', $id)->get()->result();
+            return $query ? array('data' => $query) : false;
+        } else {
+            $query = $this->db->select('*')->from('partner_records')->where('partner_status !=', 0)->get()->result();
+            return $query ? array('data' => $query) : false;
+        }
+    }
+
     public function get_load_users_record(){
         $query = $this->db->select('*')->from('users')->where('status !=', 0)->get()->result();
         return $query ? array('data' => $query) : false;
@@ -210,4 +220,32 @@ Class Admin_Model extends CI_Model {
         return $query ? array('data' => $query) : false ;
     }
     
+    public function post_partner($data) {
+        if ($data['partner_id'] == 0) {
+            # insert
+            $query = $this->db->insert('partner_records', $data);
+            if (!$query) {
+                # error inserting in db
+                return false;
+            }
+            $id = $this->db->insert_id();
+            $api_key = sha1('UF-API' . $id);
+            $query = $this->db->where('partner_id', $id)->update('partner_records', array('api_key' => $api_key));
+            return $query ? true : false;
+        } else {
+            # update
+            $query = $this->db->where('partner_id', $data['partner_id'])->update('partner_records', $data);
+            return $query ? true : false;
+        }
+        
+    }
+
+    public function post_archive_partner($id) {
+        $array = [
+            'partner_status' => 0,
+            'api_access' => 0
+        ];
+        $query = $this->db->set($array)->where('partner_id', $id)->update('partner_records');
+        return $query ? true : false;
+    }
 }

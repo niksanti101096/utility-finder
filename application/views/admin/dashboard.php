@@ -175,3 +175,6 @@
 </div>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/admin/dashboard.js"></script>
 <!-- END: Content-->
+
+<!-- Modals -->
+<?php include_once('assets/modals/allocate-lead-modal.php'); ?>

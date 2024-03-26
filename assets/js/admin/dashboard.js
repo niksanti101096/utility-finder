@@ -51,6 +51,23 @@ $(document).ready(function () {
         }
     });
 
+    $('#btn-allocate , #btn-reallocate').click(function() {
+        const partnerVal = $('#allocate-lead').val();
+        if (partnerVal != "") {
+            $('#btn-allocate-disabled').attr('hidden', false);
+            $('#btn-allocate').attr('hidden', true);
+            $('#btn-reallocate').attr('hidden', true);
+            allocateLead(partnerVal, $('#allocate-lead option:selected').text());
+        } else {
+            Swal.fire(
+                'Oppss..',
+                'Please select a partner!',
+                'warning'
+            );
+        }
+        
+    });
+
 });
 
 function loadLeads() {
@@ -63,6 +80,7 @@ function loadLeads() {
         data: {},
         success: function (response) {
             if (response.data.length > 0) {
+                console.log(response.data)
                 response.data.forEach(function (data) {
                     leadRecords.push(data);
                 });
@@ -109,16 +127,20 @@ function loadLeads() {
                         {
                             data: null,
                             render: function (data, type, row) {
+                                console.log(row.lead_id)
+                                console.log(row.status)
+                                if (row.status == 1) {
+                                    var alloBtn = '<button type="button" class="btn btn-secondary btn-sm w-100" onclick="loadAllocateModal(\''+encodeURIComponent(JSON.stringify(data))+'\')">Allocate</button>';
+                                } else {
+                                    var alloBtn = '<button type="button" class="btn btn-secondary btn-sm w-100" onclick="loadReallocateModal(\''+encodeURIComponent(JSON.stringify(data))+'\')">Reallocate</button>';
+                                }
                                 return (
                                     '<button type="button" class="btn btn-success btn-sm w-100" onclick="viewLeadRecord('+row.sequence+')">View</button>' +
+                                    alloBtn +
                                     '<button type="button" class="btn btn-danger btn-sm w-100" onclick="archiveLead('+row.sequence+')">Archive</button>'
                                 )
                             }
-                        },
-                        {
-                            data: "date_created",
-                            visible: false,
-                        }, // this column is for sorting only
+                        }
                     ],
                     select: true,
                     buttons: [
@@ -130,7 +152,7 @@ function loadLeads() {
                     ],
                     displayLength: 50,
                     lengthMenu: [50, 75, 100],
-                    order: [[9, 'desc']],
+                    "order": []
                 });
             }
         },
@@ -265,6 +287,90 @@ function archiveLead(id) {
                 '',
                 'info',
             );
+        }
+    });
+}
+
+function loadAllocateModal(encryptedData) {
+    const data = JSON.parse(decodeURIComponent(encryptedData));
+    $('#allocate-lead-modal').modal('show');
+    $('.unallocated-lead-label, #btn-allocate').attr('hidden', false);
+    $('.allocate-title-modal').html('Allocate Lead ' + data.lead_id);
+    $('#btn-allocate-disabled, .unallocated-bulk-lead-sublabel, .allocated-lead-label, #btn-reallocate, .unallocated-bulk-lead-label').attr('hidden', true);
+    $('#lead-sequence').val(data.sequence);
+    $('#lead-status').val(data.status);
+    loadAllPartners();
+}
+
+function loadReallocateModal(encryptedData) {
+    const data = JSON.parse(decodeURIComponent(encryptedData));
+    $('#allocate-lead-modal').modal('show');
+    $('.allocated-lead-label span').html(data.partner_name);
+    $('.allocated-lead-label').attr('hidden', false);
+    $('.unallocated-lead-label').attr('hidden', true);
+    $('.allocate-title-modal').html('Reallocate Lead ' + data.lead_id);
+    $('#btn-allocate').attr('hidden', true);
+    $('#btn-reallocate').attr('hidden', false);
+    $('#btn-allocate-disabled, .allocated-bulk-lead-label, .bulk-lead-sublabel').attr('hidden', true);
+    $('#lead-sequence').val(data.sequence);
+    $('#lead-status').val(data.status);
+    loadAllPartners(data.partner_id);
+}
+
+function loadAllPartners(partnerId = 0) {
+    var allocateOptions;
+    $.ajax({
+        type: "GET",
+        url: url + "admin/load-all-partners",
+        dataType: "JSON",
+        data: {},
+        success: function (response) {
+            allocateOptions = '<option value=""></option>';
+            for (const key in response.data) {
+                if (partnerId != 0) {
+                    if (response.data[key]['partner_id'] != partnerId) {
+                        allocateOptions += '<option value="'+response.data[key]['partner_id']+'">'+response.data[key]['partner_name']+'</option>';
+                    }
+                } else {
+                    allocateOptions += '<option value="'+response.data[key]['partner_id']+'">'+response.data[key]['partner_name']+'</option>';
+                }
+            }
+            $('#allocate-lead').html(allocateOptions);
+        }
+    });
+}
+
+function allocateLead(partnerVal, partnerName) {
+    const sequence = $('#lead-sequence').val();
+    const lead_status = $('#lead-status').val();
+    $.ajax({
+        type: "POST",
+        url: url + "admin/assign-partner",
+        dataType: "JSON",
+        data: {
+            partner_id : partnerVal,
+            lead_sequence : sequence,
+            lead_status: lead_status,
+            partner_name: partnerName
+        },
+        success: function (response) {
+            if (response.success) {
+                Swal.fire(
+                    response.message,
+                    '',
+                    'success',
+                ).then(() => {
+                    $('#btn-allocate-disabled').attr('hidden', true);
+                    $('#allocate-lead-modal').modal('hide');
+                    loadLeads();
+                });
+            } else {
+                Swal.fire(
+                    response.message,
+                    '',
+                    'error',
+                );
+            }
         }
     });
 }
