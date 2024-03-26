@@ -876,7 +876,6 @@ function loadPartnerDetails() {
                     dom: '<"card-header border-bottom p-1"<"head-label"<"datatable-user-title">>><"card-body"<"d-flex justify-content-between align-items-center mx-0 row">t<"d-flex justify-content-between mx-0 row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>>',
                     responsive: true,
                     initComplete : function( settings, json ) {
-                        $('.datatable-user-title').html('Third Party Records');
                         $('.datatable-user-title').addClass('h4');
                         $('.datatable-user-title').css('color','inherit');
                     },
@@ -938,6 +937,9 @@ function createPartner() {
                     'success'
                 );
                 loadPartnerDetails();
+                setTimeout(() => {
+                    $('.datatable-user-title').html('Third Party Records');
+                }, 50);
             }
         }
     });
@@ -1075,6 +1077,9 @@ function openThirdPartyDetail(id) {
                         }).then((result) => {
                             if (result.isConfirmed) {
                                 loadPartnerDetails();
+                                setTimeout(() => {
+                                    $('.datatable-user-title').html('Third Party Records');
+                                }, 50);
                             }
                         });
                     }

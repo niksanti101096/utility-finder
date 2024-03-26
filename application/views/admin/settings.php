@@ -33,18 +33,18 @@
                 <div class="col-md-12" id="setting-navigation">
                     <ul class="nav nav-tabs justify-content-end mb-0" role="tablist">
                         <li class="nav-item">
-                            <a href="#user-setting" role="tab" data-toggle="tab" class="nav-link" id="nav-user-setting">User Setting</a>
+                            <a href="#user-setting" role="tab" data-toggle="tab" class="nav-link active" id="nav-user-setting">User Setting</a>
                         </li>
                         <li class="nav-item">
                             <a href="#system-setting" role="tab" data-toggle="tab" class="nav-link" id="nav-system-setting">System Setting</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#third-parties-setting" role="tab" data-toggle="tab" class="nav-link active" id="nav-third-parties-setting">Third Party Setting</a>
+                            <a href="#third-parties-setting" role="tab" data-toggle="tab" class="nav-link" id="nav-third-parties-setting">Third Party Setting</a>
                         </li>
                     </ul>
                     <div class="card">
                         <div class="card-body tab-content">
-                            <div class="tab-pane" role="tabpanel" id="user-setting">
+                            <div class="tab-pane active" role="tabpanel" id="user-setting">
                                 <div class="table-responsive">
                                     <table class="table" id="user-records-table">
                                         <thead>
@@ -167,7 +167,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="tab-pane active" role="tabpanel" id="third-parties-setting">
+                            <div class="tab-pane" role="tabpanel" id="third-parties-setting">
                                 <div class="table-responsive" id="third-party-records">
                                     <table class="table" id="third-parties-records-table">
                                         <thead>
@@ -267,7 +267,7 @@
                     </div>
                     
                     <div class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-primary" id="add-user-btn" hidden>
+                        <button type="button" class="btn btn-primary" id="add-user-btn">
                             <i data-feather="plus"></i>
                             <span>Add user</span>
                         </button>
@@ -283,7 +283,7 @@
                             <i data-feather="plus"></i>
                             <span>Add lead source</span>
                         </button>
-                        <button type="button" class="btn btn-primary" id="add-third-party-btn">
+                        <button type="button" class="btn btn-primary" id="add-third-party-btn" hidden>
                             <i data-feather="plus"></i>
                             <span>Add Third Party</span>
                         </button>
