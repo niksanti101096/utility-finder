@@ -1,5 +1,5 @@
 <style>
-    .avatar-wrapper{
+    .avatar-wrapper {
         position: relative;
         height: 10rem;
         width: 10rem;
@@ -33,7 +33,7 @@
                                     </div>
                                     <div class="col-sm-8 d-flex align-items-center">
                                         <div class="custom-file">
-                                            <input type="file" id="avatar" class="custom-file-input" name="avatar" accept="image/*"/>
+                                            <input type="file" id="avatar" class="custom-file-input" name="avatar" accept="image/*" />
                                             <label class="custom-file-label" for="avatar">Upload avatar</label>
                                         </div>
                                         <div id="change-avatar">
@@ -68,7 +68,7 @@
                                     </div>
                                     <div class="col-sm-8 d-flex align-items-center">
                                         <div class="col-12 p-0">
-                                            <input type="text" id="firstname" class="form-control" name="firstname" placeholder="..."/>
+                                            <input type="text" id="firstname" class="form-control" name="firstname" placeholder="..." />
                                         </div>
                                     </div>
                                 </div>
@@ -80,7 +80,7 @@
                                     </div>
                                     <div class="col-sm-8 d-flex align-items-center">
                                         <div class="col-12 p-0">
-                                            <input type="text" id="lastname" class="form-control" name="lastname" placeholder="..."/>
+                                            <input type="text" id="lastname" class="form-control" name="lastname" placeholder="..." />
                                         </div>
                                     </div>
                                 </div>
@@ -108,7 +108,7 @@
                                     </div>
                                     <div class="col-sm-8 d-flex align-items-center">
                                         <div class="col-12 p-0">
-                                            <input type="email" id="email" class="form-control" name="email" placeholder="..."/>
+                                            <input type="email" id="email" class="form-control" name="email" placeholder="..." />
                                         </div>
                                     </div>
                                 </div>
@@ -120,7 +120,7 @@
                                     </div>
                                     <div class="col-sm-8 d-flex align-items-center">
                                         <div class="col-12 p-0">
-                                            <input type="number" id="phone" class="form-control" name="phone" placeholder="..."/>
+                                            <input type="number" id="phone" class="form-control" name="phone" placeholder="..." />
                                         </div>
                                     </div>
                                 </div>
@@ -132,7 +132,7 @@
                                     </div>
                                     <div class="col-sm-8 d-flex align-items-center">
                                         <div class="col-12 p-0">
-                                            <input type="text" id="extention" class="form-control" name="extention" placeholder="..."/>
+                                            <input type="text" id="extention" class="form-control" name="extention" placeholder="..." />
                                         </div>
                                     </div>
                                 </div>
@@ -163,7 +163,7 @@
                                     </div>
                                     <div class="col-sm-8 d-flex align-items-center">
                                         <div class="col-12 p-0">
-                                            <input type="text" id="username" class="form-control" name="username" placeholder="..."/>
+                                            <input type="text" id="username" class="form-control" name="username" placeholder="..." />
                                         </div>
                                     </div>
                                 </div>
@@ -176,7 +176,7 @@
                                     <div class="col-sm-8 d-flex align-items-center">
                                         <div class="col-12 p-0">
                                             <div class="input-group input-group-merge form-password-toggle">
-                                                <input type="password" class="form-control" id="password" name="password" placeholder="..."/>
+                                                <input type="password" class="form-control" id="password" name="password" placeholder="..." />
                                                 <div class="input-group-append">
                                                     <span class="input-group-text cursor-pointer"><i data-feather="eye"></i></span>
                                                 </div>
@@ -193,7 +193,7 @@
                                     <div class="col-sm-8 d-flex align-items-center">
                                         <div class="col-12 p-0">
                                             <div class="input-group input-group-merge form-password-toggle">
-                                                <input type="password" class="form-control" id="re-password" name="re_password"placeholder="..."/>
+                                                <input type="password" class="form-control" id="re-password" name="re_password" placeholder="..." />
                                                 <div class="input-group-append">
                                                     <span class="input-group-text cursor-pointer"><i data-feather="eye"></i></span>
                                                 </div>

@@ -3,7 +3,7 @@
     <div class="content-overlay"></div>
     <div class="header-navbar-shadow"></div>
     <div class="content-wrapper container-xxl p-0">
-        
+
         <div class="content-header">
             <div class="content-header row">
                 <div class="content-header-left col-md-9 col-12 mb-2">
@@ -182,7 +182,7 @@
                                         <tbody></tbody>
                                     </table>
                                 </div>
-                                
+
                                 <div class="card m-0 p-0" id="third-party-detail" hidden>
                                     <div class="card-body p-0">
                                         <section class="vertical-wizard mb-0">
@@ -209,19 +209,19 @@
                                                             <div class="row">
                                                                 <div class="form-group col-md-6">
                                                                     <label class="form-label" for="partner-name">Partner Name</label>
-                                                                    <input type="text" id="partner-name" class="form-control editable" name="partner_name" placeholder="" disabled/>
+                                                                    <input type="text" id="partner-name" class="form-control editable" name="partner_name" placeholder="" disabled />
                                                                 </div>
                                                                 <div class="form-group col-md-6">
                                                                     <label class="form-label" for="tp-info-email">Email Address</label>
-                                                                    <input type="email" id="tp-info-email" class="form-control editable" name="email" placeholder="" disabled/>
+                                                                    <input type="email" id="tp-info-email" class="form-control editable" name="email" placeholder="" disabled />
                                                                 </div>
                                                             </div>
-                                                            
+
                                                             <div class="row">
                                                                 <div class="form-group col-md-12">
                                                                     <label class="form-label" for="api-key">API Key</label>
                                                                     <div class="input-group input-group-merge">
-                                                                        <input type="text" id="api-key" class="form-control form-control-merge" name="api_key" placeholder="" disabled/>
+                                                                        <input type="text" id="api-key" class="form-control form-control-merge" name="api_key" placeholder="" disabled />
                                                                         <div class="input-group-append">
                                                                             <span class="input-group-text cursor-pointer" data-toggle="tooltip" data-placement="bottom" title="Copy to clipboard" id="copy-tooltip" onclick="copyToClipboard('#api-key')"><i data-feather='clipboard'></i></span>
                                                                         </div>
@@ -229,19 +229,19 @@
                                                                 </div>
                                                                 <div class="form-group col-md-12">
                                                                     <label class="form-label" for="partner-status">Status</label>
-                                                                    <input type="text" id="partner-status" class="form-control" name="partner_status" placeholder="" disabled/>
+                                                                    <input type="text" id="partner-status" class="form-control" name="partner_status" placeholder="" disabled />
                                                                 </div>
                                                             </div>
                                                             <div class="row">
                                                                 <div class="form-group col-4 d-flex align-items-center">
                                                                     <div class="custom-control custom-checkbox">
-                                                                        <input type="checkbox" class="custom-control-input editable" id="received-email" name="received_email"checked disabled/>
+                                                                        <input type="checkbox" class="custom-control-input editable" id="received-email" name="received_email" checked disabled />
                                                                         <label class="custom-control-label" for="received-email">Received Email.</label>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group col-4 d-flex align-items-center">
                                                                     <div class="custom-control custom-checkbox">
-                                                                        <input type="checkbox" class="custom-control-input editable" id="api-access" name="api_access" checked disabled/>
+                                                                        <input type="checkbox" class="custom-control-input editable" id="api-access" name="api_access" checked disabled />
                                                                         <label class="custom-control-label" for="api-access">API Access.</label>
                                                                     </div>
                                                                 </div>
@@ -270,7 +270,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="d-flex justify-content-end">
                         <button type="button" class="btn btn-primary" id="add-user-btn">
                             <i data-feather="plus"></i>
