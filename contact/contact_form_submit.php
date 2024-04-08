@@ -1,4 +1,9 @@
 <?php
+
+use SebastianBergmann\Environment\Console;
+
+// $base_url = "https://utilityfinder.a2server.co.uk";
+$base_url = "http://localhost";
 $taken_from_page = $utility_type = $quote_for = $current_supplier  = $eg_current_supplier = $w_current_supplier = $contract_end = "";
 $business_name = $postcode = $your_name = $email_address = $phone_number = "";
 $business_nameErr = $postcodeErr = $your_nameErr = $email_addressErr = $phone_numberErr = "";
@@ -107,7 +112,28 @@ if (!empty($_POST)) {
 
 		$post_code = $postcode;
 		$contact_name = $your_name;
-		// echo '<script type="text/javascript">console.log("taken from: '.$taken_from_page.',quote for: '.$quote_for.', current supplier: '.$current_supplier.', contract end: '.$current_contract_ends.', business name: '.$business_name.', postcode: '.$postcode.', your name: '.$your_name.', email: '.$email_address.', phone_number: '.$phone_number.'");</script>';
+		// echo '<script type="text/javascript">alert("taken from: '.$taken_from_page.',quote for: '.$quote_for.', current supplier: '.$current_supplier.', contract end: '.$current_contract_ends.', business name: '.$business_name.', postcode: '.$postcode.', your name: '.$your_name.', email: '.$email_address.', phone_number: '.$phone_number.'");</script>';
+
+		$to_send_data = [
+			'taken_from_page' => $taken_from_page,
+			'quote_for' => $quote_for,
+			'current_supplier' => $current_supplier,
+			'current_contract_ends' => $current_contract_ends,
+			'business_name' => $business_name,
+			'post_code' => $postcode,
+			'contact_name' => $your_name,
+			'phone_number' => $phone_number,
+			'email_address' => $email_address,
+		];
+
+		$data_string = json_encode($to_send_data);
+		$ch = curl_init($base_url . '/api/contact_form');
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$result = curl_exec($ch);
+		$result_formatted = json_decode($result, true);
+		curl_close($ch);
 
 		header('Location: thankyou.php');
 		exit;
