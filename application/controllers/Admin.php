@@ -8,6 +8,7 @@ class Admin extends REST_Controller {
         parent::__construct();
         $this->load->model('admin_model');
         $this->load->model('audit_log_model');
+        $this->load->model('api_model');
         $this->load->helper(array('form', 'url'));
     }
 
@@ -188,8 +189,9 @@ class Admin extends REST_Controller {
         }
         
     }
-
+// MARK: Create New Lead Function
     public function create_new_lead_post(){
+        
         if($this->session->userdata('uf_session')){
             $sess = $this->session->userdata('uf_session');
             $data = [
@@ -242,10 +244,10 @@ class Admin extends REST_Controller {
                             'notif_added_by' => $id,
                         ];
                         $this->admin_model->post_notif_details($data);
-                        $data = [
-                            'lead_id' => $this->post('new_lead_id'),
-                            'sequence' => $lead_sequence,
-                        ];
+                        // $data = [
+                        //     'lead_id' => $this->post('new_lead_id'),
+                        //     'sequence' => $lead_sequence,
+                        // ];
                         // $return_mail = $this->send_email($data);
                         $this->response(array('success'=>true,'message'=>'Successfully Created Lead.'), REST_Controller::HTTP_OK);
                     } else {
@@ -258,15 +260,19 @@ class Admin extends REST_Controller {
                         'notif_added_by' => $id,
                     ];
                     $this->admin_model->post_notif_details($data);
+                    // $data = [
+                    //     'lead_id' => $this->post('new_lead_id'),
+                    //     'sequence' => $lead_sequence,
+                    // ];
                     // $return_email = $this->send_email($data);
                     $this->response(array('success'=>true,'message'=>'Successfully Created Lead.'), REST_Controller::HTTP_OK);
                 }
             } else {
                 $this->response(array('success'=>false,'message'=>'Failed Saving'), REST_Controller::HTTP_OK);
             }
-		}else{
-			return redirect(base_url('admin'), 'refresh');
-		}
+        }else{
+            return redirect(base_url('admin'), 'refresh');
+        }
     }
 
     public function send_email($data) {

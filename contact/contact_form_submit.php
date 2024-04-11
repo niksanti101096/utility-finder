@@ -147,11 +147,11 @@ function test_input($data)
 	return $data;
 }
 
-function url(){
-	if(isset($_SERVER['HTTPS'])){
+function url()
+{
+	if (isset($_SERVER['HTTPS'])) {
 		$protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
-	}
-	else{
+	} else {
 		$protocol = 'http';
 	}
 	return $protocol . "://" . $_SERVER['SERVER_NAME'];
