@@ -1,6 +1,6 @@
 <?php
 
-class API_Model extends CI_Model
+class Api_Model extends CI_Model
 {
     public function post_contact_form($data)
     {

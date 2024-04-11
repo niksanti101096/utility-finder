@@ -205,7 +205,7 @@ class Admin extends REST_Controller {
                 'contact_name' => $this->post('new_lead_contact_name') ? $this->post('new_lead_contact_name') : '',
                 'phone_number' => $this->post('new_lead_phone_number') ? $this->post('new_lead_phone_number') : '',
                 'email_address' => $this->post('new_lead_email') ? $this->post('new_lead_email') : '',
-                'created_by' => $sess['id'],
+                'created_by' => $sess['id'] ? $sess['id'] : '',
             ];
             $result = $this->admin_model->create_new_lead($data);
             if(gettype($result) == "array"){

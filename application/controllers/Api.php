@@ -1,13 +1,14 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 require APPPATH . 'libraries/REST_Controller.php';
-class API extends REST_Controller
+class Api extends REST_Controller
 {
     function __construct()
     {
         parent::__construct();
         $this->load->model('api_model');
         $this->load->model('admin_model');
+        $this->load->model('audit_log_model');
     }
     private function returns($result)
     {
@@ -24,6 +25,7 @@ class API extends REST_Controller
 
     public function contact_form_post()
     {
+        // Data for saving in contact_form table
         $data = [
             'taken_from_page' => $this->post('taken_from_page') ? $this->post('taken_from_page') : '',
             'quote_for' => $this->post('quote_for') ? $this->post('quote_for') : '',
@@ -48,7 +50,7 @@ class API extends REST_Controller
         } else {
             $lead_type = 0;
         }
-
+        // Data for saving in leads table
         $data = [
             'lead_id' => $this->makeID(4),
             'lead_type' => $lead_type,
@@ -60,9 +62,27 @@ class API extends REST_Controller
             'contact_name' => $this->post('contact_name') ? $this->post('contact_name') : '',
             'phone_number' => $this->post('phone_number') ? $this->post('phone_number') : '',
             'email_address' => $this->post('email_address') ? $this->post('email_address') : '',
-            'created_by' => 0,
+            'created_by' => $this->post('created_by') ? $this->post('created_by') : '',
         ];
-        $this->admin_model->create_new_lead($data);
+        $result = $this->admin_model->create_new_lead($data);
+
+        // Data for audit log
+        $lead_sequence = $result['id'];
+        $data = [
+            'lead_sequence' => $lead_sequence,
+            'action' => "Lead Created.",
+            'action_by' => $this->post('created_by') ? $this->post('created_by') : '',
+        ];
+        $this->audit_log_model->post_audit_log($data);
+
+        // Data for notification
+        $data = [
+            'lead_sequence' => $lead_sequence,
+            'notif_details' => "New Lead Received by Webform",
+            'notif_added_by' => $this->post('created_by') ? $this->post('created_by') : '',
+        ];
+        $this->admin_model->post_notif_details($data);
+        
         return true;
     }
 

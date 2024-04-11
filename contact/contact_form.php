@@ -1,4 +1,7 @@
-<?php include_once('contact_form_submit.php'); ?>
+<?php 
+$session_id = isset($_GET['id']) ? $_GET['id'] : 0;
+include_once('contact_form_submit.php'); 
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -262,6 +265,7 @@
 	<div class="center-vertical">
 		<div class="center-content row">
 			<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" id="contact_form" class="col-md-12 center-margin form-horizontal" method="post">
+			<input type="hidden" name="session_id" value="<?php echo $session_id; ?>">
 				<!--<div class="panel">
 					<div class="panel-body">-->
 				<div class="example-box-wrapper">

@@ -8,7 +8,7 @@ $business_name = $postcode = $your_name = $email_address = $phone_number = "";
 $business_nameErr = $postcodeErr = $your_nameErr = $email_addressErr = $phone_numberErr = "";
 $lead_type = $post_code = $contact_name = $current_contract_ends = "";
 
-if (!empty($_GET)) {
+if (!empty($_GET['type'])) {
 	if ($_GET['type'] == "energy") {
 		$utility_type = "energy";
 	} else if ($_GET['type'] == "water") {
@@ -19,6 +19,7 @@ if (!empty($_GET)) {
 if (!empty($_POST)) {
 	$taken_from_page = test_input($_POST['taken_from']);
 	$utility_type = test_input($_POST['utility_type']);
+	$session_id = $_POST['session_id'];
 	if (!empty($_POST['quote_for'])) $quote_for = test_input($_POST['quote_for']);
 
 	if (!empty($_POST['eg_current_supplier'])) $eg_current_supplier = test_input($_POST['eg_current_supplier']);
@@ -123,6 +124,7 @@ if (!empty($_POST)) {
 			'contact_name' => $your_name,
 			'phone_number' => $phone_number,
 			'email_address' => $email_address,
+			'created_by' => $session_id,
 		];
 
 		$data_string = json_encode($to_send_data);

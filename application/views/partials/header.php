@@ -148,7 +148,7 @@
 
                 <!-- Contact -->
                 <li class="nav-item">
-                    <a class="nav-link" id="navbar-profile" href="<?php echo base_url('contact/contact_form.php')?>">
+                    <a class="nav-link" id="navbar-profile" href="<?php echo base_url('contact/contact_form.php?id='.$session['id'])?>">
                         <!-- <i class="ficon" data-feather="bell"></i> -->
                         Contact Form 
                     </a>
