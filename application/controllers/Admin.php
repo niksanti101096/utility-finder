@@ -404,6 +404,7 @@ class Admin extends REST_Controller {
         if($this->session->userdata('uf_session')){
             $sess = $this->session->userdata('uf_session');
             $lead_sequence = $this->post('lead_sequence');
+            $partner_name = $this->post('partner_name');
             $data = [
                 'status' => 2,
                 'partner_id' => $this->post('partner_id'),
@@ -414,20 +415,26 @@ class Admin extends REST_Controller {
                 if ($this->post('lead_status') == 1) {
                     $data = [
                         'lead_sequence' => $lead_sequence,
-                        'action' => "Lead Allocated - " . $this->post('partner_name'),
+                        'action' => "Lead Allocated - " . $partner_name,
                         'action_by' => $sess['id'],
                     ];
-                    $this->audit_log_model->post_audit_log($data);
                     $returnMessage = 'Successfully allocated lead!';
                 } else {
                     $data = [
                         'lead_sequence' => $lead_sequence,
-                        'action' => "Lead Re-Allocated - " . $this->post('partner_name'),
+                        'action' => "Lead Re-Allocated - " . $partner_name,
                         'action_by' => $sess['id'],
                     ];
-                    $this->audit_log_model->post_audit_log($data);
                     $returnMessage = 'Successfully reallocated lead!';
                 }
+                $this->audit_log_model->post_audit_log($data);
+
+                $data = [
+                    'partner_name' => $partner_name,
+                    'lead_sequence' => $lead_sequence,
+                ];
+                $this->check_supplier($data);
+
                 $this->response(array('success'=>true,'message'=>$returnMessage), REST_Controller::HTTP_OK);
             } else {
                 $this->response(array('success'=>false,'message'=>'Something went wrong!'), REST_Controller::HTTP_OK);
@@ -718,5 +725,69 @@ class Admin extends REST_Controller {
             $this->response(array('success'=>false,'data'=>[]), REST_Controller::HTTP_OK);
         }
     }
-    
+
+    public function check_supplier($data) {
+
+        $result = $this->admin_model->get_load_supplier($data['lead_sequence']);
+
+        if ($data['partner_name'] == "SwiftSwitch") {
+
+            $curl = curl_init();
+
+            curl_setopt_array($curl, [
+                CURLOPT_URL => "https://api.swiftswitch.co.uk/v1/leads/create",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_POSTFIELDS => json_encode([
+                  'Last_Name' => '',
+                  'First_Name' => $result['data'][0]->contact_name,
+                  'Company' => $result['data'][0]->business_name,
+                  'Product' => 'Water',
+                  'Email' => $result['data'][0]->email_address,
+                  'Phone' => $result['data'][0]->phone_number,
+                  'Postal_Code' => $result['data'][0]->post_code,
+                  'Street' => '',
+                  'Description' => 'Lead From Utility Finder'
+                ]),
+                CURLOPT_HTTPHEADER => [
+                  "Accept: application/json",
+                  "Content-Type: application/json",
+                  "x-api-key: DnGtYh3fPq1wUx9rLm4Jv5XtZs6aBc"
+                ],
+              ]);
+              curl_exec($curl);
+              curl_close($curl);
+        }
+
+        if ($data['partner_name'] == "Clearsight Energy") {
+
+            $this->load->library('phpmailer_library');
+            $mail = $this->phpmailer_library->load();
+            $mail->SMTPDebug = 0;
+            $mail->IsSMTP();
+            $mail->CharSet = 'UTF-8';
+            $mail->Host = "email-smtp.eu-west-2.amazonaws.com";
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = 'tls';//ssl for gmail testing
+            $mail->Port = 587;
+            $mail->Username = "AKIA6JHVAJHZJK2UYOEM";
+            $mail->Password = "BJPHE3JYUaOT0GwjZddxZi95zCknn3YYwG3XXwWmrFe/";              
+            $mail->From = "info@utilityfinder.co.uk ";
+            $mail->FromName = "A2 SOLUTIONS";
+            $mail->Subject = "Lead From Utility Finder";
+            $mail->Body = "Lead Source : Utility Finder<br>Current Supplier : ".$result['data'][0]->current_supplier."<br>Contract End Month : ".$result['data'][0]->current_contract_ends."<br>Business Name : ".$result['data'][0]->business_name."<br>Postcode : ".$result['data'][0]->post_code."<br>Contact Name : ".$result['data'][0]->contact_name."<br>Contact Phone : ".$result['data'][0]->phone_number."<br>Contact Email : ".$result['data'][0]->email_address;
+            $mail->IsHTML(true);
+            $mail->AddAddress("contact@clearsightenergy.com");
+            // Send email
+            if($mail->send()){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    }
 }

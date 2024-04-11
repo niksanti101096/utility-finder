@@ -248,4 +248,9 @@ Class Admin_Model extends CI_Model {
         $query = $this->db->set($array)->where('partner_id', $id)->update('partner_records');
         return $query ? true : false;
     }
+
+    public function get_load_supplier($id) {
+        $query = $this->db->select('*')->from('lead_records')->where('sequence', $id)->get()->result();
+        return $query ? array('data' => $query) : false ;
+    }
 }
