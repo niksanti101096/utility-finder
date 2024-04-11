@@ -175,7 +175,7 @@ function loadLeadsRecords() {
         dataType: "JSON",
         data: {},
         success: function (response) {
-            if (response.data.length > 0) {
+            if (response.data) {
                 allocatedLeads = [];
                 response.data.forEach(function (data) {
                     allocatedLeads.push(data);
