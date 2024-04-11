@@ -2,8 +2,7 @@
 
 use SebastianBergmann\Environment\Console;
 
-// $base_url = "https://utilityfinder.a2server.co.uk";
-$base_url = "http://localhost";
+$base_url = url();
 $taken_from_page = $utility_type = $quote_for = $current_supplier  = $eg_current_supplier = $w_current_supplier = $contract_end = "";
 $business_name = $postcode = $your_name = $email_address = $phone_number = "";
 $business_nameErr = $postcodeErr = $your_nameErr = $email_addressErr = $phone_numberErr = "";
@@ -146,4 +145,14 @@ function test_input($data)
 	$data = stripslashes($data);
 	$data = htmlspecialchars($data);
 	return $data;
+}
+
+function url(){
+	if(isset($_SERVER['HTTPS'])){
+		$protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
+	}
+	else{
+		$protocol = 'http';
+	}
+	return $protocol . "://" . $_SERVER['SERVER_NAME'];
 }

@@ -182,7 +182,7 @@
 </head>
 
 <body class="bg-wrapper">
-
+	
 	<?php
 	include_once('contact_form_submit.php');
 	?>
@@ -207,9 +207,10 @@
 						<h3>Thank you!</h3>
 						<h1>Your information has been submitted successfully.</h1>
 						<h2>You will shortly be contacted by email or phone to receive your quote.</h2>
+						
 					</div>
 					<div class="text-center">
-						<a href="http://localhost">
+						<a href=<?php echo url()?>>
 							<button type="button" class="btn btn-info btn-lg ">
 								Go back to site
 							</button>
