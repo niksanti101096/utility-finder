@@ -79,6 +79,7 @@
                                                             <th>Business Name</th>
                                                             <th>Phone</th>
                                                             <th>Email</th>
+                                                            <th>Utility Type</th>
                                                             <th>Contract End</th>
                                                             <th>Lead Source</th>
                                                             <th>Status</th>

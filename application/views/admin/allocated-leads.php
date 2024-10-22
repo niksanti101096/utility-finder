@@ -87,13 +87,13 @@
                                                             <th>ID</th>
                                                             <th>Business Name</th>
                                                             <th>Phone</th>
-                                                            <th width="10%">Email</th>
+                                                            <th>Email</th>
+                                                            <th>Utility Type</th>
                                                             <th>Contract End</th>
-                                                            <!-- <th>Lead Type</th> -->
                                                             <th>Lead Source</th>
                                                             <th>Status</th>
                                                             <th>Allocated to</th>
-                                                            <th>Action</th>
+                                                            <th class="none">Action</th>
                                                         </tr>
                                                     </thead>
                                                 </table>

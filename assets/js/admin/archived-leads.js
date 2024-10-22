@@ -45,6 +45,15 @@ function loadArchivedLeads() {
                         {data: "business_name"},
                         {data: "phone_number"},
                         {data: "email_address"},
+						{
+						    data: null,
+						    render: function(data, type, row) {
+						        if(row.lead_type == 2) return "Electricity & Gas";
+						        if(row.lead_type == 3) return "Gas";
+						        if(row.lead_type == 4) return "Electricity";
+						        if(row.lead_type == 5) return "Water";
+						    }
+						},
                         {data: "current_contract_ends"},
                         {data: "lead_source"},
                         {

@@ -95,16 +95,16 @@ function loadLeads() {
 						{ data: "business_name" },
 						{ data: "phone_number" },
 						{ data: "email_address" },
+						{
+						    data: null,
+						    render: function(data, type, row) {
+						        if(row.lead_type == 2) return "Electricity & Gas";
+						        if(row.lead_type == 3) return "Gas";
+						        if(row.lead_type == 4) return "Electricity";
+						        if(row.lead_type == 5) return "Water";
+						    }
+						},
 						{ data: "current_contract_ends" },
-						// {
-						//     data: null,
-						//     render: function(data, type, row) {
-						//         if(row.lead_type == 2) return "Electricity & Gas";
-						//         if(row.lead_type == 3) return "Gas";
-						//         if(row.lead_type == 4) return "Electricity";
-						//         if(row.lead_type == 5) return "Water";
-						//     }
-						// },
 						{ data: "lead_source" },
 						{
 							data: null,
@@ -119,23 +119,23 @@ function loadLeads() {
 							render: function (data, type, row) {
 								if (row.status == 1) {
 									var alloBtn =
-										'<button type="button" class="btn btn-secondary btn-sm w-100" onclick="loadAllocateModal(\'' +
+										'<button type="button" class="btn btn-secondary btn-sm " onclick="loadAllocateModal(\'' +
 										encodeURIComponent(JSON.stringify(data)) +
 										"')\">Allocate</button>";
 								} else {
 									var alloBtn =
-										'<button type="button" class="btn btn-secondary btn-sm w-100" onclick="loadReallocateModal(\'' +
+										'<button type="button" class="btn btn-secondary btn-sm " onclick="loadReallocateModal(\'' +
 										encodeURIComponent(JSON.stringify(data)) +
 										"')\">Reallocate</button>";
 								}
 								return (
-									'<button type="button" class="btn btn-success btn-sm w-100" onclick="viewLeadRecord(' +
+									'<div class="btn-group"><button type="button" class="btn btn-success btn-sm " onclick="viewLeadRecord(' +
 									row.sequence +
 									')">View</button>' +
 									alloBtn +
-									'<button type="button" class="btn btn-danger btn-sm w-100" onclick="archiveLead(' +
+									'<button type="button" class="btn btn-danger btn-sm " onclick="archiveLead(' +
 									row.sequence +
-									')">Archive</button>'
+									')">Archive</button></div>'
 								);
 							},
 						},

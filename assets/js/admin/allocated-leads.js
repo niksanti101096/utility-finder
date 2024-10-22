@@ -211,6 +211,15 @@ function loadLeadsRecords() {
                         {data: "business_name"},
                         {data: "phone_number"},
                         {data: "email_address"},
+						{
+						    data: null,
+						    render: function(data, type, row) {
+						        if(row.lead_type == 2) return "Electricity & Gas";
+						        if(row.lead_type == 3) return "Gas";
+						        if(row.lead_type == 4) return "Electricity";
+						        if(row.lead_type == 5) return "Water";
+						    }
+						},
                         {data: "current_contract_ends"},
                         {data: "lead_source"},
                         {
@@ -225,9 +234,9 @@ function loadLeadsRecords() {
                             data: null,
                             render: function (data, type, row) {
                                 return (
-                                    '<button type="button" class="btn btn-success btn-sm w-100" onclick="viewLeadRecord('+row.sequence+')">View</button>' +
+                                    '<div class="btn-group"><button type="button" class="btn btn-success btn-sm w-100" onclick="viewLeadRecord('+row.sequence+')">View</button>' +
                                     '<button type="button" class="btn btn-secondary btn-sm w-100" onclick="loadReallocateModal(\''+encodeURIComponent(JSON.stringify(data))+'\')">Reallocate</button>' +
-                                    '<button type="button" class="btn btn-danger btn-sm w-100" onclick="archiveLead('+row.sequence+')">Archive</button>'
+                                    '<button type="button" class="btn btn-danger btn-sm w-100" onclick="archiveLead('+row.sequence+')">Archive</button></div>'
                                 )
                             }
                         },
@@ -511,6 +520,15 @@ function loadAlloLeads(type = "dateRange") {
                         {data: "business_name"},
                         {data: "phone_number"},
                         {data: "email_address"},
+						{
+						    data: null,
+						    render: function(data, type, row) {
+						        if(row.lead_type == 2) return "Electricity & Gas";
+						        if(row.lead_type == 3) return "Gas";
+						        if(row.lead_type == 4) return "Electricity";
+						        if(row.lead_type == 5) return "Water";
+						    }
+						},
                         {data: "current_contract_ends"},
                         {data: "lead_source"},
                         {
@@ -525,9 +543,9 @@ function loadAlloLeads(type = "dateRange") {
                             data: null,
                             render: function (data, type, row) {
                                 return (
-                                    '<button type="button" class="btn btn-success btn-sm w-100" onclick="viewLeadRecord('+row.sequence+')">View</button>' +
+                                    '<div class="btn-group"><button type="button" class="btn btn-success btn-sm w-100" onclick="viewLeadRecord('+row.sequence+')">View</button>' +
                                     '<button type="button" class="btn btn-secondary btn-sm w-100" onclick="loadReallocateModal(\''+encodeURIComponent(JSON.stringify(data))+'\')">Reallocate</button>' +
-                                    '<button type="button" class="btn btn-danger btn-sm w-100" onclick="archiveLead('+row.sequence+')">Archive</button>'
+                                    '<button type="button" class="btn btn-danger btn-sm w-100" onclick="archiveLead('+row.sequence+')">Archive</button></div>'
                                 )
                             }
                         },
