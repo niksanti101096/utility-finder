@@ -42,7 +42,7 @@
 
 <!-- BEGIN: Body-->
 
-<body class="horizontal-layout horizontal-menu blank-page navbar-floating footer-static dark-layout" data-open="hover" data-menu="horizontal-menu" data-col="blank-page">
+<body class="horizontal-layout horizontal-menu blank-page navbar-floating footer-static" data-open="hover" data-menu="horizontal-menu" data-col="blank-page">
     <!-- BEGIN: Content-->
     <div class="app-content content ">
         <div class="content-overlay"></div>
@@ -57,7 +57,7 @@
                         <!-- /Brand logo-->
                         <!-- Left Text-->
                         <div class="d-none d-lg-flex col-lg-8 align-items-center p-5">
-                            <div class="w-100 d-lg-flex align-items-center justify-content-center px-5"><img class="img-fluid bg-green" src="<?php echo base_url('assets/img/utility-finder-no-background-logo.png');?>" alt="Login V2" /></div>
+                            <div class="w-100 d-lg-flex align-items-center justify-content-center px-5"><img class="img-fluid bg-green" src="<?php echo base_url('assets/images/Full_colour_login.png');?>" alt="Login V2" /></div>
                         </div>
                         <!-- /Left Text-->
                         <!-- Login-->

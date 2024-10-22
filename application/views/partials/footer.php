@@ -4,7 +4,7 @@
     <footer class="footer footer-static footer-light footer-shadow">
         <p class="clearfix mb-0">
             <span class="float-md-left d-block d-md-inline-block mt-25">COPYRIGHT &copy; 2024
-                <a class="ml-25" href="">Utility Finder</a>
+                <a class="ml-25" href="<?php echo base_url();?>">Switch Finder</a>
                 <span class="d-none d-sm-inline-block">, All rights Reserved</span>
             </span>
             <!-- <span class="float-md-right d-none d-md-block">

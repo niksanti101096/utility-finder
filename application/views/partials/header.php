@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="loading dark-layout" lang="en" data-layout="dark-layout" data-textdirection="ltr">
+<html class="loading" lang="en" data-textdirection="ltr">
 <!-- BEGIN: Head-->
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -101,7 +101,7 @@
 <body class="vertical-layout vertical-menu-modern content-left-sidebar navbar-floating footer-static" data-open="click" data-menu="vertical-menu-modern" data-col="content-left-sidebar">
 
     <!-- BEGIN: Header-->
-    <nav class="header-navbar navbar navbar-expand-lg align-items-center floating-nav navbar-dark navbar-shadow container-xxl">
+    <nav class="header-navbar navbar navbar-expand-lg align-items-center floating-nav navbar-shadow container-xxl">
         <div class="navbar-container d-flex content">
             <div class="bookmark-wrapper d-flex align-items-center">
                 <ul class="nav navbar-nav d-xl-none">
@@ -118,7 +118,7 @@
 
                 <li class="nav-item d-none d-lg-block">
                     <a class="nav-link nav-link-style">
-                        <i class="ficon" data-feather="sun"></i>
+                        <i class="ficon" data-feather="moon"></i>
                     </a>
                 </li>
                 
@@ -167,13 +167,13 @@
 
 
     <!-- BEGIN: Main Menu-->
-    <div class="main-menu menu-fixed menu-dark menu-accordion menu-shadow" data-scroll-to-active="true">
+    <div class="main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true">
         <div class="navbar-header">
             <ul class="nav navbar-nav flex-row">
                 <li class="nav-item m-auto d-flex">
-                    <a class="navbar-brand" href="<?php echo base_url('admin'); ?>">
+                    <a class="navbar-brand" href="<?php echo base_url(); ?>">
                         <!-- <h2 class="brand-text">Utility Finder</h2> -->
-                        <img src="<?php echo base_url('assets/images/Both.png'); ?>" alt="" width="125rem">
+                        <img src="<?php echo base_url('assets/images/Full_colour_SF.png'); ?>" alt="" width="125rem">
                     </a>
                 </li>
                 <!-- <li class="nav-item nav-toggle">
