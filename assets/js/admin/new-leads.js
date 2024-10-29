@@ -209,8 +209,12 @@ function loadNotLeads() {
                             }
                         },
                         {data: "business_name"},
-                        {data: "phone_number"},
-                        {data: "email_address"},
+						{
+						    data: null,
+						    render: function(data, type, row) {
+						        return row.phone_number + "<br>" + row.email_address
+						    }
+						},
 						{
 						    data: null,
 						    render: function(data, type, row) {
@@ -236,9 +240,9 @@ function loadNotLeads() {
                                 partnerId = row.partner_id;
                                 leadStatus= row.status;
                                 return (
-                                    '<div class="btn-group" role="group"><button type="button" class="btn btn-success btn-sm w-100" onclick="viewLeadRecord('+row.sequence+')">View</button>' +
+                                    '<button type="button" class="btn btn-success btn-sm w-100" onclick="viewLeadRecord('+row.sequence+')">View</button>' +
                                     '<button type="button" class="btn btn-secondary btn-sm w-100" onclick="loadAllocateModal(\''+encodeURIComponent(JSON.stringify(data))+'\')">Allocate</button>' +
-                                    '<button type="button" class="btn btn-danger btn-sm w-100" onclick="archiveLead('+row.sequence+')">Archive</button></div>'
+                                    '<button type="button" class="btn btn-danger btn-sm w-100" onclick="archiveLead('+row.sequence+')">Archive</button>'
                                 )
                             }
                         },
@@ -511,8 +515,12 @@ function loadNewLeads(type = "dateRange") {
                             }
                         },
                         {data: "business_name"},
-                        {data: "phone_number"},
-                        {data: "email_address"},
+						{
+						    data: null,
+						    render: function(data, type, row) {
+						        return row.phone_number + "<br>" + row.email_address
+						    }
+						},
 						{
 						    data: null,
 						    render: function(data, type, row) {

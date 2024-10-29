@@ -93,8 +93,12 @@ function loadLeads() {
 							},
 						},
 						{ data: "business_name" },
-						{ data: "phone_number" },
-						{ data: "email_address" },
+						{
+						    data: null,
+						    render: function(data, type, row) {
+						        return row.phone_number + "<br>" + row.email_address
+						    }
+						},
 						{
 						    data: null,
 						    render: function(data, type, row) {
@@ -119,23 +123,23 @@ function loadLeads() {
 							render: function (data, type, row) {
 								if (row.status == 1) {
 									var alloBtn =
-										'<button type="button" class="btn btn-secondary btn-sm " onclick="loadAllocateModal(\'' +
+										'<button type="button" class="btn btn-secondary btn-sm w-100 " onclick="loadAllocateModal(\'' +
 										encodeURIComponent(JSON.stringify(data)) +
 										"')\">Allocate</button>";
 								} else {
 									var alloBtn =
-										'<button type="button" class="btn btn-secondary btn-sm " onclick="loadReallocateModal(\'' +
+										'<button type="button" class="btn btn-secondary btn-sm w-100 " onclick="loadReallocateModal(\'' +
 										encodeURIComponent(JSON.stringify(data)) +
 										"')\">Reallocate</button>";
 								}
 								return (
-									'<div class="btn-group"><button type="button" class="btn btn-success btn-sm " onclick="viewLeadRecord(' +
+									'<button type="button" class="btn btn-success btn-sm w-100 " onclick="viewLeadRecord(' +
 									row.sequence +
 									')">View</button>' +
 									alloBtn +
-									'<button type="button" class="btn btn-danger btn-sm " onclick="archiveLead(' +
+									'<button type="button" class="btn btn-danger btn-sm w-100 " onclick="archiveLead(' +
 									row.sequence +
-									')">Archive</button></div>'
+									')">Archive</button>'
 								);
 							},
 						},

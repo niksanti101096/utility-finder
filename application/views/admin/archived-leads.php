@@ -77,8 +77,7 @@
                                                         <tr>
                                                             <th>ID</th>
                                                             <th>Business Name</th>
-                                                            <th>Phone</th>
-                                                            <th>Email</th>
+                                                            <th>Phone / Email</th>
                                                             <th>Utility Type</th>
                                                             <th>Contract End</th>
                                                             <th>Lead Source</th>

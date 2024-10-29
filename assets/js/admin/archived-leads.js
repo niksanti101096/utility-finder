@@ -43,8 +43,12 @@ function loadArchivedLeads() {
                             }
                         },
                         {data: "business_name"},
-                        {data: "phone_number"},
-                        {data: "email_address"},
+						{
+						    data: null,
+						    render: function(data, type, row) {
+						        return row.phone_number + "<br>" + row.email_address
+						    }
+						},
 						{
 						    data: null,
 						    render: function(data, type, row) {
