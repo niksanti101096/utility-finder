@@ -808,7 +808,15 @@ class Admin extends REST_Controller {
             foreach ($result as $key => $value) {
                 foreach ($value as $key => $data) {
                     $email = $data->email;
-                    $mail->AddAddress($email);
+                    $delimiter = ', ';
+                    if (strpos($email, $delimiter) !== false) {
+                        $emails = explode($delimiter, $email);
+                        foreach ($emails as $key => $value) {
+                            $mail->AddAddress($value);
+                        }
+                    } else {
+                        $mail->AddAddress($email);
+                    }
                 }
             }
             // Send email
