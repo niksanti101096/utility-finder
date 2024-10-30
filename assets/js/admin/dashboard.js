@@ -71,6 +71,7 @@ function loadLeads() {
 		data: {},
 		success: function (response) {
 			if (response.data.length > 0) {
+				console.log(response.data);
 				response.data.forEach(function (data) {
 					leadRecords.push(data);
 				});
@@ -91,12 +92,20 @@ function loadLeads() {
 							render: function (data, type, row) {
 								return `${row.lead_id}`;
 							},
+							visible: false,
+						},
+						{ 
+							data: null,
+							render: function (data, type, row) {
+								const d = new Date(row.date_created);
+								return `${d.getDay().toString().padStart(2, "0")}-${(d.getMonth() + 1).toString().padStart(2, "0")}-${d.getFullYear()} ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
+							}
 						},
 						{ data: "business_name" },
 						{
 						    data: null,
 						    render: function(data, type, row) {
-						        return row.phone_number + "<br>" + row.email_address
+						        return row.phone_number + " / <br>" + row.email_address
 						    }
 						},
 						{
@@ -108,7 +117,7 @@ function loadLeads() {
 						        if(row.lead_type == 5) return "Water";
 						    }
 						},
-						{ data: "current_contract_ends" },
+						{ data: "current_contract_ends", visible: false },
 						{ data: "lead_source" },
 						{
 							data: null,

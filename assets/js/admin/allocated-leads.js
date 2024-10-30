@@ -208,11 +208,18 @@ function loadLeadsRecords() {
                                 return `${row.lead_id}`;
                             }
                         },
+						{ 
+							data: null,
+							render: function (data, type, row) {
+								const d = new Date(row.date_created);
+								return `${d.getDay().toString().padStart(2, "0")}-${(d.getMonth() + 1).toString().padStart(2, "0")}-${d.getFullYear()} ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
+							}
+						},
                         {data: "business_name"},
 						{
 						    data: null,
 						    render: function(data, type, row) {
-						        return row.phone_number + "<br>" + row.email_address
+						        return row.phone_number + " / <br>" + row.email_address
 						    }
 						},
 						{
@@ -260,10 +267,12 @@ function loadLeadsRecords() {
                 var columns = $('#allocated-leads-filter-display').val();
 
                 columns.forEach(element => {
-                    leadTable.column(parseInt(element) - 1).visible(true);
+                    leadTable.column(element).visible(true);
                 });
 
                 leadTable.column(0).visible(false);
+                leadTable.column(1).visible(false);
+                leadTable.column(6).visible(false);
             };
         },
         error : function() {},
@@ -521,11 +530,18 @@ function loadAlloLeads(type = "dateRange") {
                                 return `${row.lead_id}`;
                             }
                         },
+						{ 
+							data: null,
+							render: function (data, type, row) {
+								const d = new Date(row.date_created);
+								return `${d.getDay().toString().padStart(2, "0")}-${(d.getMonth() + 1).toString().padStart(2, "0")}-${d.getFullYear()} ${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
+							}
+						},
                         {data: "business_name"},
 						{
 						    data: null,
 						    render: function(data, type, row) {
-						        return row.phone_number + "<br>" + row.email_address
+						        return row.phone_number + " / <br>" + row.email_address
 						    }
 						},
 						{
@@ -573,10 +589,12 @@ function loadAlloLeads(type = "dateRange") {
                 var columns = $('#allocated-leads-filter-display').val();
 
                 columns.forEach(element => {
-                    leadTable.column(parseInt(element) - 1).visible(true);
+                    leadTable.column(element).visible(true);
                 });
 
                 leadTable.column(0).visible(false);
+                leadTable.column(1).visible(false);
+                leadTable.column(6).visible(false);
             }
         }
     });

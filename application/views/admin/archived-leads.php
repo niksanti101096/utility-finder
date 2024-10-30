@@ -55,11 +55,11 @@
                             <div class="row">
                                 <div class="form-group col-12">
                                     <select class="form_control select2" name="archived_leads_filter_display[]" id="archived-leads-filter-display" multiple="true" onchange="loadArchivedLeads()">
-                                        <option value="1">Lead ID</option>
-                                        <option value="2">Business Name</option>
-                                        <option value="3">Phone</option>
-                                        <option value="4">Email</option>
-                                        <option value="5">Date</option>
+                                        <!-- <option value="1">Lead ID</option> -->
+                                        <option value="2">Arrived</option>
+                                        <option value="3">Business Name</option>
+                                        <option value="4">Phone / Email</option>
+                                        <!-- <option value="5">Date</option> -->
                                         <option value="6">Source</option>
                                         <option value="7">Status</option>
                                     </select>
@@ -76,6 +76,7 @@
                                                     <thead>
                                                         <tr>
                                                             <th>ID</th>
+                                                            <th>Arrived</th>
                                                             <th>Business Name</th>
                                                             <th>Phone / Email</th>
                                                             <th>Utility Type</th>

@@ -253,4 +253,16 @@ Class Admin_Model extends CI_Model {
         $query = $this->db->select('*')->from('lead_records')->where('sequence', $id)->get()->result();
         return $query ? array('data' => $query) : false ;
     }
+
+    public function post_add_third_party_email($data) {
+        $query = $this->db->select('email')->from('partner_records')->where('partner_id', $data['partner_id'])->get()->result();
+
+        if ($query) {
+            $existing_email = $query[0]->email;
+            $updated_email = $existing_email . ", " . $data['email'];
+
+            $query = $this->db->where('partner_id', $data['partner_id'])->update('partner_records', array('email' => $updated_email));
+        }
+        return $query ? true : false;
+    }
 }

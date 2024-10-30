@@ -184,6 +184,7 @@ $(document).ready(function () {
 
 	$("#add-third-party-btn").click(function () {
 		$("#third-party-modal").modal("show");
+		$("#third-party-form").prop("hidden", false);
 		document.getElementById("third-party-form").reset();
 		$("#third-party-title-modal").html("Add Third Party");
 	});
@@ -304,6 +305,11 @@ $(document).ready(function () {
 		e.preventDefault();
 		createPartner();
 	});
+
+	$("#third-party-email-form").submit(function (e) {
+		e.preventDefault();
+		addThirdPartyEmail();
+	})
 
 	$("#btn-edit-tp-profile").click(function () {
 		$(".editable").attr("disabled", false);
@@ -990,6 +996,29 @@ function createPartner() {
 	$("#third-party-modal").modal("hide");
 }
 
+function addThirdPartyEmail() {
+	$("#btn-add-third-party-email").attr("hidden", true);
+	$("#btn-disabled-tp-email").attr("hidden", false);
+	$.ajax({
+		type: "POST",
+		url: url + "admin/add-third-party-email",
+		dataType: "JSON",
+		data: $("#third-party-email-form").serialize(),
+		success: function (response) {
+			if (response) {
+				Swal.fire("Successfully Added Email", "", "success");
+				openThirdPartyDetail($("#partner-id").val());
+				setTimeout(() => {
+					$(".datatable-user-title").html("Third Party Records");
+				}, 50);
+			}
+		},
+	});
+	$("#btn-add-third-party-email").attr("hidden", false);
+	$("#btn-disabled-tp-email").attr("hidden", true);
+	$("#third-party-modal").modal("hide");
+}
+
 function openThirdPartyDetail(id) {
 	$.ajax({
 		type: "GET",
@@ -1135,4 +1164,13 @@ function copyToClipboard() {
 	$("#copy-tooltip").mouseleave(function () {
 		$("#copy-tooltip").attr("data-original-title", "Copy to clipboard!");
 	});
+}
+
+function addEmailAddress() {
+	var partnerId = $('#partner-id').val();
+	$("#third-party-modal").modal("show");
+	$("#third-party-email-form").prop("hidden", false);
+	document.getElementById("third-party-email-form").reset();
+	$("#third-party-title-modal").html("Add Third Party Email");
+	$('#third-party-email-form [name="partner_id"]').val(partnerId);
 }

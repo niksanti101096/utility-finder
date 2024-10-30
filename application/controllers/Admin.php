@@ -244,11 +244,11 @@ class Admin extends REST_Controller {
                             'notif_added_by' => $id,
                         ];
                         $this->admin_model->post_notif_details($data);
-                        // $data = [
-                        //     'lead_id' => $this->post('new_lead_id'),
-                        //     'sequence' => $lead_sequence,
-                        // ];
-                        // $return_mail = $this->send_email($data);
+                        $data = [
+                            'lead_id' => $this->post('new_lead_id'),
+                            'sequence' => $lead_sequence,
+                        ];
+                        $return_email = $this->send_email($data);
                         $this->response(array('success'=>true,'message'=>'Successfully Created Lead.'), REST_Controller::HTTP_OK);
                     } else {
                         $this->response(array('success'=>false,'message'=>'Failed Saving'), REST_Controller::HTTP_OK);
@@ -260,11 +260,11 @@ class Admin extends REST_Controller {
                         'notif_added_by' => $id,
                     ];
                     $this->admin_model->post_notif_details($data);
-                    // $data = [
-                    //     'lead_id' => $this->post('new_lead_id'),
-                    //     'sequence' => $lead_sequence,
-                    // ];
-                    // $return_email = $this->send_email($data);
+                    $data = [
+                        'lead_id' => $this->post('new_lead_id'),
+                        'sequence' => $lead_sequence,
+                    ];
+                    $return_email = $this->send_email($data);
                     $this->response(array('success'=>true,'message'=>'Successfully Created Lead.'), REST_Controller::HTTP_OK);
                 }
             } else {
@@ -276,7 +276,7 @@ class Admin extends REST_Controller {
     }
 
     public function send_email($data) {
-        
+        // Lead Creation Email
         $result = $this->admin_model->get_user_emails();
         
         if(gettype($result) == "array"){
@@ -751,7 +751,7 @@ class Admin extends REST_Controller {
                   'Phone' => $result['data'][0]->phone_number,
                   'Postal_Code' => $result['data'][0]->post_code,
                   'Street' => '',
-                  'Description' => 'Lead From Utility Finder'
+                  'Description' => 'Lead From Switch Finder'
                 ]),
                 CURLOPT_HTTPHEADER => [
                   "Accept: application/json",
@@ -761,25 +761,23 @@ class Admin extends REST_Controller {
               ]);
               curl_exec($curl);
               curl_close($curl);
-        }
-
-        if ($data['partner_name'] == "Clearsight Energy") {
+        } elseif ($data['partner_name'] == "Clearsight Energy") {
 
             $this->load->library('phpmailer_library');
             $mail = $this->phpmailer_library->load();
             $mail->SMTPDebug = 0;
             $mail->IsSMTP();
             $mail->CharSet = 'UTF-8';
-            $mail->Host = "email-smtp.eu-west-2.amazonaws.com";
+            $mail->Host = MAIL_PRECOM_HOST;
             $mail->SMTPAuth = true;
             $mail->SMTPSecure = 'tls';//ssl for gmail testing
-            $mail->Port = 587;
-            $mail->Username = "AKIA6JHVAJHZJK2UYOEM";
-            $mail->Password = "BJPHE3JYUaOT0GwjZddxZi95zCknn3YYwG3XXwWmrFe/";              
-            $mail->From = "info@utilityfinder.co.uk ";
+            $mail->Port = MAIL_PRECOM_PORT;
+            $mail->Username = MAIL_PRECOM_USERNAME;
+            $mail->Password = MAIL_PRECOM_PASSWORD;              
+            $mail->From = EMAIL_PRECOM;
             $mail->FromName = "A2 SOLUTIONS";
-            $mail->Subject = "Lead From Utility Finder";
-            $mail->Body = "Lead Source : Utility Finder<br>Current Supplier : ".$result['data'][0]->current_supplier."<br>Contract End Month : ".$result['data'][0]->current_contract_ends."<br>Business Name : ".$result['data'][0]->business_name."<br>Postcode : ".$result['data'][0]->post_code."<br>Contact Name : ".$result['data'][0]->contact_name."<br>Contact Phone : ".$result['data'][0]->phone_number."<br>Contact Email : ".$result['data'][0]->email_address;
+            $mail->Subject = "Lead From Switch Finder";
+            $mail->Body = "Lead Source : Switch Finder<br>Current Supplier : ".$result['data'][0]->current_supplier."<br>Contract End Month : ".$result['data'][0]->current_contract_ends."<br>Business Name : ".$result['data'][0]->business_name."<br>Postcode : ".$result['data'][0]->post_code."<br>Contact Name : ".$result['data'][0]->contact_name."<br>Contact Phone : ".$result['data'][0]->phone_number."<br>Contact Email : ".$result['data'][0]->email_address;
             $mail->IsHTML(true);
             $mail->AddAddress("contact@clearsightenergy.com");
             // Send email
@@ -788,6 +786,45 @@ class Admin extends REST_Controller {
             }else{
                 return false;
             }
+        } else {
+            $this->load->library('phpmailer_library');
+            $mail = $this->phpmailer_library->load();
+            $mail->SMTPDebug = 0;
+            $mail->IsSMTP();
+            $mail->CharSet = 'UTF-8';
+            $mail->Host = MAIL_PRECOM_HOST;
+            $mail->SMTPAuth = true;
+            $mail->SMTPSecure = 'tls';//ssl for gmail testing
+            $mail->Port = MAIL_PRECOM_PORT;
+            $mail->Username = MAIL_PRECOM_USERNAME;
+            $mail->Password = MAIL_PRECOM_PASSWORD;              
+            $mail->From = EMAIL_PRECOM;
+            $mail->FromName = "A2 SOLUTIONS";
+            $mail->Subject = "Lead From Switch Finder";
+            $mail->Body = "Lead Source : Switch Finder<br>Current Supplier : ".$result['data'][0]->current_supplier."<br>Contract End Month : ".$result['data'][0]->current_contract_ends."<br>Business Name : ".$result['data'][0]->business_name."<br>Postcode : ".$result['data'][0]->post_code."<br>Contact Name : ".$result['data'][0]->contact_name."<br>Contact Phone : ".$result['data'][0]->phone_number."<br>Contact Email : ".$result['data'][0]->email_address;
+            $mail->IsHTML(true);
+            
+            
+            foreach ($result as $key => $value) {
+                foreach ($value as $key => $data) {
+                    $email = $data->email;
+                    $mail->AddAddress($email);
+                }
+            }
+            // Send email
+            if($mail->send()){
+                return true;
+            }else{
+                return false;
+            }
         }
+    }
+    public function add_third_party_email_post() {
+        $data = [
+            'partner_id' => $this->post('partner_id'),
+            'email' => $this->post('email'),
+        ];
+        $result = $this->admin_model->post_add_third_party_email($data);
+        $this->returns($result);
     }
 }

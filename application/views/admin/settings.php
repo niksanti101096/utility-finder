@@ -213,7 +213,12 @@
                                                                 </div>
                                                                 <div class="form-group col-md-6">
                                                                     <label class="form-label" for="tp-info-email">Email Address</label>
-                                                                    <input type="email" id="tp-info-email" class="form-control editable" name="email" placeholder="" disabled />
+                                                                    <div class="input-group input-group-merge">
+                                                                        <input type="email" id="tp-info-email" class="form-control editable" name="email" placeholder="" disabled />
+                                                                        <div class="input-group-append">
+                                                                            <span class="input-group-text cursor-pointer" data-toggle="tooltip" data-placement="bottom" title="Add Email Address" id="add-email-tooltip" onclick="addEmailAddress()"><i data-feather='plus'></i></span>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
 

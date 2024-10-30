@@ -70,7 +70,6 @@ $(document).ready(function () {
     $('#btn-allocate , #btn-reallocate').click(function() {
         const partnerVal = $('#allocate-lead').val();
         const partnerName = $('#allocate-lead option:selected').text();
-        console.log(partnerName);
         if (partnerVal != "") {
             $('#btn-allocate-disabled').attr('hidden', false);
             $('#btn-allocate').attr('hidden', true);

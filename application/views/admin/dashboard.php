@@ -152,6 +152,7 @@
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
+                                                <th>Arrived</th>
                                                 <th>Business Name</th>
                                                 <th>Phone / Email</th>
                                                 <th>Utility Type</th>
