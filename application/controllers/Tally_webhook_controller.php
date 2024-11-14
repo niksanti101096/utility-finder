@@ -94,7 +94,6 @@ class Tally_webhook_controller extends REST_Controller
 
         $temp['lead_id'] = bin2hex(random_bytes(3));
         $temp['lead_source'] = "Webform";
-        // $this->tally_webhook_model->post_tally_webhook($temp);
-        echo json_encode($temp);
+        $this->tally_webhook_model->post_tally_webhook($temp);
     }
 }

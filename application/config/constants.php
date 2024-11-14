@@ -14,9 +14,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // email constants
 define('MAIL_PRECOM_HOST', 'email-smtp.eu-west-2.amazonaws.com');
 define('MAIL_PRECOM_PORT', '587');
-define('MAIL_PRECOM_USERNAME', 'AKIA6JHVAJHZDJNMORON');
-define('MAIL_PRECOM_PASSWORD', 'BPw4wVNIEhHVsufw512rYlB/rhVye8UStNuJEIdWkxYk');
 define('EMAIL_PRECOM', 'info@switchfinder.co.uk');
+// username and password are save in DB
 
 
 defined('SHOW_DEBUG_BACKTRACE') OR define('SHOW_DEBUG_BACKTRACE', TRUE);

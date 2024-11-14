@@ -275,9 +275,10 @@ class Admin extends REST_Controller {
         }
     }
 
-    public function send_email($data) {
+    public function send_email($data = false) {
         // Lead Creation Email
         $result = $this->admin_model->get_user_emails();
+        $aws_info = $this->admin_model->get_aws_info();
         
         if(gettype($result) == "array"){
             $this->load->library('phpmailer_library');
@@ -289,8 +290,8 @@ class Admin extends REST_Controller {
             $mail->SMTPAuth = true;
             $mail->SMTPSecure = 'ssl';//ssl for gmail testing
             $mail->Port = MAIL_PRECOM_PORT;
-            $mail->Username = MAIL_PRECOM_USERNAME;
-            $mail->Password = MAIL_PRECOM_PASSWORD;              
+            $mail->Username = $aws_info[0]->MAIL_PRECOM_USERNAME;
+            $mail->Password = $aws_info[0]->MAIL_PRECOM_PASSWORD;              
             $mail->From = EMAIL_PRECOM;
             $mail->FromName = "A2 SOLUTIONS";
             $mail->Subject = "New Lead is Created";
@@ -762,7 +763,9 @@ class Admin extends REST_Controller {
               curl_exec($curl);
               curl_close($curl);
         } elseif ($data['partner_name'] == "Clearsight Energy") {
-
+            
+            $aws_info = $this->admin_model->get_aws_info();
+            
             $this->load->library('phpmailer_library');
             $mail = $this->phpmailer_library->load();
             $mail->SMTPDebug = 0;
@@ -772,8 +775,8 @@ class Admin extends REST_Controller {
             $mail->SMTPAuth = true;
             $mail->SMTPSecure = 'tls';//ssl for gmail testing
             $mail->Port = MAIL_PRECOM_PORT;
-            $mail->Username = MAIL_PRECOM_USERNAME;
-            $mail->Password = MAIL_PRECOM_PASSWORD;              
+            $mail->Username = $aws_info[0]->MAIL_PRECOM_USERNAME;
+            $mail->Password = $aws_info[0]->MAIL_PRECOM_PASSWORD;             
             $mail->From = EMAIL_PRECOM;
             $mail->FromName = "A2 SOLUTIONS";
             $mail->Subject = "Lead From Switch Finder";
@@ -787,6 +790,9 @@ class Admin extends REST_Controller {
                 return false;
             }
         } else {
+            
+            $aws_info = $this->admin_model->get_aws_info();
+
             $this->load->library('phpmailer_library');
             $mail = $this->phpmailer_library->load();
             $mail->SMTPDebug = 0;
@@ -796,8 +802,8 @@ class Admin extends REST_Controller {
             $mail->SMTPAuth = true;
             $mail->SMTPSecure = 'tls';//ssl for gmail testing
             $mail->Port = MAIL_PRECOM_PORT;
-            $mail->Username = MAIL_PRECOM_USERNAME;
-            $mail->Password = MAIL_PRECOM_PASSWORD;              
+            $mail->Username = $aws_info[0]->MAIL_PRECOM_USERNAME;
+            $mail->Password = $aws_info[0]->MAIL_PRECOM_PASSWORD;             
             $mail->From = EMAIL_PRECOM;
             $mail->FromName = "A2 SOLUTIONS";
             $mail->Subject = "Lead From Switch Finder";

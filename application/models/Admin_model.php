@@ -216,7 +216,7 @@ Class Admin_Model extends CI_Model {
     }
 
     public function get_user_emails() {
-        $query = $this->db->select('email')->from('users')->where('received_email = 1')->where('email != ""')->get()->result();
+        $query = $this->db->select('email')->from('users')->where('received_email = 1')->where('email != ""')->where('status = 1')->where('user_type = 1')->get()->result();
         return $query ? array('data' => $query) : false ;
     }
     
@@ -264,5 +264,10 @@ Class Admin_Model extends CI_Model {
             $query = $this->db->where('partner_id', $data['partner_id'])->update('partner_records', array('email' => $updated_email));
         }
         return $query ? true : false;
+    }
+
+    public function get_aws_info() {
+        $query = $this->db->select('*')->from('information')->where('sequence = 1')->get()->result();
+        return $query ? $query : false ;
     }
 }

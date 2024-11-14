@@ -27,6 +27,7 @@ class Forgot_Password extends REST_Controller {
 				shuffle($word);
 				$system_generated_password = substr(implode($word), 0, 8);
 				$new_password = password_hash($system_generated_password,PASSWORD_BCRYPT);
+				$aws_info = $this->admin_model->get_aws_info();
 				/*Mail Code*/
 				$this->load->library('phpmailer_library');
 
@@ -41,8 +42,8 @@ class Forgot_Password extends REST_Controller {
 				$mail->SMTPAuth = true;
 				$mail->SMTPSecure = 'ssl';//ssl for gmail testing
 				$mail->Port = MAIL_PRECOM_PORT;
-				$mail->Username = MAIL_PRECOM_USERNAME;
-				$mail->Password = MAIL_PRECOM_PASSWORD;              
+				$mail->Username = $aws_info[0]->MAIL_PRECOM_USERNAME;
+				$mail->Password = $aws_info[0]->MAIL_PRECOM_PASSWORD;           
 				$mail->From = EMAIL_PRECOM;
 				$mail->FromName = "A2 SOLUTIONS";
 				$mail->Subject = "Account Password Recovery";
